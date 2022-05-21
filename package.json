@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "packageManager": "pnpm@7.1.0",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "lint": "eslint --ext .ts,.js,.vue ."
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^10.0.0",
+    "@nuxtjs/tailwindcss": "^5.0.4",
+    "@vueuse/core": "^8.5.0",
+    "@vueuse/nuxt": "^8.5.0",
+    "eslint": "^8.15.0",
+    "install-peers": "^1.0.4",
+    "nuxt": "3.0.0-rc.3",
+    "sass": "^1.52.1",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.6.1",
+    "@heroicons/vue": "^1.0.6"
+  },
+  "overrides": {
+    "ufo": "^0.8.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "ufo": "^0.8.4"
+    }
+  }
+}
