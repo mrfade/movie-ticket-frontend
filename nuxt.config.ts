@@ -6,6 +6,9 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@vueuse/nuxt'
   ],
+  buildModules: [
+    './modules/auto-import-eslint'
+  ],
   typescript: {
     shim: false
   }
