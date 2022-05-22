@@ -9,6 +9,9 @@
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   },
   "eslint.format.enable": true,
+  "eslint.packageManager": "yarn",
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
   "files.associations": {
     "*.css": "tailwindcss"
   }
