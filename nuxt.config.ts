@@ -9,6 +9,9 @@ export default defineNuxtConfig({
   buildModules: [
     './modules/auto-import-eslint'
   ],
+  build: {
+    transpile: ['@heroicons/vue']
+  },
   typescript: {
     shim: false
   }
