@@ -1,5 +1,4 @@
-<script setup>
-import { useJwt } from '@vueuse/integrations/useJwt'
+<script setup lang="ts">
 import { useToast } from 'vue-toastification'
 import { useApi } from '@/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
@@ -33,6 +32,7 @@ const login = async () => {
     method: 'POST',
     body: JSON.stringify(user)
   }).catch((err) => {
+    // eslint-disable-next-line no-console
     console.log('catch', err)
     toast.error('Beklenmeyen bir hata oluştu')
   }).finally(() => {
@@ -40,6 +40,7 @@ const login = async () => {
   })
 
   if (error) {
+    // eslint-disable-next-line no-console
     console.log('error', error)
     return
   }
@@ -48,10 +49,7 @@ const login = async () => {
     // TODO: add notification
     return
 
-  const { payload } = useJwt(data.token)
-  const { id: _id, name: _name, email: _email } = payload.value
-
-  userStore.login(data.token, _id, _name, _email)
+  userStore.loginWithToken(data.token)
 
   // redirect
   router.push('/')

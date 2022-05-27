@@ -1,8 +1,21 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { useToast } from 'vue-toastification'
+import { useJwt } from '@vueuse/integrations/useJwt'
 import { setAccessToken, removeAccessToken } from '~~/composables/useAuthCookie'
 
 const toast = useToast()
+
+const parseToken = (token: string) => {
+  const { payload } = useJwt(token)
+
+  const {
+    'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier': id,
+    'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': name,
+    email
+  } = payload.value as any
+
+  return { id, name, email }
+}
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -67,6 +80,11 @@ export const useUserStore = defineStore('user', {
 
       setAccessToken(token)
       toast.success('Başarıyla giriş yapıldı')
+    },
+
+    loginWithToken (token: string) {
+      const { id, name, email } = parseToken(token)
+      this.login(token, id, name, email)
     }
   }
 })
