@@ -11,6 +11,9 @@ module.exports = {
     './.nuxt/.eslintrc.js'
   ],
   plugins: ['vue'],
+  globals: {
+    definePageMeta: 'readonly'
+  },
   env: {
     'vue/setup-compiler-macros': true
   },
