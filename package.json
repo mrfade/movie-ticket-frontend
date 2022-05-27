@@ -10,7 +10,6 @@
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^10.0.0",
     "@nuxtjs/tailwindcss": "^5.0.4",
-    "@vueuse/core": "^8.5.0",
     "@vueuse/nuxt": "^8.5.0",
     "eslint": "^8.15.0",
     "install-peers": "^1.0.4",
@@ -20,7 +19,14 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.6.1",
-    "@heroicons/vue": "^1.0.6"
+    "@heroicons/vue": "^1.0.6",
+    "@pinia/nuxt": "^0.1.9",
+    "@vueuse/core": "^8.5.0",
+    "@vueuse/integrations": "^8.5.0",
+    "axios": "^0.27.2",
+    "jwt-decode": "^3.1.2",
+    "pinia": "^2.0.14",
+    "vue-loading-overlay": "^5.0"
   },
   "overrides": {
     "ufo": "^0.8.4"
