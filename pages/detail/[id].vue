@@ -1,5 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import { useApi } from '~~/composables/useApi'
+import { ApiResponse } from '~~/@types/api'
+import { Movie } from '~~/@types/movie'
 
 const casts = [
   {
@@ -104,6 +107,14 @@ const similarFilms = [
   }
 ]
 
+const route = useRoute()
+
+const { data } = await useAsyncData<ApiResponse<Movie>>('movie', () => useApi(`movie/${route.params.id}`))
+console.log(data)
+
+const movie: Movie = data.value.data
+console.log(movie)
+
 definePageMeta({
   layout: 'home'
 })
@@ -111,25 +122,27 @@ definePageMeta({
 
 <template>
   <div class="w-full">
-    <div class="w-full h-96 pt-20 flex justify-center items-end bg-black bg-opacity-90">
-      <!-- <div class="w-full h-full relative">
-        <div class="w-full h-full absolute bg-black bg-opacity-40"></div>
-        <div class="w-full h-full bg-cover bg-[url('https://kdaidggt0f3v.merlincdn.net/Uploads/FilmCover/top-gun-maverick-2019624115131.jpg')]"></div>
-      </div> -->
+    <div class="w-full h-[32em] flex justify-center items-end relative">
+      <div class="w-full h-full relative">
+        <div class="w-full h-full absolute bg-black bg-opacity-60"></div>
+        <div class="w-full h-full bg-cover" :style="`background-image: url('https://image.tmdb.org/t/p/original/${movie.backdropPath}')`"></div>
+      </div>
 
-      <div class="container max-w-screen-xl px-8 h-72 flex justify-between items-center">
-        <img src="https://kdaidggt0f3v.merlincdn.net/Uploads/Films/top-gun-maverick-202251811657.jpg" alt="" class="h-full rounded-t-lg">
+      <div class="container max-w-screen-xl px-8 h-72 flex justify-between items-center absolute">
+        <img :src="`https://image.tmdb.org/t/p/w500/${movie.posterPath}`" alt="" class="h-full rounded-t-lg">
         <div class="h-full p-8 flex-1 flex flex-col justify-end items-start">
-          <div class="text-white text-4xl font-bold mb-6">
-            Top Gun: Maverick
+          <div class="mb-6">
+            <h3 class="text-white text-4xl font-bold">{{ movie.title }}</h3>
+            <span class="text-white text-sm font-light">{{ movie.originalTitle }}</span>
           </div>
           <div class="text-white text-xs font-light mb-8 px-4 py-2 rounded bg-black bg-opacity-40">
-            27 Mayıs 2022
+            {{ movie.releaseDate }}
           </div>
           <div class="text-white text-sm flex items-center gap-1.5 mb-1">
-            <ClientOnly><ClockIcon class="h-4 w-4" /></ClientOnly> 131 dakika
+            <ClientOnly><ClockIcon class="h-4 w-4" /></ClientOnly> {{ movie.duration }} dakika
           </div>
           <div class="text-white text-sm">
+            {{ movie.genres?.map(genre => genre.name).join(', ') }}
             Action, Adventure, Comedy
           </div>
         </div>
@@ -159,9 +172,7 @@ definePageMeta({
 
         <TabPanels>
           <TabPanel class="tab-panel">
-            <p>1986 yapımı Top Gun'ın devam hikâyesi olan Top Gun: Maverick, usta pilot Maverick'in bu kez eğitmen olarak hava kuvvetlerine geri dönüşü sonrası gelişen olayları anlatıyor.</p>
-            <br>
-            <p>Donanmanın en iyi pilotlarından biri olan Pete “Maverick” Mitchell, 30 yıllık hizmetten sonra ait olduğu yerde, cesur bir test pilotu olarak sınırları zorlar ve kendisini yere bağlayacak olan terfiden kaçar. Kendisini Top Gun mezunlarından oluşan bir müfrezeyi o güne kadar hiçbir pilotun görmediği özel bir görev için eğitirken bulur. Belirsiz bir gelecekle ve geçmişinden gelen anılarla karşı karşıya kalan Maverick, en büyük korkularıyla yüzleşmek ve büyük bir fedakarlık yapmasını gerektiren bir göreve gitmek zorunda kalır.</p>
+            {{ movie.description }}
           </TabPanel>
           <TabPanel class="tab-panel">
             <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
