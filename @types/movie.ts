@@ -4,6 +4,14 @@ export interface Genre {
   name: string;
 }
 
+export interface Cast {
+  id: number;
+  actorId: number;
+  name: string;
+  character: string;
+  profilePath: string;
+}
+
 export interface Movie {
   id: number,
   title: string,
@@ -21,4 +29,5 @@ export interface Movie {
   rating: number,
   director: string,
   genres?: Genre[],
+  cast?: Cast[],
 }
