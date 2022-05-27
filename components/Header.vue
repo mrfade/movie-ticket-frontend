@@ -24,9 +24,9 @@ defineProps({
         </NuxtLink>
       </div>
       <div class="flex space-x-10 flex-1">
-        <NuxtLink to="/detail" class="whitespace-nowrap text-white hover:text-gray-100">
-          Detay
-        </NuxtLink>
+        <a href="#" class="whitespace-nowrap text-white hover:text-gray-100">
+          test
+        </a>
         <a href="#" class="whitespace-nowrap text-white hover:text-gray-100">
           test
         </a>
