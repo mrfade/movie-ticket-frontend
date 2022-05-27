@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import { ClockIcon } from '@heroicons/vue/outline'
 import { useApi } from '~~/composables/useApi'
 import { ApiResponse } from '~~/@types/api'
 import { Movie } from '~~/@types/movie'
@@ -109,11 +110,9 @@ const similarFilms = [
 
 const route = useRoute()
 
-const { data } = await useAsyncData<ApiResponse<Movie>>('movie', () => useApi(`movie/${route.params.id}`))
-console.log(data)
+const { data } = await useAsyncData<ApiResponse<Movie>>(`movie_${route.params.id}`, () => useApi(`movie/${route.params.id}`))
 
 const movie: Movie = data.value.data
-console.log(movie)
 
 definePageMeta({
   layout: 'home'
