@@ -5,9 +5,8 @@ const useApi = (
   url: string | Request,
   options?: UseFetchOptions<any>
 ): Promise<any> => {
-  if (!options) {
+  if (!options)
     options = {} as UseFetchOptions<any>
-  }
 
   const config = useRuntimeConfig()
   options.baseURL = config.public.apiBase
