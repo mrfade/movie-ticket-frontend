@@ -1,5 +1,4 @@
 <script setup>
-import { ClockIcon } from '@heroicons/vue/outline'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 const casts = [
@@ -128,7 +127,7 @@ definePageMeta({
             27 Mayıs 2022
           </div>
           <div class="text-white text-sm flex items-center gap-1.5 mb-1">
-            <ClockIcon class="h-4 w-4" /> 131 dakika
+            <ClientOnly><ClockIcon class="h-4 w-4" /></ClientOnly> 131 dakika
           </div>
           <div class="text-white text-sm">
             Action, Adventure, Comedy
