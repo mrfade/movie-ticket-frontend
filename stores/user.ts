@@ -1,5 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { useToast } from 'vue-toastification'
+import { setAccessToken, removeAccessToken } from '~~/composables/useAuthCookie'
 
 const toast = useToast()
 
@@ -27,6 +28,8 @@ export const useUserStore = defineStore('user', {
 
     setToken (token: string) {
       this.token = token
+
+      setAccessToken(token)
     },
 
     setId (id: string) {
@@ -47,6 +50,8 @@ export const useUserStore = defineStore('user', {
       this.id = null
       this.name = null
       this.email = null
+
+      removeAccessToken()
     },
 
     logout () {
@@ -60,6 +65,7 @@ export const useUserStore = defineStore('user', {
       this.setName(name)
       this.setEmail(email)
 
+      setAccessToken(token)
       toast.success('Başarıyla giriş yapıldı')
     }
   }
