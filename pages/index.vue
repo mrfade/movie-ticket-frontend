@@ -25,7 +25,7 @@ definePageMeta({
       <div class="lg:w-1/2 mx-auto flex flex-row drop-shadow absolute z-10">
         <input
           type="text"
-          class="flex-1 border-none shadow-none rounded-l-full px-6 py-4 text-base"
+          class="flex-1 border-none shadow-none rounded-l-full px-6 py-4 text-base focus:outline-none"
           placeholder="Ara"
           @focus="onSearchFocus"
           @blur="onSearchBlur"
