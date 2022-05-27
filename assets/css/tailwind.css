@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gray-100 dark:bg-[#121212];
+  @apply bg-gray-100 dark:bg-primary-dark;
 }
 
 a {

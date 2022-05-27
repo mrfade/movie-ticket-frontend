@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ywllow: '#f8e71c'
+        ywllow: '#f8e71c',
+        'primary-dark': '#121212'
       }
     }
   },
