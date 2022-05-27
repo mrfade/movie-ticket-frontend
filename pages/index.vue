@@ -1,4 +1,8 @@
-<script setup>
+<script setup lang="ts">
+import shuffle from 'lodash.shuffle'
+import { useApi } from '~~/composables/useApi'
+import { ApiResponse } from '~~/@types/api'
+import { Movie } from '~~/@types/movie'
 
 const searchFocus = ref(false)
 
@@ -9,13 +13,23 @@ const onSearchBlur = () => {
   searchFocus.value = false
 }
 
+const { data } = await useAsyncData<ApiResponse<Movie[]>>('movies', () => useApi('movie'), {
+  transform: (response) => {
+    response.data = shuffle(response.data)
+    return response
+  }
+})
+
+const movies: Movie[] = data.value.data
+const first6Movies: Movie[] = movies.slice(0, 6)
+
 definePageMeta({
   layout: 'home'
 })
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full space-y-24 mb-24">
     <div class="w-full h-[700px] relative flex justify-center items-center bg-gray-300">
       <div class="w-full h-full relative">
         <div class="w-full h-full absolute bg-black transition-opacity" :class="[searchFocus ? 'opacity-60' : 'opacity-20']"></div>
@@ -33,6 +47,19 @@ definePageMeta({
         <button class="text-black font-bold bg-white hover:bg-ywllow rounded-r-full px-6 py-4">
           Bilet Ara
         </button>
+      </div>
+    </div>
+
+    <div class="w-full max-w-screen-xl mx-auto px-8 py-16">
+      <h3 class="text-2xl font-medium mb-4 dark:text-white">Vizyondaki Filmler</h3>
+
+      <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
+        <nuxt-link v-for="movie in first6Movies" :key="movie.title" :to="`/detail/${movie.id}`">
+          <div class="flex flex-col items-center rounded-lg transition hover:scale-105">
+            <img class="w-full rounded-lg" :src="`https://image.tmdb.org/t/p/w500/${movie.posterPath}`" :alt="movie.title">
+            <h5 class="p-2 text-center font-medium text-gray-900 dark:text-white">{{ movie.title }}</h5>
+          </div>
+        </nuxt-link>
       </div>
     </div>
   </div>
