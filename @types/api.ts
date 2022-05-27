@@ -11,8 +11,8 @@ export interface ValidationError {
   errors: any
 }
 
-export interface ApiResponse {
+export interface ApiResponse<T> {
   success: boolean,
   message: string | null,
-  data?: TokenData | ValidationError | null,
+  data?: T,
 }
