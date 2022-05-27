@@ -58,15 +58,15 @@ defineProps({
             leave-from-class="transform opacity-100 scale-100"
             leave-to-class="transform opacity-0 scale-95"
           >
-            <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-primary-dark ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-cod-gray-900 ring-1 ring-black ring-opacity-5 focus:outline-none">
               <MenuItem v-slot="{ active }">
-                <a href="#" :class="[active ? 'bg-gray-100 dark:bg-white/5' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-gray-100']">Profilim</a>
+                <a href="#" :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']">Profilim</a>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <a href="#" :class="[active ? 'bg-gray-100 dark:bg-white/5' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-gray-100']">Ayarlar</a>
+                <a href="#" :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']">Ayarlar</a>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <a href="#" :class="[active ? 'bg-gray-100 dark:bg-white/5' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-gray-100']" @click.prevent="userStore.logout">Çıkış Yap</a>
+                <a href="#" :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']" @click.prevent="userStore.logout">Çıkış Yap</a>
               </MenuItem>
             </MenuItems>
           </transition>
