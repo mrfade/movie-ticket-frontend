@@ -1,4 +1,7 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -56,6 +59,8 @@ export const useUserStore = defineStore('user', {
       this.setId(id)
       this.setName(name)
       this.setEmail(email)
+
+      toast.success('Başarıyla giriş yapıldı')
     }
   }
 })
