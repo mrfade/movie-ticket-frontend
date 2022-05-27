@@ -1,8 +1,6 @@
 import { $fetch } from 'ohmyfetch'
 import { UseFetchOptions } from 'nuxt/dist/app/composables/fetch'
 
-const config = useRuntimeConfig()
-
 const useApi = (
   url: string | Request,
   options?: UseFetchOptions<any>
@@ -11,6 +9,7 @@ const useApi = (
     options = {} as UseFetchOptions<any>
   }
 
+  const config = useRuntimeConfig()
   options.baseURL = config.public.apiBase
 
   return $fetch(url, options)
