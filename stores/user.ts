@@ -17,6 +17,8 @@ const parseToken = (token: string) => {
   return { id, name, email }
 }
 
+export { parseToken }
+
 export const useUserStore = defineStore('user', {
   state: () => ({
     authenticated: false,
