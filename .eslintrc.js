@@ -12,7 +12,8 @@ module.exports = {
   ],
   plugins: ['vue'],
   globals: {
-    definePageMeta: 'readonly'
+    definePageMeta: 'readonly',
+    $fetch: 'readonly'
   },
   env: {
     'vue/setup-compiler-macros': true
