@@ -35,9 +35,9 @@ defineProps({
         <NuxtLink v-if="!userStore.isAuthenticated" to="/login" class="whitespace-nowrap text-white hover:text-gray-100">
           Giriş Yap
         </NuxtLink>
-        <a v-if="!userStore.isAuthenticated" class="whitespace-nowrap text-white hover:text-gray-100">
+        <NuxtLink v-if="!userStore.isAuthenticated" to="/register" class="whitespace-nowrap text-white hover:text-gray-100">
           Üye Ol
-        </a>
+        </NuxtLink>
 
         <!-- Profile dropdown -->
         <Menu v-if="userStore.isAuthenticated" as="div" class="flex-1 relative">
