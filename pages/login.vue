@@ -17,10 +17,9 @@ const login = async () => {
   const emailValue = email.value
   const passwordValue = password.value
 
-  if (!emailValue || !passwordValue) {
+  if (!emailValue || !passwordValue)
     // TODO: add notification
     return
-  }
 
   loaderStore.setLoading(true)
 
@@ -45,10 +44,9 @@ const login = async () => {
     return
   }
 
-  if (!data.token) {
+  if (!data.token)
     // TODO: add notification
     return
-  }
 
   const { payload } = useJwt(data.token)
   const { id: _id, name: _name, email: _email } = payload.value
