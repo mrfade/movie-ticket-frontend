@@ -1,6 +1,5 @@
-import { useJwt } from '@vueuse/integrations/useJwt'
 import cookieparser from 'cookieparser'
-import { useUserStore } from '~~/stores/user'
+import { useUserStore, parseToken } from '~~/stores/user'
 
 export default defineNuxtPlugin(() => {
   const cookies = useRequestHeaders(['cookie'])
@@ -12,8 +11,7 @@ export default defineNuxtPlugin(() => {
   const token = parsed.access_token
   const userStore = useUserStore()
 
-  const { payload } = useJwt<any>(token)
-  const { id, name, email } = payload.value
+  const { id, name, email } = parseToken(token)
 
   userStore.setAuthenticated(true)
   userStore.setToken(token)
