@@ -124,11 +124,11 @@ definePageMeta({
     <div class="w-full h-[32em] flex justify-center items-end relative">
       <div class="w-full h-full relative">
         <div class="w-full h-full absolute bg-black bg-opacity-60"></div>
-        <div class="w-full h-full bg-cover" :style="`background-image: url('https://image.tmdb.org/t/p/original/${movie.backdropPath}')`"></div>
+        <div class="w-full h-full bg-cover bg-[center_top]" :style="`background-image: url('https://image.tmdb.org/t/p/original/${movie.backdropPath}')`"></div>
       </div>
 
       <div class="container max-w-screen-xl px-8 h-72 flex justify-between items-center absolute">
-        <img :src="`https://image.tmdb.org/t/p/w500/${movie.posterPath}`" alt="" class="h-full rounded-t-lg">
+        <img :src="`https://image.tmdb.org/t/p/w500/${movie.posterPath}`" alt="" class="w-32 sm:w-48 md:w-56 h-auto rounded-t-lg self-end">
         <div class="h-full p-8 flex-1 flex flex-col justify-end items-start">
           <div class="mb-6">
             <h3 class="text-white text-4xl font-bold">{{ movie.title }}</h3>
