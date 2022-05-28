@@ -60,31 +60,29 @@ const login = async () => {
   <div class="w-full flex items-center justify-center my-16">
     <div class="w-full sm:max-w-xs md:max-w-sm lg:max-w-md space-y-8 py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-opacity-5 drop-shadow-md">
       <div>
-        <h2 class="text-center text-2xl font-bold text-gray-900 dark:text-white">Sign in to your account</h2>
+        <h2 class="text-center text-2xl font-bold text-gray-900 dark:text-white">Giriş Yap</h2>
       </div>
 
       <form class="mt-8 space-y-6" @submit.prevent="login">
         <div>
           <div class="mb-2">
-            <label for="email-address" class="sr-only">Email address</label>
+            <label for="email-address" class="sr-only">Email</label>
             <input
               id="email-address"
               v-model="email"
-              name="email"
               type="email"
-              placeholder="Email address"
+              placeholder="Email"
               class="input"
             />
           </div>
 
           <div>
-            <label for="password" class="sr-only">Password</label>
+            <label for="password" class="sr-only">Şifre</label>
             <input
               id="password"
               v-model="password"
-              name="password"
               type="password"
-              placeholder="Password"
+              placeholder="Şifre"
               class="input"
             />
           </div>
@@ -98,7 +96,7 @@ const login = async () => {
 
         <div>
           <Button fluid>
-            Sign in
+            Giriş Yap
           </Button>
         </div>
       </form>
