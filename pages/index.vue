@@ -40,12 +40,12 @@ definePageMeta({
         <input
           type="text"
           class="flex-1 border-none shadow-none rounded-l-full px-6 py-4 text-base focus:outline-none"
-          placeholder="Ara"
+          :placeholder="$t('search')"
           @focus="onSearchFocus"
           @blur="onSearchBlur"
         >
         <button class="text-black font-bold bg-white hover:bg-ywllow rounded-r-full px-6 py-4">
-          Bilet Ara
+          {{ $t('search ticket') }}
         </button>
       </div>
     </div>
@@ -54,12 +54,11 @@ definePageMeta({
       <h3 class="text-2xl font-medium mb-4 dark:text-white">Vizyondaki Filmler</h3>
 
       <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
-        <nuxt-link v-for="movie in first6Movies" :key="movie.title" :to="`/detail/${movie.id}`">
-          <div class="flex flex-col items-center rounded-lg transition hover:scale-105">
-            <img class="w-full rounded-lg" :src="`https://image.tmdb.org/t/p/w500/${movie.posterPath}`" :alt="movie.title">
-            <h5 class="p-2 text-center font-medium text-gray-900 dark:text-white">{{ movie.title }}</h5>
-          </div>
-        </nuxt-link>
+        <MovieSingle
+          v-for="smovie in first6Movies"
+          :key="smovie.id"
+          :movie="smovie"
+        />
       </div>
     </div>
   </div>
