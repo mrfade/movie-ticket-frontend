@@ -95,9 +95,9 @@ const login = async () => {
         </div> -->
 
         <div>
-          <Button fluid>
+          <button class="w-full">
             Giriş Yap
-          </Button>
+          </button>
         </div>
       </form>
     </div>

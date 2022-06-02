@@ -103,9 +103,9 @@ const register = async () => {
         </div>
 
         <div>
-          <Button fluid>
+          <button class="w-full">
             Kaydol
-          </Button>
+          </button>
         </div>
       </form>
     </div>
