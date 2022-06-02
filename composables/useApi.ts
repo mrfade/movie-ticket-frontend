@@ -1,17 +1,17 @@
 import { $fetch } from 'ohmyfetch'
-import { UseFetchOptions } from 'nuxt/dist/app/composables/fetch'
+import { FetchResult, UseFetchOptions } from 'nuxt/dist/app/composables/fetch'
 
-const useApi = (
+function useApi<T> (
   url: string | Request,
   options?: UseFetchOptions<any>
-): Promise<any> => {
+): FetchResult<any> {
   if (!options)
     options = {} as UseFetchOptions<any>
 
   const config = useRuntimeConfig()
   options.baseURL = config.public.apiBase
 
-  return $fetch(url, options)
+  return $fetch<T, any>(url, options)
 }
 
 export default useApi
