@@ -13,7 +13,6 @@ if (error.value)
   throwError('not found')
 
 const movie: Movie = movieData.value.data
-console.log(movie)
 
 const cast = ref<Cast[]>([])
 const { data: castData, pending: castPending } = useLazyAsyncData<ApiResponse<Cast[]>>(`movie_${route.params.slug}_cast`, () => useApi(`movie/${route.params.slug}/cast`))
@@ -63,7 +62,7 @@ definePageMeta({
             {{ movie.genres?.map(genre => genre.genre.name).join(', ') }}
           </div>
         </div>
-        <Button>Bilet Al</Button>
+        <button class="button">Bilet Al</button>
       </div>
     </div>
 
@@ -92,12 +91,17 @@ definePageMeta({
             {{ movie.description }}
           </TabPanel>
           <TabPanel class="tab-panel">
-            <div v-if="!castPending" class="grid grid-cols-3 md:grid-cols-6 gap-4">
+            <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
               <CastSingle
                 v-for="character in cast"
                 :key="character.id"
                 :character="character"
               />
+
+              <CastSkeleton v-if="castPending" />
+              <CastSkeleton v-if="castPending" />
+              <CastSkeleton v-if="castPending" />
+              <CastSkeleton v-if="castPending" />
             </div>
           </TabPanel>
           <TabPanel class="tab-panel">
@@ -107,17 +111,24 @@ definePageMeta({
       </TabGroup>
     </div>
 
-    <div class="w-full max-w-screen-xl mx-auto px-8 py-16">
-      <h3 class="text-2xl font-medium mb-4 dark:text-white">Benzer Filmler</h3>
+    <MovieShelf>
+      <template #title>
+        <h3 class="text-2xl font-medium mb-4 dark:text-white">Benzer Filmler</h3>
+      </template>
 
-      <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
-        <MovieSingle
-          v-for="smovie in similarMovies"
-          :key="smovie.id"
-          :movie="smovie"
-        />
-      </div>
-    </div>
+      <MovieSingle
+        v-for="smovie in similarMovies"
+        :key="smovie.id"
+        :movie="smovie"
+      />
+
+      <MovieSkeleton v-if="similarMoviesPending" />
+      <MovieSkeleton v-if="similarMoviesPending" />
+      <MovieSkeleton v-if="similarMoviesPending" />
+      <MovieSkeleton v-if="similarMoviesPending" />
+      <MovieSkeleton v-if="similarMoviesPending" />
+      <MovieSkeleton v-if="similarMoviesPending" />
+    </MovieShelf>
   </div>
 </template>
 
