@@ -55,11 +55,19 @@ definePageMeta({
           <div class="text-white text-xs font-light mb-8 px-4 py-2 rounded bg-black bg-opacity-40">
             {{ movie.releaseDate }}
           </div>
-          <div class="text-white text-sm flex items-center gap-1.5 mb-1">
-            <ClientOnly><ClockIcon class="h-4 w-4" /></ClientOnly> {{ movie.duration }} dakika
-          </div>
-          <div class="text-white text-sm">
-            {{ movie.genres?.map(genre => genre.genre.name).join(', ') }}
+          <div class="flex-1 items-end space-y-2">
+            <div v-if="movie.director" class="text-white text-sm">
+              Yönetmen: {{ movie.director }}
+            </div>
+            <div v-if="cast.length > 0" class="text-white text-sm">
+              Oyuncular: {{ cast.slice(0,3).map(c => c.actor.name).join(', ') }}
+            </div>
+            <div class="text-white text-sm flex items-center gap-1.5">
+              <ClientOnly><ClockIcon class="h-4 w-4" /></ClientOnly> {{ movie.duration }} dakika
+            </div>
+            <div class="text-white text-sm">
+              {{ movie.genres?.map(genre => genre.genre.name).join(', ') }}
+            </div>
           </div>
         </div>
         <button class="button">Bilet Al</button>
