@@ -1,5 +1,18 @@
+<script setup lang="ts">
+const props = defineProps<{
+  variant: 'light' | 'dark'
+}>()
+
+const variantColor = computed(() => {
+  if (props.variant === 'light')
+    return 'text-white'
+
+  return 'text-cod-gray-300'
+})
+</script>
+
 <template>
-  <svg class="animate-spin h-5 w-5 text-cod-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+  <svg class="animate-spin h-5 w-5" :class="variantColor" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
     <circle
       class="opacity-25"
       cx="12"
