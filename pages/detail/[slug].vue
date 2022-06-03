@@ -66,7 +66,7 @@ definePageMeta({
               <ClientOnly><ClockIcon class="h-4 w-4" /></ClientOnly> {{ movie.duration }} dakika
             </div>
             <div class="text-white text-sm">
-              {{ movie.genres?.map(genre => genre.genre.name).join(', ') }}
+              {{ movie.genres?.map(genre => genre.name).join(', ') }}
             </div>
           </div>
         </div>

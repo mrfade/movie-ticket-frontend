@@ -1,14 +1,6 @@
 export interface Genre {
   id: number;
-  tmdbId: number;
   name: string;
-}
-
-export interface MovieGenre {
-  id: number;
-  movieId: number;
-  genreId: number;
-  genre: Genre;
 }
 
 export interface Actor {
@@ -43,6 +35,6 @@ export interface Movie {
   trailerUrl: string,
   rating: number,
   director: string,
-  genres?: MovieGenre[],
+  genres?: Genre[],
   cast?: Cast[],
 }
