@@ -99,7 +99,7 @@ const login = async () => {
         </div> -->
 
         <div>
-          <button class="w-full">
+          <button class="button w-full">
             Giriş Yap
           </button>
         </div>
