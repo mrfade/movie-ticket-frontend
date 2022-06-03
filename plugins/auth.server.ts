@@ -1,7 +1,7 @@
 import cookieparser from 'cookieparser'
-import { useUserStore, parseToken } from '~~/stores/user'
+import { useUserStore } from '~~/stores/user'
 
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin(async () => {
   const cookies = useRequestHeaders(['cookie'])
   if (!cookies.cookie) return
 
@@ -11,11 +11,5 @@ export default defineNuxtPlugin(() => {
   const token = parsed.access_token
   const userStore = useUserStore()
 
-  const { id, name, email } = parseToken(token)
-
-  userStore.setAuthenticated(true)
-  userStore.setToken(token)
-  userStore.setId(id)
-  userStore.setName(name)
-  userStore.setEmail(email)
+  await userStore.loginWithToken(token)
 })

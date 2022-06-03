@@ -52,9 +52,13 @@ const register = async () => {
     // TODO: add notification
     return
 
-  userStore.loginWithToken(data.token)
+  await userStore.loginWithToken(data.token)
+  if (!userStore.isAuthenticated) {
+    toast.error('Kayıt başarısız')
+    return
+  }
 
-  // redirect
+  toast.success('Kayıt başarılı')
   router.push('/')
 }
 </script>

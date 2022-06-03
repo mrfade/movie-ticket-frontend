@@ -1,23 +1,11 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { useToast } from 'vue-toastification'
-import { useJwt } from '@vueuse/integrations/useJwt'
+import { useToast } from 'vue-toastification/dist/index.mjs'
 import { setAccessToken, removeAccessToken } from '~~/composables/useAuthCookie'
+import { useApi } from '~~/composables/useApi'
+import { ApiResponse } from '~~/@types/api'
+import { User } from '~~/@types/user'
 
 const toast = useToast()
-
-const parseToken = (token: string) => {
-  const { payload } = useJwt(token)
-
-  const {
-    'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier': id,
-    'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': name,
-    email
-  } = payload.value as any
-
-  return { id, name, email }
-}
-
-export { parseToken }
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -84,9 +72,28 @@ export const useUserStore = defineStore('user', {
       toast.success('Başarıyla giriş yapıldı')
     },
 
+    async getMe (): Promise<void | Boolean> {
+      const data = await useApi<ApiResponse<User>>('/auth/me').catch(() => {
+        this.clear()
+        return false
+      })
+
+      if (!data)
+        return Promise.resolve(false)
+
+      const user: User = data.data
+
+      this.setAuthenticated(true)
+      this.setId(user.id)
+      this.setName(user.name)
+      this.setEmail(user.email)
+
+      setAccessToken(this.getToken)
+    },
+
     loginWithToken (token: string) {
-      const { id, name, email } = parseToken(token)
-      this.login(token, id, name, email)
+      this.setToken(token)
+      return this.getMe()
     }
   }
 })

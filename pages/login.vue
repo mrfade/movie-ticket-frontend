@@ -49,9 +49,13 @@ const login = async () => {
     // TODO: add notification
     return
 
-  userStore.loginWithToken(data.token)
+  await userStore.loginWithToken(data.token)
+  if (!userStore.isAuthenticated) {
+    toast.error('Giriş başarısız')
+    return
+  }
 
-  // redirect
+  toast.success('Giriş yapıldı')
   router.push('/')
 }
 </script>
