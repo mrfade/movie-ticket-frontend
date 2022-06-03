@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useToast } from 'vue-toastification'
+import { RouteLocationRaw } from 'vue-router'
 import { useApi } from '@/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
 import { useUserStore } from '~~/stores/user'
@@ -8,7 +9,7 @@ const email = ref(null)
 const password = ref(null)
 
 const toast = useToast()
-const router = useRouter()
+const route = useRoute()
 const loaderStore = useLoaderStore()
 const userStore = useUserStore()
 
@@ -56,7 +57,10 @@ const login = async () => {
   }
 
   toast.success('Giriş yapıldı')
-  router.push('/')
+  if (route.query.next)
+    navigateTo(route.query.next as RouteLocationRaw)
+  else
+    navigateTo('/')
 }
 </script>
 
