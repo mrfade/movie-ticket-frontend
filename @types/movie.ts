@@ -1,3 +1,22 @@
+import { Theather, Seat } from './theather'
+
+export interface MovieSimple {
+  id: number;
+  title: string;
+  posterPath: string;
+  slug: string;
+}
+
+export interface Session {
+  id: number;
+  movieId?: number;
+  movie: MovieSimple;
+  theather: Theather;
+  name: string;
+  date: string;
+  seats: Seat[];
+}
+
 export interface Genre {
   id: number;
   name: string;

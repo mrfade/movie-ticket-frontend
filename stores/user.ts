@@ -1,11 +1,8 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { useToast } from 'vue-toastification/dist/index.mjs'
 import { setAccessToken, removeAccessToken } from '~~/composables/useAuthCookie'
 import { useApi } from '~~/composables/useApi'
 import { ApiResponse } from '~~/@types/api'
 import { User } from '~~/@types/user'
-
-const toast = useToast()
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -69,7 +66,6 @@ export const useUserStore = defineStore('user', {
       this.setEmail(email)
 
       setAccessToken(token)
-      toast.success('Başarıyla giriş yapıldı')
     },
 
     async getMe (): Promise<void | Boolean> {

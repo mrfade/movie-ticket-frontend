@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import { ClockIcon } from '@heroicons/vue/outline'
+import { useToast } from 'vue-toastification'
 import { useApi } from '~~/composables/useApi'
+import { useDayjs } from '~~/composables/useDayjs'
 import { ApiResponse } from '~~/@types/api'
-import { Movie, Cast } from '~~/@types/movie'
+import { Movie, Cast, Session } from '~~/@types/movie'
+import { useUserStore } from '~~/stores/user'
 
 const route = useRoute()
+const toast = useToast()
+const userStore = useUserStore()
 
 const { data: movieData, error } = await useAsyncData<ApiResponse<Movie>>(`movie_${route.params.slug}`, () => useApi(`movie/${route.params.slug}`))
 
@@ -24,13 +29,56 @@ watch(castData, (newValue) => {
 })
 
 const similarMovies = ref<Movie[]>([])
-const { data: similarMoviesData, pending: similarMoviesPending } = useLazyAsyncData<ApiResponse<Movie[]>>(`movie_${route.params.slug}_similar_movies`, () => useApi(`movie/${route.params.slug}/similiar_movies`))
+const { data: similarMoviesData, pending: similarMoviesPending } = useLazyAsyncData<ApiResponse<Movie[]>>(`movie_${route.params.slug}_similar_movies`, () => useApi(`movie/${route.params.slug}/similar_movies`))
 if (similarMoviesData.value)
   similarMovies.value = similarMoviesData.value.data
 
 watch(similarMoviesData, (newValue) => {
   similarMovies.value = newValue.data
 })
+
+const sessions = ref<Session[]>([])
+const openSessions = ref(false)
+const sessionsSection = ref<HTMLElement | null>(null)
+const sessionsPending = ref(false)
+
+const onClickBuyTicket = async () => {
+  if (!userStore.isAuthenticated) {
+    toast.error('You must be logged in to buy a ticket')
+    navigateTo({
+      path: '/login',
+      query: {
+        next: route.path
+      }
+    })
+    return
+  }
+
+  sessionsPending.value = true
+  const { data: sessionsData, error } = await useAsyncData<ApiResponse<Session[]>>(`movie_${route.params.slug}_sessions`, () => useApi(`movie/${route.params.slug}/sessions`))
+  if (error.value) {
+    toast.error('Something went wrong')
+    return
+  }
+
+  sessions.value = sessionsData.value.data
+
+  sessionsPending.value = false
+  openSessions.value = true
+
+  nextTick(() => {
+    sessionsSection.value?.scrollIntoView({ behavior: 'smooth' })
+  })
+}
+
+const onSelectSession = (session: Session) => {
+  navigateTo({
+    path: '/choose_seat',
+    query: {
+      sessionId: session.id
+    }
+  })
+}
 
 definePageMeta({
   layout: 'home'
@@ -70,7 +118,10 @@ definePageMeta({
             </div>
           </div>
         </div>
-        <button class="button">Bilet Al</button>
+        <button class="button items-center gap-x-2" @click.prevent="onClickBuyTicket">
+          Bilet Al
+          <MiniLoader v-if="sessionsPending" variant="light" />
+        </button>
       </div>
     </div>
 
@@ -117,6 +168,25 @@ definePageMeta({
           </TabPanel>
         </TabPanels>
       </TabGroup>
+    </div>
+
+    <div
+      v-if="openSessions"
+      ref="sessionsSection"
+      class="w-full max-w-screen-xl mx-auto px-8 py-16"
+    >
+      <h3 class="text-2xl font-medium mb-4 dark:text-white">Seanslar</h3>
+
+      <div class="flex flex-col space-y-1">
+        <div v-for="session in sessions" :key="session.id" class="flex-1 flex flex-row px-4 py-2 bg-cod-gray-100 dark:bg-cod-gray-800 rounded-lg">
+          <div class="flex-1 flex items-center text-cod-gray-900 dark:text-cod-gray-50">
+            {{ session.theather.name }} -- {{ useDayjs()(session.date).format('DD MMMM YYYY dddd') }} -- {{ session.name }}
+          </div>
+          <div>
+            <button class="px-4 py-2 border border-transparent text-base font-medium rounded-lg text-cod-gray-900 bg-ywllow hover:bg-yellow-300 focus:outline-none" @click.prevent="onSelectSession(session)">Seç</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <MovieShelf>
