@@ -169,7 +169,7 @@ definePageMeta({
             <span class="text-white text-sm font-light">{{ movie.originalTitle }}</span>
           </div>
           <div class="text-white text-xs font-light mb-8 px-4 py-2 rounded bg-black bg-opacity-40">
-            {{ movie.releaseDate }}
+            {{ useDayjs()(movie.releaseDate).format('D MMMM YYYY dddd') }}
           </div>
           <div class="flex-1 items-end space-y-2">
             <div v-if="movie.director" class="text-white text-sm">
@@ -206,7 +206,7 @@ definePageMeta({
               Filmin Kadrosu
             </button>
           </Tab>
-          <Tab v-slot="{ selected }" as="template">
+          <Tab v-if="movie.trailerUrl" v-slot="{ selected }" as="template">
             <button class="tab-btn" :class="{ selected }">
               Fragman
             </button>
@@ -231,8 +231,10 @@ definePageMeta({
               <CastSkeleton v-if="castPending" />
             </div>
           </TabPanel>
-          <TabPanel class="tab-panel">
-            xx
+          <TabPanel v-if="movie.trailerUrl" class="tab-panel">
+            <vue-plyr>
+              <div data-plyr-provider="youtube" :data-plyr-embed-id="movie.trailerUrl"></div>
+            </vue-plyr>
           </TabPanel>
         </TabPanels>
       </TabGroup>
