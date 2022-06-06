@@ -51,21 +51,7 @@
         </ul>
       </div>
       <div>
-        <h2 class="mb-6 text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase">Download</h2>
-        <ul class="text-gray-600 dark:text-gray-300">
-          <li class="mb-4">
-            <a href="#" class="font-light dark:font-normal hover:underline">iOS</a>
-          </li>
-          <li class="mb-4">
-            <a href="#" class="font-light dark:font-normal hover:underline">Android</a>
-          </li>
-          <li class="mb-4">
-            <a href="#" class="font-light dark:font-normal hover:underline">Windows</a>
-          </li>
-          <li class="mb-4">
-            <a href="#" class="font-light dark:font-normal hover:underline">MacOS</a>
-          </li>
-        </ul>
+        <select-city />
       </div>
     </div>
     <div class="py-6 px-4 bg-zinc-300 dark:bg-white/5 md:flex md:items-center md:justify-between">

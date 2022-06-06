@@ -1,16 +1,25 @@
 <script setup lang="ts">
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import { Splide, SplideSlide } from '@splidejs/vue-splide'
 import { ClockIcon } from '@heroicons/vue/outline'
 import { useToast } from 'vue-toastification'
+import { FetchError } from 'ohmyfetch'
 import { useApi } from '~~/composables/useApi'
 import { useDayjs } from '~~/composables/useDayjs'
 import { ApiResponse } from '~~/@types/api'
-import { Movie, Cast, Session } from '~~/@types/movie'
+import { Movie, Cast } from '~~/@types/movie'
 import { useUserStore } from '~~/stores/user'
+import { MovieSession, SessionPlace } from '~~/@types/session'
+import { useCityStore } from '~~/stores/city'
+import { City } from '~~/@types/city'
+import '@splidejs/vue-splide/css'
+import { useLoaderStore } from '~~/stores/loader'
 
 const route = useRoute()
 const toast = useToast()
 const userStore = useUserStore()
+const cityStore = useCityStore()
+const loaderStore = useLoaderStore()
 
 const { data: movieData, error } = await useAsyncData<ApiResponse<Movie>>(`movie_${route.params.slug}`, () => useApi(`movie/${route.params.slug}`))
 
@@ -37,10 +46,45 @@ watch(similarMoviesData, (newValue) => {
   similarMovies.value = newValue.data
 })
 
-const sessions = ref<Session[]>([])
+const sessionPlaces = ref<SessionPlace[]>([])
 const openSessions = ref(false)
 const sessionsSection = ref<HTMLElement | null>(null)
 const sessionsPending = ref(false)
+const currentDay = ref<string>(useDayjs()().format('YYYY-MM-DD'))
+
+const getSessionPlaces = async (movieSlug: string, cityId: number, date: string) => {
+  sessionsPending.value = true
+  const { data: sessionPlacesData, error } = await useAsyncData<ApiResponse<SessionPlace[]>>(`movie_${movieSlug}_city_${cityId}_date_${date}_session_places`, () => useApi(`movie/${movieSlug}/sessions?city=${cityId}&date=${date}`))
+
+  if (error.value) {
+    const err: FetchError = error.value as FetchError
+    if (err.response.status !== 404) {
+      toast.error('Something went wrong')
+      Promise.reject(new Error('not found'))
+    }
+  } else {
+    sessionPlaces.value = sessionPlacesData.value.data
+  }
+
+  sessionsPending.value = false
+  Promise.resolve()
+}
+
+const sessionDays = computed(() => {
+  const days = []
+  const today = useDayjs()()
+
+  for (let i = 0; i < 7; i++) {
+    const day = today.add(i, 'day')
+    days.push({
+      date: day.format('YYYY-MM-DD'),
+      isToday: day.isSame(today, 'day'),
+      isTomorrow: day.isSame(today.add(1, 'day'), 'day')
+    })
+  }
+
+  return days
+})
 
 const onClickBuyTicket = async () => {
   if (!userStore.isAuthenticated) {
@@ -54,16 +98,14 @@ const onClickBuyTicket = async () => {
     return
   }
 
-  sessionsPending.value = true
-  const { data: sessionsData, error } = await useAsyncData<ApiResponse<Session[]>>(`movie_${route.params.slug}_sessions`, () => useApi(`movie/${route.params.slug}/sessions`))
-  if (error.value) {
-    toast.error('Something went wrong')
+  const selectedCity: City = cityStore.getSelectedCity
+  if (!selectedCity) {
+    toast.error('You must select a city first')
+    document.querySelector('#city-selector')?.scrollIntoView({ behavior: 'smooth' })
     return
   }
 
-  sessions.value = sessionsData.value.data
-
-  sessionsPending.value = false
+  await getSessionPlaces(route.params.slug as string, selectedCity.id, currentDay.value)
   openSessions.value = true
 
   nextTick(() => {
@@ -71,7 +113,16 @@ const onClickBuyTicket = async () => {
   })
 }
 
-const onSelectSession = (session: Session) => {
+const changeSessionsDay = async (day: string) => {
+  loaderStore.setLoading(true)
+
+  currentDay.value = day
+  await getSessionPlaces(route.params.slug as string, cityStore.getSelectedCity?.id, day)
+
+  loaderStore.setLoading(false)
+}
+
+const onSelectSession = (session: MovieSession) => {
   navigateTo({
     path: '/choose_seat',
     query: {
@@ -173,18 +224,65 @@ definePageMeta({
     <div
       v-if="openSessions"
       ref="sessionsSection"
-      class="w-full max-w-screen-xl mx-auto px-8 py-16"
+      class="w-full max-w-screen-xl mx-auto px-8 py-16 space-y-4"
     >
-      <h3 class="text-2xl font-medium mb-4 dark:text-white">Seanslar</h3>
+      <h3 class="text-xl font-bold p-6 text-cod-gray-800 dark:text-cod-gray-50 bg-white dark:bg-cod-gray-800 shadow">
+        <font-awesome-icon icon="film" />
+        Seanslar ve Salonlar
+      </h3>
 
-      <div class="flex flex-col space-y-1">
-        <div v-for="session in sessions" :key="session.id" class="flex-1 flex flex-row px-4 py-2 bg-cod-gray-100 dark:bg-cod-gray-800 rounded-lg">
-          <div class="flex-1 flex items-center text-cod-gray-900 dark:text-cod-gray-50">
-            {{ session.theather.name }} -- {{ useDayjs()(session.date).format('DD MMMM YYYY dddd') }} -- {{ session.name }}
+      <client-only>
+        <Splide
+          :options="{
+            perPage: 4,
+            perMove: 1,
+            pagination: false
+          }"
+          class="bg-white dark:bg-cod-gray-800"
+        >
+          <SplideSlide
+            v-for="day in sessionDays"
+            :key="day.date"
+            class="flex flex-col gap-2 items-center justify-center p-4 cursor-pointer hover:bg-cod-gray-100 hover:dark:bg-cod-gray-700"
+            :class="{ 'bg-cod-gray-100 dark:bg-cod-gray-700': day.date === currentDay }"
+            @click.prevent="changeSessionsDay(day.date)"
+          >
+            <span v-if="day.isToday" class="font-bold text-sm dark:text-cod-gray-100">Bugün</span>
+            <span v-if="day.isTomorrow" class="font-bold text-sm dark:text-cod-gray-100">Yarın</span>
+            <span class="font-bold dark:text-cod-gray-100">{{ useDayjs()(day.date).format('D MMMM dddd') }}</span>
+          </SplideSlide>
+        </Splide>
+      </client-only>
+
+      <div class="flex flex-col space-y-1 bg-white dark:bg-cod-gray-800 shadow divide-y-2 divide-cod-gray-50 dark:divide-cod-gray-700">
+        <div v-for="place in sessionPlaces" :key="place.id" class="flex flex-row gap-4 px-8 py-4">
+          <div class="flex min-w-[33%] items-center font-semibold text-cod-gray-700 dark:text-cod-gray-50">
+            {{ place.name }}
           </div>
-          <div>
-            <button class="px-4 py-2 border border-transparent text-base font-medium rounded-lg text-cod-gray-900 bg-ywllow hover:bg-yellow-300 focus:outline-none" @click.prevent="onSelectSession(session)">Seç</button>
+          <div class="flex-1 flex-col flex gap-4 text-cod-gray-900 dark:text-cod-gray-50 divide-y-2 divide-cod-gray-50 dark:divide-cod-gray-700">
+            <div
+              v-for="theather in place.theathers"
+              :key="theather.id"
+              class="flex pt-4 items-center"
+            >
+              <div class="flex-1 flex items-center underline">
+                {{ theather.name }}
+              </div>
+              <div class="flex gap-2">
+                <button
+                  v-for="session in theather.sessions"
+                  :key="session.id"
+                  class="p-2 border border-transparent text-sm font-medium rounded text-cod-gray-900 bg-ywllow hover:bg-yellow-300 focus:outline-none"
+                  @click.prevent="onSelectSession(session)"
+                >
+                  {{ session.name }}
+                </button>
+              </div>
+            </div>
           </div>
+        </div>
+        <div v-if="sessionPlaces.length === 0" class="flex justify-center p-4 bg-yellow-100 text-cod-gray-600">
+          Seans Bulunamadı
         </div>
       </div>
     </div>

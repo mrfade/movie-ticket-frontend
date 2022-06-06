@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { createError } from 'h3'
-import { useDateFormat } from '@vueuse/core'
 import { Ref } from 'vue'
 import { useApi } from '~~/composables/useApi'
 import { useCurrencyFormat } from '~~/composables/useCurrencyFormat'
@@ -32,13 +31,16 @@ if (error.value)
     })
   )
 
-// TODO: get price from session
-const basePrice = 31.00
 const session: Session = sessionData.value.data
 const seatPlan: SeatPlan = JSON.parse(session.theather.seatPlan)
 const selectedSeats: Ref<Seat[]> = ref<Seat[]>([])
 
+const basePrice = session.theather.prices.find(price => price.type === 1).price
 const sessionDate = computed(() => useDayjs()(session.date).format('DD MMMM YYYY dddd HH:mm'))
+
+// get selected seats from db
+if (paymentStore.getSession?.id === session.id)
+  selectedSeats.value = paymentStore.getSelectedSeats
 
 // set session
 paymentStore.setSession(session)
@@ -53,7 +55,12 @@ const isSelectedSeat = (id: number) => {
 
 const selectSeat = (id: number) => {
   if (selectedSeats.value.find(seat => seat.id === id)) {
+    // remove seat
     selectedSeats.value = selectedSeats.value.filter(seat => seat.id !== id)
+
+    // update selectedSeats
+    paymentStore.setSelectedSeats(selectedSeats.value)
+
     return
   }
 
@@ -61,17 +68,26 @@ const selectSeat = (id: number) => {
   if (!seat || seat.available === false)
     return
 
+  // default ticket price
+  seat.type = 1
   selectedSeats.value.push(seat)
 
   // update selectedSeats
   paymentStore.setSelectedSeats(selectedSeats.value)
 }
 
-const totalPriceText = computed(() => {
-  // TODO: get price from session
-  const price = selectedSeats.value.length * basePrice
-  return useCurrencyFormat(price)
-})
+const totalPriceText = computed(() => useCurrencyFormat(selectedSeats.value.length * basePrice))
+
+const priceTypeText = (type: number): string => {
+  switch (type) {
+    case 1:
+      return 'Tam'
+    case 2:
+      return 'Öğrenci'
+    default:
+      return 'Tam'
+  }
+}
 
 const seatPlanSeats = seatPlan.rows.map((row) => {
   return row.map((_seat) => {
@@ -103,7 +119,7 @@ definePageMeta({
           <h3 class="text-white text-2xl font-bold mb-4">{{ session.movie.title }}</h3>
           <div class="flex-1 space-y-1">
             <div class="text-white text-sm">
-              {{ session.theather.name }}
+              {{ session.theather.place.name }} - {{ session.theather.name }}
             </div>
             <div class="text-white text-sm">
               {{ sessionDate }}
@@ -117,9 +133,13 @@ definePageMeta({
           <div class="flex flex-col py-4 px-6 space-y-4">
             <div class="text-cod-gray-500 dark:text-cod-gray-200 uppercase text-xs font-bold">BİLET FİYATLARI</div>
             <div class="flex flex-row space-x-6">
-              <div class="flex flex-col justify-center items-center">
-                <div class="text-cod-gray-600 dark:text-cod-gray-100 font-bold">{{ useCurrencyFormat(basePrice) }}</div>
-                <div class="text-cod-gray-600 dark:text-cod-gray-300 text-xs px-2">Tam</div>
+              <div
+                v-for="price in session.theather.prices"
+                :key="price.id"
+                class="flex flex-col justify-center items-center"
+              >
+                <div class="text-cod-gray-600 dark:text-cod-gray-100 font-bold">{{ useCurrencyFormat(price.price) }}</div>
+                <div class="text-cod-gray-600 dark:text-cod-gray-300 text-xs px-2">{{ priceTypeText(price.type) }}</div>
               </div>
             </div>
           </div>
