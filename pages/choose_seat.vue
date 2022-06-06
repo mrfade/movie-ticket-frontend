@@ -112,23 +112,27 @@ definePageMeta({
 
 <template>
   <div class="w-full">
-    <div class="w-full h-36 flex justify-center bg-cod-gray-800">
-      <div class="container max-w-screen-xl px-8 h-36 flex justify-between items-center">
-        <img :src="`https://image.tmdb.org/t/p/w500/${session.movie.posterPath}`" alt="" class="w-20 aspect-[2/3] rounded-lg">
-        <div class="h-full p-8 flex-1 flex flex-col">
-          <h3 class="text-white text-2xl font-bold mb-4">{{ session.movie.title }}</h3>
-          <div class="flex-1 space-y-1">
-            <div class="text-white text-sm">
-              {{ session.theather.place.name }} - {{ session.theather.name }}
-            </div>
-            <div class="text-white text-sm">
-              {{ sessionDate }}
+    <div class="w-full h-auto lg:h-36 flex justify-center bg-cod-gray-800">
+      <div class="container max-w-screen-xl box-border px-8 py-4 h-full flex flex-col lg:flex-row justify-between items-center">
+        <div class="w-full h-28 lg:w-auto flex flex-row justify-center">
+          <img :src="`https://image.tmdb.org/t/p/w500/${session.movie.posterPath}`" alt="" class="h-28 aspect-[2/3] rounded-lg">
+          <div class="pl-4 lg:pl-8 flex flex-col justify-center">
+            <h3 class="text-white text-2xl font-bold mb-2 lg:mb-4">{{ session.movie.title }}</h3>
+            <div class="space-y-1">
+              <div class="text-white text-sm">
+                {{ session.theather.place.name }} - {{ session.theather.name }}
+              </div>
+              <div class="text-white text-sm">
+                {{ sessionDate }}
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- info card -->
         <div
-          class="flex flex-col w-80 bg-white dark:bg-cod-gray-900 divide-y divide-cod-gray-100 dark:divide-cod-gray-500 rounded-lg shadow-lg z-10"
-          :class="selectedSeats.length > 0 ? 'mt-48' : 'mt-24'"
+          class="flex flex-col w-full lg:w-80 mt-4 bg-white dark:bg-cod-gray-900 divide-y divide-cod-gray-100 dark:divide-cod-gray-500 rounded-lg shadow-lg z-10"
+          :class="selectedSeats.length > 0 ? 'lg:mt-48' : 'lg:mt-24'"
         >
           <div class="flex flex-col py-4 px-6 space-y-4">
             <div class="text-cod-gray-500 dark:text-cod-gray-200 uppercase text-xs font-bold">BİLET FİYATLARI</div>
@@ -193,7 +197,7 @@ definePageMeta({
       </div>
 
       <!-- seats grid -->
-      <div class="grid grid-flow-row space-y-2 overflow-x-auto">
+      <div class="grid grid-flow-row space-y-2 max-w-full overflow-x-auto">
         <div v-for="(row, ri) in seatPlanSeats" :key="`row-${ri}`" class="grid grid-flow-col space-x-2">
           <!-- eslint-disable-next-line vue/no-v-for-template-key -->
           <template v-for="(seat, si) in row" :key="`seat-${ri}-${si}`">

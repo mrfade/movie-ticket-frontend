@@ -168,8 +168,13 @@ definePageMeta({
             <h3 class="text-white text-4xl font-bold">{{ movie.title }}</h3>
             <span class="text-white text-sm font-light">{{ movie.originalTitle }}</span>
           </div>
-          <div class="text-white text-xs font-light mb-8 px-4 py-2 rounded bg-black bg-opacity-40">
-            {{ useDayjs()(movie.releaseDate).format('D MMMM YYYY dddd') }}
+          <div class="flex flex-row gap-4 mb-8">
+            <div class="text-white text-xs font-light px-4 py-2 rounded bg-black bg-opacity-40">
+              {{ useDayjs()(movie.releaseDate).format('D MMMM YYYY dddd') }}
+            </div>
+            <div v-if="movie.nowPlaying" class="text-white text-xs px-4 py-2 rounded-full bg-green-600">
+              Gösterimde
+            </div>
           </div>
           <div class="flex-1 items-end space-y-2">
             <div v-if="movie.director" class="text-white text-sm">
@@ -245,7 +250,7 @@ definePageMeta({
       ref="sessionsSection"
       class="w-full max-w-screen-xl mx-auto px-8 py-16 space-y-4"
     >
-      <h3 class="text-xl font-bold p-6 text-cod-gray-800 dark:text-cod-gray-50 bg-white dark:bg-cod-gray-800 shadow">
+      <h3 class="text-xl font-bold p-6 text-cod-gray-800 dark:text-cod-gray-50 bg-white dark:bg-cod-gray-850 shadow">
         <font-awesome-icon icon="film" />
         Seanslar ve Salonlar
       </h3>
@@ -257,13 +262,13 @@ definePageMeta({
             perMove: 1,
             pagination: false
           }"
-          class="bg-white dark:bg-cod-gray-800"
+          class="bg-white dark:bg-cod-gray-850"
         >
           <SplideSlide
             v-for="day in sessionDays"
             :key="day.date"
-            class="flex flex-col gap-2 items-center justify-center p-4 cursor-pointer hover:bg-cod-gray-100 hover:dark:bg-cod-gray-700"
-            :class="{ 'bg-cod-gray-100 dark:bg-cod-gray-700': day.date === currentDay }"
+            class="flex flex-col gap-2 items-center justify-center p-4 cursor-pointer hover:bg-cod-gray-100 hover:dark:bg-cod-gray-800"
+            :class="{ 'bg-cod-gray-100 dark:bg-cod-gray-800': day.date === currentDay }"
             @click.prevent="changeSessionsDay(day.date)"
           >
             <span v-if="day.isToday" class="font-bold text-sm dark:text-cod-gray-100">Bugün</span>
@@ -273,12 +278,12 @@ definePageMeta({
         </Splide>
       </client-only>
 
-      <div class="flex flex-col space-y-1 bg-white dark:bg-cod-gray-800 shadow divide-y-2 divide-cod-gray-50 dark:divide-cod-gray-700">
+      <div class="flex flex-col space-y-1 bg-white dark:bg-cod-gray-850 shadow divide-y-2 divide-cod-gray-50 dark:divide-cod-gray-900">
         <div v-for="place in sessionPlaces" :key="place.id" class="flex flex-row gap-4 px-8 py-4">
           <div class="flex min-w-[33%] items-center font-semibold text-cod-gray-700 dark:text-cod-gray-50">
             {{ place.name }}
           </div>
-          <div class="flex-1 flex-col flex gap-4 text-cod-gray-900 dark:text-cod-gray-50 divide-y-2 divide-cod-gray-50 dark:divide-cod-gray-700">
+          <div class="flex-1 flex-col flex gap-4 text-cod-gray-900 dark:text-cod-gray-50 divide-y-2 divide-cod-gray-50 dark:divide-cod-gray-900">
             <div
               v-for="theather in place.theathers"
               :key="theather.id"
