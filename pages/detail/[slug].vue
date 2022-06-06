@@ -237,9 +237,11 @@ definePageMeta({
             </div>
           </TabPanel>
           <TabPanel v-if="movie.trailerUrl" class="tab-panel">
-            <vue-plyr>
-              <div data-plyr-provider="youtube" :data-plyr-embed-id="movie.trailerUrl"></div>
-            </vue-plyr>
+            <client-only>
+              <vue-plyr>
+                <div data-plyr-provider="youtube" :data-plyr-embed-id="movie.trailerUrl"></div>
+              </vue-plyr>
+            </client-only>
           </TabPanel>
         </TabPanels>
       </TabGroup>
