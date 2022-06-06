@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useToast } from 'vue-toastification'
 import { RouteLocationRaw } from 'vue-router'
+import { FetchError } from 'ohmyfetch'
 import { useApi } from '@/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
 import { useUserStore } from '~~/stores/user'
@@ -17,9 +18,10 @@ const login = async () => {
   const emailValue = email.value
   const passwordValue = password.value
 
-  if (!emailValue || !passwordValue)
-    // TODO: add notification
+  if (!emailValue || !passwordValue) {
+    toast.error('Please fill all fields')
     return
+  }
 
   loaderStore.setLoading(true)
 
@@ -29,26 +31,27 @@ const login = async () => {
     password: passwordValue
   }
 
-  const { data, error } = await useApi('/auth', {
+  const { data } = await useApi('/auth', {
     method: 'POST',
     body: JSON.stringify(user)
-  }).catch((err) => {
+  }).catch((error) => {
     // eslint-disable-next-line no-console
-    console.log('catch', err)
-    toast.error('Beklenmeyen bir hata oluştu')
+    console.log('catch', error)
+
+    const err: FetchError = error as FetchError
+
+    if (err.response.status === 400)
+      toast.error('Invalid email or password')
+    else
+      toast.error('Something went wrong')
   }).finally(() => {
     loaderStore.setLoading(false)
   })
 
-  if (error) {
-    // eslint-disable-next-line no-console
-    console.log('error', error)
+  if (!data.token) {
+    toast.error('Login failed')
     return
   }
-
-  if (!data.token)
-    // TODO: add notification
-    return
 
   await userStore.loginWithToken(data.token)
   if (!userStore.isAuthenticated) {

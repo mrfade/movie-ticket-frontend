@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useToast } from 'vue-toastification'
+import { FetchError } from 'ohmyfetch'
 import { useApi } from '@/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
 import { useUserStore } from '~~/stores/user'
@@ -18,9 +19,10 @@ const register = async () => {
   const emailValue = email.value
   const passwordValue = password.value
 
-  if (!nameValue || !emailValue || !passwordValue)
-    // TODO: add notification
+  if (!nameValue || !emailValue || !passwordValue) {
+    toast.error('Please fill all fields')
     return
+  }
 
   loaderStore.setLoading(true)
 
@@ -31,26 +33,27 @@ const register = async () => {
     password: passwordValue
   }
 
-  const { data, error } = await useApi('/auth/register', {
+  const { data } = await useApi('/auth/register', {
     method: 'POST',
     body: JSON.stringify(user)
-  }).catch((err) => {
+  }).catch((error) => {
     // eslint-disable-next-line no-console
-    console.log('catch', err)
-    toast.error('Beklenmeyen bir hata oluştu')
+    console.log('catch', error)
+
+    const err: FetchError = error as FetchError
+
+    if (err.response.status === 400)
+      toast.error('Fields are required')
+    else
+      toast.error('Something went wrong')
   }).finally(() => {
     loaderStore.setLoading(false)
   })
 
-  if (error) {
-    // eslint-disable-next-line no-console
-    console.log('error', error)
+  if (!data.token) {
+    toast.error('Register failed')
     return
   }
-
-  if (!data.token)
-    // TODO: add notification
-    return
 
   await userStore.loginWithToken(data.token)
   if (!userStore.isAuthenticated) {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import shuffle from 'lodash.shuffle'
 import { onClickOutside } from '@vueuse/core'
+import { Ref } from 'vue'
 import { useApi } from '~~/composables/useApi'
 import { ApiResponse } from '~~/@types/api'
 import { Movie } from '~~/@types/movie'
@@ -19,15 +20,18 @@ onClickOutside(searchContainer, () => {
   searchFocus.value = false
 })
 
-const { data } = await useAsyncData<ApiResponse<Movie[]>>('movies', () => useApi('movie'), {
+const movies: Ref<Movie[]> = ref<Movie[]>([])
+const first6Movies: Ref<Movie[]> = ref<Movie[]>([])
+const { data: moviesData, pending: moviesPending } = await useLazyAsyncData<ApiResponse<Movie[]>>('movies', () => useApi('movie'), {
   transform: (response) => {
     response.data = shuffle(response.data)
     return response
   }
 })
-
-const movies: Movie[] = data.value.data
-const first6Movies: Movie[] = movies.slice(0, 6)
+if (moviesData.value) {
+  movies.value = moviesData.value.data
+  first6Movies.value = movies.value.slice(0, 6)
+}
 
 watch(search, async (newValue) => {
   if (newValue.length < 3) return
@@ -94,6 +98,10 @@ definePageMeta({
         :key="smovie.id"
         :movie="smovie"
       />
+
+      <template v-if="moviesPending">
+        <MovieSkeleton v-for="i in [...Array(5).keys()]" :key="`sf-${i}`" />
+      </template>
     </MovieShelf>
   </div>
 </template>

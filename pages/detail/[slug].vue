@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { createError } from 'h3'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import { Splide, SplideSlide } from '@splidejs/vue-splide'
 import { ClockIcon } from '@heroicons/vue/outline'
@@ -23,8 +24,24 @@ const loaderStore = useLoaderStore()
 
 const { data: movieData, error } = await useAsyncData<ApiResponse<Movie>>(`movie_${route.params.slug}`, () => useApi(`movie/${route.params.slug}`))
 
-if (error.value)
-  throwError('not found')
+if (error.value) {
+  const err: FetchError = error.value as FetchError
+
+  if (err.response.status === 404)
+    throwError(
+      createError({
+        statusCode: 404,
+        statusMessage: 'Not Found'
+      })
+    )
+
+  throwError(
+    createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error'
+    })
+  )
+}
 
 const movie: Movie = movieData.value.data
 
@@ -298,12 +315,9 @@ definePageMeta({
         :movie="smovie"
       />
 
-      <MovieSkeleton v-if="similarMoviesPending" />
-      <MovieSkeleton v-if="similarMoviesPending" />
-      <MovieSkeleton v-if="similarMoviesPending" />
-      <MovieSkeleton v-if="similarMoviesPending" />
-      <MovieSkeleton v-if="similarMoviesPending" />
-      <MovieSkeleton v-if="similarMoviesPending" />
+      <template v-if="similarMoviesPending">
+        <MovieSkeleton v-for="i in [...Array(5).keys()]" :key="`sf-${i}`" />
+      </template>
     </MovieShelf>
   </div>
 </template>

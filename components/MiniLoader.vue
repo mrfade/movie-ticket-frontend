@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  variant: 'light' | 'dark'
+  variant?: 'light' | 'dark'
 }>()
 
 const variantColor = computed(() => {
