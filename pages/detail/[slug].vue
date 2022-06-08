@@ -325,7 +325,7 @@ definePageMeta({
       />
 
       <template v-if="similarMoviesPending">
-        <MovieSkeleton v-for="i in [...Array(5).keys()]" :key="`sf-${i}`" />
+        <MovieSkeleton v-for="i in [...Array(6).keys()]" :key="`sf-${i}`" />
       </template>
     </MovieShelf>
   </div>

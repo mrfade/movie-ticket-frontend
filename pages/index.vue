@@ -28,10 +28,15 @@ const { data: moviesData, pending: moviesPending } = useLazyAsyncData<ApiRespons
     return response
   }
 })
-if (moviesData.value) {
-  movies.value = moviesData.value.data
+const setMovies = (_movies) => {
+  movies.value = _movies
   first6Movies.value = movies.value.slice(0, 6)
 }
+
+if (moviesData.value)
+  setMovies(moviesData.value.data)
+
+watch(moviesData, newValue => setMovies(newValue.data))
 
 watch(search, async (newValue) => {
   if (newValue.length < 3) return
@@ -100,7 +105,7 @@ definePageMeta({
       />
 
       <template v-if="moviesPending">
-        <MovieSkeleton v-for="i in [...Array(5).keys()]" :key="`sf-${i}`" />
+        <MovieSkeleton v-for="i in [...Array(6).keys()]" :key="`sf-${i}`" />
       </template>
     </MovieShelf>
   </div>
