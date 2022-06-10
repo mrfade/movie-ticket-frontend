@@ -11,7 +11,7 @@ a {
 }
 
 input.input {
-  @apply appearance-none rounded-lg relative block w-full px-3 py-2 dark:bg-cod-gray-800 border-2 border-cod-gray-100 dark:border-cod-gray-600 placeholder-cod-gray-500 dark:placeholder-cod-gray-300 text-cod-gray-800 dark:text-cod-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm;
+  @apply appearance-none rounded-lg relative block w-full px-3 py-2 dark:bg-cod-gray-800 border-2 border-cod-gray-100 dark:border-cod-gray-600 placeholder-cod-gray-500 dark:placeholder-cod-gray-300 text-cod-gray-800 dark:text-cod-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:focus:ring-indigo-500 dark:focus:border-indigo-500;
 }
 
 button.button {
@@ -19,5 +19,5 @@ button.button {
 }
 
 select.select {
-  @apply bg-cod-gray-50 border-2 border-cod-gray-300 text-cod-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-auto p-2.5 dark:bg-cod-gray-800 dark:border-cod-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+  @apply border-2 dark:bg-cod-gray-800 border-cod-gray-100 dark:border-cod-gray-600 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-auto py-2 px-4 dark:placeholder-cod-gray-300 dark:text-cod-gray-100 dark:focus:ring-indigo-500 dark:focus:border-indigo-500;
 }
