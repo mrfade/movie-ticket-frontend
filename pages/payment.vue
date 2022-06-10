@@ -21,7 +21,7 @@ if (!paymentStore.getSession) {
 
 const cardName: Ref<string> = ref<string>('')
 const cardNumber: Ref<string> = ref<string>('')
-const cardMonth: Ref<number> = ref<number>(useDayjs()().month())
+const cardMonth: Ref<number> = ref<number>(useDayjs()().month() + 1)
 const cardYear: Ref<number> = ref<number>(useDayjs()().year())
 const cardCvc: Ref<number> = ref<number>(null)
 
@@ -127,7 +127,7 @@ definePageMeta({
                   <label class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Koltuk {{ idx + 1 }} ({{ seat.name }})</label>
                   <select
                     v-model="seat.type"
-                    class="flex-1 bg-gray-50 border-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="flex-1 select"
                   >
                     <option
                       v-for="price in session.theather.prices"
@@ -153,6 +153,7 @@ definePageMeta({
                   <label for="cardName" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Kart Üzerindeki İsim</label>
                   <input
                     id="cardName"
+                    v-model="cardName"
                     type="text"
                     class="input"
                   />
@@ -162,6 +163,7 @@ definePageMeta({
                   <label for="cardNumber" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Kart Numarası</label>
                   <input
                     id="cardNumber"
+                    v-model="cardNumber"
                     type="text"
                     class="input"
                   />
@@ -170,18 +172,43 @@ definePageMeta({
 
               <div class="grid grid-flow-col grid-cols-4 w-full space-x-4">
                 <div class="flex flex-col gap-1 col-span-3">
-                  <label for="cardExp" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Son Kullanma Tarihi</label>
-                  <input
-                    id="cardExp"
-                    type="text"
-                    class="input"
-                  />
+                  <label for="cardMonth" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Son Kullanma Tarihi</label>
+                  <div class="flex flex-row gap-2">
+                    <select
+                      id="cardMonth"
+                      v-model="cardMonth"
+                      class="select flex-1"
+                    >
+                      <option
+                        v-for="month in [...Array(12).keys()].map(m => m + 1)"
+                        :key="month"
+                        :value="month"
+                      >
+                        {{ month }}
+                      </option>
+                    </select>
+
+                    <select
+                      id="cardYear"
+                      v-model="cardYear"
+                      class="select flex-1"
+                    >
+                      <option
+                        v-for="year in [...Array(20).keys()].map(y => y + (new Date().getFullYear()))"
+                        :key="year"
+                        :value="year"
+                      >
+                        {{ year }}
+                      </option>
+                    </select>
+                  </div>
                 </div>
 
                 <div class="flex flex-col gap-1 col-span-1">
                   <label for="cardCVC" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Güvenlik Kodu</label>
                   <input
                     id="cardCVC"
+                    v-model="cardCvc"
                     type="text"
                     class="input"
                   />
