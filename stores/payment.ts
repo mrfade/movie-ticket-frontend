@@ -43,6 +43,9 @@ export const usePaymentStore = defineStore('payment', {
         throw new Error('Unexpected error')
       })
 
+      // empty the selected seats
+      this.setSelectedSeats([])
+
       this.setLastTicket(data.data)
       return Promise.resolve(data.data)
     }
