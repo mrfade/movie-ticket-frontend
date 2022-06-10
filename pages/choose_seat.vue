@@ -204,10 +204,10 @@ definePageMeta({
             <!-- seat -->
             <div
               v-if="seat.type == 'seat'"
-              class="w-10 h-10 text-sm lg:w-12 lg:text-base lg:h-12 flex justify-center items-center cursor-pointer font-medium text-cod-gray-800 dark:text-cod-gray-200 rounded-lg"
+              class="w-10 h-10 text-sm lg:w-12 lg:text-base lg:h-12 flex justify-center items-center cursor-pointer font-medium rounded-lg"
               :class="[
                 isSelectedSeat(seat.id) ? 'bg-ywllow text-cod-gray-900 border-ywllow dark:text-cod-gray-900 dark:border-ywllow' : 'border-cod-gray-200 dark:border-cod-gray-400',
-                !seat.seat.available ? 'bg-cod-gray-600 text-cod-gray-200' : 'border-2 hover:text-cod-gray-900 hover:dark:text-cod-gray-900 hover:bg-ywllow hover:border-ywllow hover:dark:border-ywllow'
+                !seat.seat.available ? 'bg-cod-gray-600 text-cod-gray-200' : 'border-2 text-cod-gray-800 dark:text-cod-gray-200 hover:text-cod-gray-900 hover:dark:text-cod-gray-900 hover:bg-ywllow hover:border-ywllow hover:dark:border-ywllow'
               ]"
               @click="selectSeat(seat.id)"
             >
