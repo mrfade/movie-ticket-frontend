@@ -31,7 +31,7 @@ const login = async () => {
     password: passwordValue
   }
 
-  const { data } = await useApi('/auth', {
+  const { data } = await useApi('/auth/login', {
     method: 'POST',
     body: JSON.stringify(user)
   }).catch((error) => {
