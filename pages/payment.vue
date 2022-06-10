@@ -8,6 +8,7 @@ import { usePaymentStore } from '~~/stores/payment'
 import { useLoaderStore } from '~~/stores/loader'
 import { Seat } from '~~/@types/theather'
 import { Session } from '~~/@types/movie'
+import { Ticket } from '~~/@types/ticket'
 
 const toast = useToast()
 const paymentStore = usePaymentStore()
