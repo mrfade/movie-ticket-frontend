@@ -69,7 +69,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async getMe (): Promise<void | Boolean> {
-      const data = await useApi<ApiResponse<User>>('/auth/me').catch(() => {
+      const data = await useApi<ApiResponse<User>>('/me').catch(() => {
         this.clear()
         return false
       })

@@ -32,7 +32,7 @@ export const usePaymentStore = defineStore('payment', {
       this.lastTicket = ticket
     },
 
-    async makePayment (sessionId: number, paymentData: any): Promise<Ticket | boolean> {
+    async makePayment (sessionId: number, paymentData: any): Promise<Ticket> {
       const data = await useApi<ApiResponse<Ticket>>(`/session/${sessionId}/buy`, {
         method: 'POST',
         body: paymentData
@@ -40,11 +40,8 @@ export const usePaymentStore = defineStore('payment', {
         if (error.response.status === 400)
           throw new Error(error.response._data.message)
 
-        return false
+        throw new Error('Unexpected error')
       })
-
-      if (!data)
-        return Promise.resolve(false)
 
       this.setLastTicket(data.data)
       return Promise.resolve(data.data)
