@@ -5,16 +5,24 @@ import { Ref } from 'vue'
 import { useDayjs } from '~~/composables/useDayjs'
 import { useCurrencyFormat } from '~~/composables/useCurrencyFormat'
 import { usePaymentStore } from '~~/stores/payment'
+import { useLoaderStore } from '~~/stores/loader'
 import { Seat } from '~~/@types/theather'
 import { Session } from '~~/@types/movie'
 
 const toast = useToast()
 const paymentStore = usePaymentStore()
+const loaderStore = useLoaderStore()
 
 if (!paymentStore.getSession) {
   toast.error('Session not found')
   navigateTo('/')
 }
+
+const cardName: Ref<string> = ref<string>('')
+const cardNumber: Ref<string> = ref<string>('')
+const cardMonth: Ref<number> = ref<number>(useDayjs()().month())
+const cardYear: Ref<number> = ref<number>(useDayjs()().year())
+const cardCvc: Ref<number> = ref<number>(null)
 
 const session: Session = paymentStore.getSession
 const selectedSeats: Ref<Seat[]> = ref<Seat[]>([])
@@ -34,6 +42,61 @@ const totalServiceFee = computed(() => selectedSeats.value.length * serviceFee)
 const totalTicketPriceText = computed(() => useCurrencyFormat(totalTicketPrice.value))
 const totalServiceFeeText = computed(() => useCurrencyFormat(totalServiceFee.value))
 const totalPriceText = computed(() => useCurrencyFormat(totalTicketPrice.value + totalServiceFee.value))
+
+const paymentData = computed(() => {
+  return {
+    seats: selectedSeats.value,
+    cardName: cardName.value,
+    cardNumber: cardNumber.value,
+    cardMonth: cardMonth.value,
+    cardYear: cardYear.value,
+    cardCvc: cardCvc.value
+  }
+})
+
+const makePayment = async () => {
+  if (!selectedSeats.value.length) {
+    toast.error('Please select at least one seat')
+    return
+  }
+
+  if (!cardName.value) {
+    toast.error('Please enter card name')
+    return
+  }
+
+  if (!cardNumber.value) {
+    toast.error('Please enter card number')
+    return
+  }
+
+  if (!cardCvc.value) {
+    toast.error('Please enter card cvc')
+    return
+  }
+
+  if (!cardMonth.value) {
+    toast.error('Please enter card month')
+    return
+  }
+
+  if (!cardYear.value) {
+    toast.error('Please enter card year')
+    return
+  }
+
+  loaderStore.setLoading(true)
+  const ticket: Ticket = await paymentStore.makePayment(session.id, paymentData.value).catch((error: Error) => {
+    toast.error(error.message)
+  }).finally(() => {
+    loaderStore.setLoading(false)
+  })
+
+  if (ticket) {
+    toast.success('Payment successful')
+    navigateTo('/profile/tickets')
+  }
+}
 
 definePageMeta({
   middleware: ['auth'],
@@ -164,7 +227,10 @@ definePageMeta({
               </div>
 
               <div class="flex flex-col pt-4 items-center justify-center">
-                <button class="w-full bg-ywllow text-cod-gray-800 tracking-wider font-bold py-4 px-4 rounded-lg">
+                <button
+                  class="w-full bg-ywllow text-cod-gray-800 tracking-wider font-bold py-4 px-4 rounded-lg"
+                  @click.prevent="makePayment"
+                >
                   ÖDEME YAP ({{ totalPriceText }})
                 </button>
               </div>
@@ -172,6 +238,10 @@ definePageMeta({
 
             <div class="flex justify-center mt-4">
               <nuxt-link :to="`/choose_seat?sessionId=${session.id}`" class="underline text-cod-gray-400">Geri Dön</nuxt-link>
+            </div>
+
+            <div class="flex mt-4">
+              <pre>{{ paymentData }}</pre>
             </div>
           </div>
         </div>
