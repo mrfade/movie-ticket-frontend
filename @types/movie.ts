@@ -5,6 +5,7 @@ export interface MovieSimple {
   title: string;
   posterPath: string;
   slug: string;
+  backdropPath?: string;
 }
 
 export interface Session {
