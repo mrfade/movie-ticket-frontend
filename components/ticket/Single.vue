@@ -37,7 +37,7 @@ defineProps<{
           <div class="flex flex-row space-x-4 divide-x-2 divide-cod-gray-800">
             <div class="flex flex-col gap-2">
               <font-awesome-icon icon="calendar" class="text-xl text-cod-gray-400" />
-              <span class="text-sm font-medium text-white">{{ useDayjs()(ticket.session.date).format('MM:DD') }}</span>
+              <span class="text-sm font-medium text-white">{{ useDayjs()(ticket.session.date).format('DD.MM') }}</span>
             </div>
 
             <div class="flex flex-col gap-2 pl-4">
