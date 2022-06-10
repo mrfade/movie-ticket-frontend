@@ -60,7 +60,12 @@ defineProps({
           >
             <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-cod-gray-900 ring-1 ring-black ring-opacity-5 focus:outline-none">
               <MenuItem v-slot="{ active }">
-                <a href="#" :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']">Profilim</a>
+                <nuxt-link
+                  to="/profile"
+                  :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']"
+                >
+                  Profilim
+                </nuxt-link>
               </MenuItem>
               <MenuItem v-slot="{ active }">
                 <a href="#" :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']">Ayarlar</a>
