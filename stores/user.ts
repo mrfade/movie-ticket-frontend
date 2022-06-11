@@ -87,6 +87,24 @@ export const useUserStore = defineStore('user', {
       setAccessToken(this.getToken)
     },
 
+    async updateUser (user: User): Promise<boolean> {
+      const data = await useApi<ApiResponse<User>>('/me/details', {
+        method: 'PUT',
+        body: user
+      }).catch(() => {
+        return false
+      })
+
+      if (!data)
+        return Promise.resolve(false)
+
+      const updatedUser: User = data.data
+      this.setName(updatedUser.name)
+      this.setEmail(updatedUser.email)
+
+      return Promise.resolve(true)
+    },
+
     loginWithToken (token: string) {
       this.setToken(token)
       return this.getMe()
