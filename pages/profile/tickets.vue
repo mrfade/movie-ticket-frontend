@@ -1,13 +1,47 @@
 <script setup lang="ts">
 import { FetchError } from 'ohmyfetch'
-import { useApi } from '~~/composables/useApi'
-import { ApiResponse } from '~~/@types/api'
+import { Ref } from 'vue'
+import { apiOptions } from '~~/composables/useApi'
+import { useLoaderStore } from '~~/stores/loader'
+import { ApiResponsePaged } from '~~/@types/api'
 import { Ticket } from '~~/@types/ticket'
 
-const { data: tickets } = await useApi<ApiResponse<Ticket[]>>('/me/tickets')
-  .catch((error: FetchError) => {
-    console.log(error)
+const loaderStore = useLoaderStore()
+const tickets: Ref<Ticket[]> = ref<Ticket[]>([])
+
+const pageNumber: Ref<number> = ref<number>(0)
+const totalPages: Ref<number> = ref<number>(0)
+const loading: Ref<boolean> = ref<boolean>(false)
+
+const fetchTickets = async (page: number): Promise<boolean> => {
+  loading.value = true
+  const { data } = await useFetch<ApiResponsePaged<Ticket[]>>('/me/tickets', {
+    ...apiOptions(),
+    params: {
+      pageNumber: page
+    }
   })
+    .catch((error: FetchError) => {
+      return Promise.reject(error)
+    })
+
+  loading.value = false
+
+  if (data) {
+    tickets.value = data.value.data as Ticket[]
+
+    pageNumber.value = data.value.pageNumber
+    totalPages.value = data.value.totalPages
+  }
+
+  return Promise.resolve(true)
+}
+
+watch(loading, (value: boolean) => {
+  loaderStore.setLoading(value)
+})
+
+await fetchTickets(1)
 </script>
 
 <template>
@@ -20,6 +54,14 @@ const { data: tickets } = await useApi<ApiResponse<Ticket[]>>('/me/tickets')
           v-for="ticket in tickets"
           :key="ticket.id"
           :ticket="ticket"
+        />
+      </div>
+
+      <div class="flex justify-center mt-8">
+        <pagination
+          :page-number="pageNumber"
+          :total-pages="totalPages"
+          @page="fetchTickets"
         />
       </div>
     </div>
