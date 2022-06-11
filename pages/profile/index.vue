@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toastification'
 import { useUserStore } from '~~/stores/user'
 
+const { t } = useI18n()
 const userStore = useUserStore()
 const toast = useToast()
 
@@ -12,7 +14,7 @@ const password: Ref<string> = ref<string>('')
 
 const updateUser = async () => {
   if (!name.value || !email.value) {
-    toast.error('Lütfen isim ve email adresinizi giriniz.')
+    toast.error(t('errors.profile.emptyFields'))
     return
   }
 
@@ -24,9 +26,9 @@ const updateUser = async () => {
   })
 
   if (update)
-    toast.success('Kullanıcı bilgileri güncellendi.')
+    toast.success(t('profile.updated'))
   else
-    toast.error('Kullanıcı bilgileri güncellenemedi.')
+    toast.error(t('profile.updateFailed'))
 }
 </script>
 
@@ -44,11 +46,11 @@ const updateUser = async () => {
 
       <div class="flex flex-col gap-4">
         <h3 class="text-cod-gray-800 dark:text-cod-gray-200 font-bold">
-          Düzenle
+          {{ $t('edit') }}
         </h3>
 
         <div class="flex flex-col gap-1">
-          <label for="name" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">İsim Soyisim</label>
+          <label for="name" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('name_surname') }}</label>
           <input
             id="name"
             v-model="name"
@@ -58,7 +60,7 @@ const updateUser = async () => {
         </div>
 
         <div class="flex flex-col gap-1">
-          <label for="email" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">E-mail</label>
+          <label for="email" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('email') }}</label>
           <input
             id="email"
             v-model="email"
@@ -68,7 +70,7 @@ const updateUser = async () => {
         </div>
 
         <div class="flex flex-col gap-1">
-          <label for="password" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Şifre</label>
+          <label for="password" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('password') }}</label>
           <input
             id="password"
             v-model="password"
@@ -89,7 +91,7 @@ const updateUser = async () => {
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
           @click.prevent="updateUser"
         >
-          Güncelle
+          {{ $t('update') }}
         </button>
       </div>
     </div>

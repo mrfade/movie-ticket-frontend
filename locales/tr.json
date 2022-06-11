@@ -1,4 +1,108 @@
 {
   "search": "Ara",
-  "search ticket": "Bilet Ara"
+  "search ticket": "Bilet Ara",
+
+  "_login": "Giriş Yap",
+  "logout": "Çıkış Yap",
+  "_register": "Kayıt Ol",
+
+  "home": "Ana Sayfa",
+  "_profile": "Profil",
+  "tickets": "Biletler",
+
+  "movies in theatres": "Vizyondaki Filmler",
+
+  "name_surname": "Ad Soyad",
+  "email": "Email",
+  "password": "Şifre",
+
+  "edit": "Düzenle",
+  "update": "Güncelle",
+  "go back": "Geri Dön",
+
+  "nowPlaying": "Gösterimde",
+  "director": "Yönetmen",
+  "actors": "Oyuncular",
+  "minutes": "Dakika",
+  "buyTicket": "Bilet Al",
+  "description": "Açıklama",
+  "movieCast": "Film Kadrosu",
+  "trailer": "Fragman",
+  "sessionsAndTheatres": "Seanslar ve Salonlar",
+  "today": "Bugün",
+  "tomorrow": "Yarın",
+  "similarMovies": "Benzer Filmler",
+
+  "_seat": "Koltuk",
+  "seat": {
+    "selected": "Seçili",
+    "notAvailable": "Dolu",
+    "available": "Boş"
+  },
+
+  "login": {
+    "success": "Giriş Başarılı"
+  },
+
+  "register": {
+    "success": "Kayıt Başarılı"
+  },
+
+  "payment": {
+    "success": "Ödeme Başarılı",
+    "seatDetails": "Koltuk Detayları",
+    "cardDetails": "Kart Detayları",
+    "cardName": "Kart Üzerindeki İsim",
+    "cardNumber": "Kart Numarası",
+    "cardExpiration": "Son Kullanma Tarihi",
+    "cardCvc": "Güvenlik Kodu",
+    "ticketPricesU": "BİLET FİYATLARI",
+    "ticketPrice": "Bilet Fiyatı",
+    "serviceFee": "Hizmet Ücreti",
+    "total": "Toplam",
+    "payU": "ÖDEME YAP",
+    "selectedSeats": "Seçili Koltuklar",
+    "selectSeatU": "KOLTUK SEÇİNİZ",
+    "stageU": "SAHNE"
+  },
+
+  "profile": {
+    "updated": "Profil Güncellendi",
+    "myTicketsU": "BİLETLERİM"
+  },
+
+  "ticket": {
+    "theather": "Salon",
+    "seatsU": "KOLTUKLAR"
+  },
+
+  "errors": {
+    "sww": "Beklenmeyen bir hata oluştu",
+    "allFieldsRequired": "Tüm alanlar zorunludur",
+    "login": {
+      "invalidCredentials": "Geçersiz Kullanıcı Adı veya Şifre",
+      "failed": "Giriş Başarısız"
+    },
+    "register": {
+      "failed": "Kayıt Başarısız"
+    },
+    "session": {
+      "notFound": "Seans Bulunamadı",
+      "noSession": "Hiç Seans Bulunamadı"
+    },
+    "payment": {
+      "pleaseSelectSeats": "Lütfen en az 1 koltuk seçiniz",
+      "pleaseEnterCardName": "Lütfen kartın üzerindeki ismini giriniz",
+      "pleaseEnterCardNumber": "Lütfen kart numarasını giriniz",
+      "pleaseEnterCardMonth": "Lütfen kartın son kullanma ayını giriniz",
+      "pleaseEnterCardYear": "Lütfen kartın son kullanma yılını giriniz",
+      "pleaseEnterCardCvc": "Lütfen kartın güvenlik kodunu giriniz",
+      "notLoggedIn": "Ödeme için giriş yapmanız gerekmektedir",
+      "noCity": "Öncelikle şehir seçmelisiniz"
+    },
+    "profile": {
+      "emptyFields": "Lütfen isim ve email alanlarını doldurunuz",
+      "updateFailed": "Profil güncellenemedi"
+    }
+  }
 }

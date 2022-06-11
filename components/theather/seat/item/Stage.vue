@@ -8,6 +8,6 @@ defineProps<{
 
 <template>
   <div class="h-8 w-16 bg-cod-gray-600 rounded-lg" :class="{'self-center': item.position === 'center'}">
-    Stage
+    {{ $t('payment.stageU') }}
   </div>
 </template>

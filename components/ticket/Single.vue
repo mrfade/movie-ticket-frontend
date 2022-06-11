@@ -53,12 +53,12 @@ defineProps<{
 
           <div class="flex flex-row space-x-4 divide-x-2 divide-cod-gray-800">
             <div class="flex flex-col items-center gap-2">
-              <span class="text-sm font-medium text-cod-gray-100">SALON</span>
+              <span class="text-sm font-medium text-cod-gray-100">{{ $t('ticket.theather') }}</span>
               <span class="text-lg font-bold text-white">{{ ticket.session.theather.name.replace('Salon ', '') }}</span>
             </div>
 
             <div class="flex flex-col items-center gap-2 pl-4">
-              <span class="text-sm font-medium text-cod-gray-100">KOLTUKLAR</span>
+              <span class="text-sm font-medium text-cod-gray-100">{{ $t('ticket.seatsU') }}</span>
               <span class="text-lg font-bold text-white">{{ ticket.seats.map((seat) => seat.name).join(', ') }}</span>
             </div>
           </div>

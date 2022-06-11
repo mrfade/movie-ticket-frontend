@@ -5,6 +5,7 @@ import { Splide, SplideSlide } from '@splidejs/vue-splide'
 import { ClockIcon } from '@heroicons/vue/outline'
 import { useToast } from 'vue-toastification'
 import { FetchError } from 'ohmyfetch'
+import { useI18n } from 'vue-i18n'
 import { useApi } from '~~/composables/useApi'
 import { useDayjs } from '~~/composables/useDayjs'
 import { ApiResponse } from '~~/@types/api'
@@ -16,6 +17,7 @@ import { City } from '~~/@types/city'
 import '@splidejs/vue-splide/css'
 import { useLoaderStore } from '~~/stores/loader'
 
+const { t } = useI18n()
 const route = useRoute()
 const toast = useToast()
 const userStore = useUserStore()
@@ -76,7 +78,7 @@ const getSessionPlaces = async (movieSlug: string, cityId: number, date: string)
   if (error.value) {
     const err: FetchError = error.value as FetchError
     if (err.response.status !== 404) {
-      toast.error('Something went wrong')
+      toast.error(t('errors.sww'))
       Promise.reject(new Error('not found'))
     }
   } else {
@@ -105,7 +107,7 @@ const sessionDays = computed(() => {
 
 const onClickBuyTicket = async () => {
   if (!userStore.isAuthenticated) {
-    toast.error('You must be logged in to buy a ticket')
+    toast.error(t('errors.payment.notLoggedIn'))
     navigateTo({
       path: '/login',
       query: {
@@ -117,7 +119,7 @@ const onClickBuyTicket = async () => {
 
   const selectedCity: City = cityStore.getSelectedCity
   if (!selectedCity) {
-    toast.error('You must select a city first')
+    toast.error(t('errors.payment.noCity'))
     document.querySelector('#city-selector')?.scrollIntoView({ behavior: 'smooth' })
     return
   }
@@ -173,18 +175,18 @@ definePageMeta({
               {{ useDayjs()(movie.releaseDate).format('D MMMM YYYY dddd') }}
             </div>
             <div v-if="movie.nowPlaying" class="text-white text-xs px-4 py-2 rounded-full bg-green-600">
-              Gösterimde
+              {{ $t('nowPlaying') }}
             </div>
           </div>
           <div class="flex-1 items-end space-y-2">
             <div v-if="movie.director" class="text-white text-sm">
-              Yönetmen: {{ movie.director }}
+              {{ $t('director') }}: {{ movie.director }}
             </div>
             <div v-if="cast.length > 0" class="text-white text-sm">
-              Oyuncular: {{ cast.slice(0,3).map(c => c.actor.name).join(', ') }}
+              {{ $t('actors') }}: {{ cast.slice(0,3).map(c => c.actor.name).join(', ') }}
             </div>
             <div class="text-white text-sm flex items-center gap-1.5">
-              <ClientOnly><ClockIcon class="h-4 w-4" /></ClientOnly> {{ movie.duration }} dakika
+              <ClientOnly><ClockIcon class="h-4 w-4" /></ClientOnly> {{ movie.duration }} {{ $t('minutes') }}
             </div>
             <div class="text-white text-sm">
               {{ movie.genres?.map(genre => genre.name).join(', ') }}
@@ -192,7 +194,7 @@ definePageMeta({
           </div>
         </div>
         <button class="button items-center gap-x-2" @click.prevent="onClickBuyTicket">
-          Bilet Al
+          {{ $t('buyTicket') }}
           <MiniLoader v-if="sessionsPending" variant="light" />
         </button>
       </div>
@@ -203,17 +205,17 @@ definePageMeta({
         <TabList class="flex">
           <Tab v-slot="{ selected }" as="template">
             <button class="tab-btn" :class="{ selected }">
-              Açıklama
+              {{ $t('description') }}
             </button>
           </Tab>
           <Tab v-slot="{ selected }" as="template">
             <button class="tab-btn" :class="{ selected }">
-              Filmin Kadrosu
+              {{ $t('movieCast') }}
             </button>
           </Tab>
           <Tab v-if="movie.trailerUrl" v-slot="{ selected }" as="template">
             <button class="tab-btn" :class="{ selected }">
-              Fragman
+              {{ $t('trailer') }}
             </button>
           </Tab>
         </TabList>
@@ -254,7 +256,7 @@ definePageMeta({
     >
       <h3 class="text-xl font-bold p-6 text-cod-gray-800 dark:text-cod-gray-50 bg-white dark:bg-cod-gray-850 shadow">
         <font-awesome-icon icon="film" />
-        Seanslar ve Salonlar
+        {{ $t('sessionsAndTheatres') }}
       </h3>
 
       <client-only>
@@ -273,8 +275,8 @@ definePageMeta({
             :class="{ 'bg-cod-gray-100 dark:bg-cod-gray-800': day.date === currentDay }"
             @click.prevent="changeSessionsDay(day.date)"
           >
-            <span v-if="day.isToday" class="font-bold text-sm dark:text-cod-gray-100">Bugün</span>
-            <span v-if="day.isTomorrow" class="font-bold text-sm dark:text-cod-gray-100">Yarın</span>
+            <span v-if="day.isToday" class="font-bold text-sm dark:text-cod-gray-100">{{ $t('today') }}</span>
+            <span v-if="day.isTomorrow" class="font-bold text-sm dark:text-cod-gray-100">{{ $t('tomorrow') }}</span>
             <span class="font-bold dark:text-cod-gray-100">{{ useDayjs()(day.date).format('D MMMM dddd') }}</span>
           </SplideSlide>
         </Splide>
@@ -308,14 +310,14 @@ definePageMeta({
           </div>
         </div>
         <div v-if="sessionPlaces.length === 0" class="flex justify-center p-4 bg-yellow-100 text-cod-gray-600">
-          Seans Bulunamadı
+          {{ $t('errors.session.noSession') }}
         </div>
       </div>
     </div>
 
     <MovieShelf>
       <template #title>
-        <h3 class="text-2xl font-medium mb-4 dark:text-white">Benzer Filmler</h3>
+        <h3 class="text-2xl font-medium mb-4 dark:text-white">{{ $t('similarMovies') }}</h3>
       </template>
 
       <MovieSingle

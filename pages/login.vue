@@ -2,6 +2,7 @@
 import { useToast } from 'vue-toastification'
 import { RouteLocationRaw } from 'vue-router'
 import { FetchError } from 'ohmyfetch'
+import { useI18n } from 'vue-i18n'
 import { useApi } from '@/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
 import { useUserStore } from '~~/stores/user'
@@ -9,6 +10,7 @@ import { useUserStore } from '~~/stores/user'
 const email = ref(null)
 const password = ref(null)
 
+const { t } = useI18n()
 const toast = useToast()
 const route = useRoute()
 const loaderStore = useLoaderStore()
@@ -19,7 +21,7 @@ const login = async () => {
   const passwordValue = password.value
 
   if (!emailValue || !passwordValue) {
-    toast.error('Please fill all fields')
+    toast.error(t('errors.allFieldsRequired'))
     return
   }
 
@@ -41,25 +43,25 @@ const login = async () => {
     const err: FetchError = error as FetchError
 
     if (err.response.status === 400)
-      toast.error('Invalid email or password')
+      toast.error(t('errors.login.invalidCredentials'))
     else
-      toast.error('Something went wrong')
+      toast.error(t('errors.sww'))
   }).finally(() => {
     loaderStore.setLoading(false)
   })
 
   if (!data.token) {
-    toast.error('Login failed')
+    toast.error(t('errors.login.failed'))
     return
   }
 
   await userStore.loginWithToken(data.token)
   if (!userStore.isAuthenticated) {
-    toast.error('Giriş başarısız')
+    toast.error(t('errors.login.failed'))
     return
   }
 
-  toast.success('Giriş yapıldı')
+  toast.success(t('login.success'))
   if (route.query.next)
     navigateTo(route.query.next as RouteLocationRaw)
   else
@@ -71,29 +73,29 @@ const login = async () => {
   <div class="w-full flex items-center justify-center my-16">
     <div class="w-full sm:max-w-xs md:max-w-sm lg:max-w-md space-y-8 py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-opacity-5 drop-shadow-md">
       <div>
-        <h2 class="text-center text-2xl font-bold text-gray-900 dark:text-white">Giriş Yap</h2>
+        <h2 class="text-center text-2xl font-bold text-gray-900 dark:text-white">{{ $t('_login') }}</h2>
       </div>
 
       <form class="mt-8 space-y-6" @submit.prevent="login">
         <div>
           <div class="mb-2">
-            <label for="email-address" class="sr-only">Email</label>
+            <label for="email-address" class="sr-only">{{ $t('email') }}</label>
             <input
               id="email-address"
               v-model="email"
               type="email"
-              placeholder="Email"
+              :placeholder="$t('email')"
               class="input"
             />
           </div>
 
           <div>
-            <label for="password" class="sr-only">Şifre</label>
+            <label for="password" class="sr-only">{{ $t('password') }}</label>
             <input
               id="password"
               v-model="password"
               type="password"
-              placeholder="Şifre"
+              :placeholder="$t('password')"
               class="input"
             />
           </div>
@@ -107,7 +109,7 @@ const login = async () => {
 
         <div>
           <button class="button w-full">
-            Giriş Yap
+            {{ $t('_login') }}
           </button>
         </div>
       </form>

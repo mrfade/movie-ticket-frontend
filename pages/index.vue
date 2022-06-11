@@ -95,7 +95,7 @@ definePageMeta({
 
     <MovieShelf>
       <template #title>
-        <h3 class="text-2xl font-medium mb-4 dark:text-white">Vizyondaki Filmler</h3>
+        <h3 class="text-2xl font-medium mb-4 dark:text-white">{{ $t('movies in theatres') }}</h3>
       </template>
 
       <MovieSingle

@@ -20,7 +20,7 @@ defineProps({
     <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
       <div class="flex justify-start">
         <NuxtLink to="/" class="whitespace-nowrap text-white hover:text-gray-100">
-          <span class="text-2xl">MoTic</span>
+          <span class="text-2xl">Ticket</span>
         </NuxtLink>
       </div>
       <div class="flex space-x-10 flex-1">
@@ -33,10 +33,10 @@ defineProps({
       </div>
       <div class="flex items-center justify-end space-x-8">
         <NuxtLink v-if="!userStore.isAuthenticated" to="/login" class="whitespace-nowrap text-white hover:text-gray-100">
-          Giriş Yap
+          {{ $t('_login') }}
         </NuxtLink>
         <NuxtLink v-if="!userStore.isAuthenticated" to="/register" class="whitespace-nowrap text-white hover:text-gray-100">
-          Üye Ol
+          {{ $t('_register') }}
         </NuxtLink>
 
         <!-- Profile dropdown -->
@@ -64,14 +64,14 @@ defineProps({
                   to="/profile"
                   :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']"
                 >
-                  Profilim
+                  {{ $t('_profile') }}
                 </nuxt-link>
               </MenuItem>
               <MenuItem v-slot="{ active }">
                 <a href="#" :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']">Ayarlar</a>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <a href="#" :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']" @click.prevent="userStore.logout">Çıkış Yap</a>
+                <a href="#" :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']" @click.prevent="userStore.logout">{{ $t('logout') }}</a>
               </MenuItem>
             </MenuItems>
           </transition>

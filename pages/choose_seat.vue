@@ -135,7 +135,7 @@ definePageMeta({
           :class="selectedSeats.length > 0 ? 'lg:mt-48' : 'lg:mt-24'"
         >
           <div class="flex flex-col py-4 px-6 space-y-4">
-            <div class="text-cod-gray-500 dark:text-cod-gray-200 uppercase text-xs font-bold">BİLET FİYATLARI</div>
+            <div class="text-cod-gray-500 dark:text-cod-gray-200 uppercase text-xs font-bold">{{ $t('payment.ticketPricesU') }}</div>
             <div class="flex flex-row space-x-6">
               <div
                 v-for="price in session.theather.prices"
@@ -149,7 +149,7 @@ definePageMeta({
           </div>
 
           <div v-if="selectedSeats.length > 0" class="flex flex-col py-2 px-4 space-y-2">
-            <div class="text-cod-gray-900 dark:text-cod-gray-200 text-sm font-bold">Seçili Koltuklar</div>
+            <div class="text-cod-gray-900 dark:text-cod-gray-200 text-sm font-bold">{{ $t('payment.selectedSeats') }}</div>
             <div class="flex flex-row flex-wrap gap-2">
               <div
                 v-for="selectedSeat in selectedSeats"
@@ -163,15 +163,15 @@ definePageMeta({
           </div>
 
           <div v-if="selectedSeats.length > 0" class="flex py-3 px-4 space-x-2">
-            <span class="text-cod-gray-900 dark:text-cod-gray-200 font-bold">Toplam: </span>
+            <span class="text-cod-gray-900 dark:text-cod-gray-200 font-bold">{{ $t('payment.total') }}: </span>
             <span class="text-cod-gray-900 dark:text-cod-gray-50">{{ totalPriceText }}</span>
           </div>
 
           <div v-if="selectedSeats.length === 0" class="flex justify-center items-center uppercase text-xl font-bold py-4 text-cod-gray-900 dark:text-cod-gray-50 bg-cod-gray-200 dark:bg-cod-gray-800 rounded-b-lg">
-            KOLTUK SEÇİNİZ
+            {{ $t('payment.selectSeatU') }}
           </div>
           <div v-else class="flex justify-center items-center uppercase text-lg font-bold py-4 cursor-pointer text-cod-gray-900 bg-ywllow rounded-b-lg" @click.prevent="goPaymentPage">
-            ÖDEME YAP
+            {{ $t('payment.payU') }}
           </div>
         </div>
       </div>
@@ -182,17 +182,17 @@ definePageMeta({
       <div class="grid grid-flow-col gap-x-4">
         <div class="flex justify-center items-center space-x-2">
           <div class="w-8 h-8 bg-ywllow rounded-lg"></div>
-          <span class="text-cod-gray-900 dark:text-cod-gray-50">Seçili</span>
+          <span class="text-cod-gray-900 dark:text-cod-gray-50">{{ $t('seat.selected') }}</span>
         </div>
 
         <div class="flex justify-center items-center space-x-2">
           <div class="w-8 h-8 bg-cod-gray-600 rounded-lg"></div>
-          <span class="text-cod-gray-900 dark:text-cod-gray-50">Dolu</span>
+          <span class="text-cod-gray-900 dark:text-cod-gray-50">{{ $t('seat.notAvailable') }}</span>
         </div>
 
         <div class="flex justify-center items-center space-x-2">
           <div class="w-8 h-8 border-2 border-cod-gray-200 dark:border-cod-gray-400 rounded-lg"></div>
-          <span class="text-cod-gray-900 dark:text-cod-gray-50">Boş</span>
+          <span class="text-cod-gray-900 dark:text-cod-gray-50">{{ $t('seat.available') }}</span>
         </div>
       </div>
 
@@ -219,7 +219,7 @@ definePageMeta({
               class="h-16 w-1/3 mt-8 flex justify-center items-center text-xl font-bold uppercase text-cod-gray-500 dark:text-cod-gray-200 bg-cod-gray-100 dark:bg-cod-gray-600 rounded-lg"
               :class="{'justify-self-center': seat.position === 'center'}"
             >
-              SAHNE
+              {{ $t('payment.stageU') }}
             </div>
             <!-- space -->
             <div v-if="seat.type == 'space-seat'" class="w-10 h-10 lg:w-12 lg:h-12"></div>

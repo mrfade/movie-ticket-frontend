@@ -2,6 +2,7 @@
 import { useToast } from 'vue-toastification'
 import { Ref } from 'vue'
 // import { useApi } from '~~/composables/useApi'
+import { useI18n } from 'vue-i18n'
 import { useDayjs } from '~~/composables/useDayjs'
 import { useCurrencyFormat } from '~~/composables/useCurrencyFormat'
 import { usePaymentStore } from '~~/stores/payment'
@@ -10,12 +11,13 @@ import { Seat } from '~~/@types/theather'
 import { Session } from '~~/@types/movie'
 import { Ticket } from '~~/@types/ticket'
 
+const { t } = useI18n()
 const toast = useToast()
 const paymentStore = usePaymentStore()
 const loaderStore = useLoaderStore()
 
 if (!paymentStore.getSession) {
-  toast.error('Session not found')
+  toast.error(t('errors.session.notFound'))
   navigateTo('/')
 }
 
@@ -57,32 +59,32 @@ const paymentData = computed(() => {
 
 const makePayment = async () => {
   if (!selectedSeats.value.length) {
-    toast.error('Please select at least one seat')
+    toast.error(t('errors.payment.pleaseSelectSeats'))
     return
   }
 
   if (!cardName.value) {
-    toast.error('Please enter card name')
+    toast.error(t('errors.payment.pleaseEnterCardName'))
     return
   }
 
   if (!cardNumber.value) {
-    toast.error('Please enter card number')
+    toast.error(t('errors.payment.pleaseEnterCardNumber'))
     return
   }
 
   if (!cardCvc.value) {
-    toast.error('Please enter card cvc')
+    toast.error(t('errors.payment.pleaseEnterCardCvc'))
     return
   }
 
   if (!cardMonth.value) {
-    toast.error('Please enter card month')
+    toast.error(t('errors.payment.pleaseEnterCardMonth'))
     return
   }
 
   if (!cardYear.value) {
-    toast.error('Please enter card year')
+    toast.error(t('errors.payment.pleaseEnterCardYear'))
     return
   }
 
@@ -94,7 +96,7 @@ const makePayment = async () => {
   })
 
   if (ticket) {
-    toast.success('Payment successful')
+    toast.success(t('payment.success'))
     navigateTo('/profile/tickets')
   }
 }
@@ -114,7 +116,7 @@ definePageMeta({
             <div class="flex flex-col bg-white dark:bg-cod-gray-800 p-4 rounded-lg shadow space-y-4">
               <div class="flex w-full">
                 <h3 class="text-cod-gray-800 dark:text-cod-gray-200 font-bold">
-                  Koltuk Bilgileri
+                  {{ $t('payment.seatDetails') }}
                 </h3>
               </div>
 
@@ -124,7 +126,7 @@ definePageMeta({
                   :key="seat.id"
                   class="col-span-6 sm:col-span-3 lg:col-span-2 flex flex-col gap-2"
                 >
-                  <label class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Koltuk {{ idx + 1 }} ({{ seat.name }})</label>
+                  <label class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('_seat') }} {{ idx + 1 }} ({{ seat.name }})</label>
                   <select
                     v-model="seat.type"
                     class="flex-1 select"
@@ -144,13 +146,13 @@ definePageMeta({
             <div class="flex flex-col bg-white dark:bg-cod-gray-800 p-4 rounded-lg shadow space-y-4">
               <div class="flex w-full">
                 <h3 class="text-cod-gray-800 dark:text-cod-gray-200 font-bold">
-                  Kart Bilgileri
+                  {{ $t('payment.cardDetails') }}
                 </h3>
               </div>
 
               <div class="flex flex-col w-full space-y-4">
                 <div class="flex flex-col gap-1">
-                  <label for="cardName" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Kart Üzerindeki İsim</label>
+                  <label for="cardName" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('payment.cardName') }}</label>
                   <input
                     id="cardName"
                     v-model="cardName"
@@ -160,7 +162,7 @@ definePageMeta({
                 </div>
 
                 <div class="flex flex-col gap-1">
-                  <label for="cardNumber" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Kart Numarası</label>
+                  <label for="cardNumber" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('payment.cardNumber') }}</label>
                   <input
                     id="cardNumber"
                     v-model="cardNumber"
@@ -172,7 +174,7 @@ definePageMeta({
 
               <div class="grid grid-flow-col grid-cols-4 w-full space-x-4">
                 <div class="flex flex-col gap-1 col-span-3">
-                  <label for="cardMonth" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Son Kullanma Tarihi</label>
+                  <label for="cardMonth" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('payment.cardExpiration') }}</label>
                   <div class="flex flex-row gap-2">
                     <select
                       id="cardMonth"
@@ -205,7 +207,7 @@ definePageMeta({
                 </div>
 
                 <div class="flex flex-col gap-1 col-span-1">
-                  <label for="cardCVC" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Güvenlik Kodu</label>
+                  <label for="cardCVC" class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('payment.cardCvc') }}</label>
                   <input
                     id="cardCVC"
                     v-model="cardCvc"
@@ -241,15 +243,15 @@ definePageMeta({
 
               <div class="flex flex-col pt-4 items-end">
                 <div class="flex space-x-2">
-                  <span class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Bilet Ücreti: </span>
+                  <span class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('payment.ticketPrice') }}: </span>
                   <span class="text-sm text-cod-gray-800 dark:text-cod-gray-50 font-bold">{{ totalTicketPriceText }}</span>
                 </div>
                 <div class="flex space-x-2">
-                  <span class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Hizmet Ücreti: </span>
+                  <span class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('payment.serviceFee') }}: </span>
                   <span class="text-sm text-cod-gray-800 dark:text-cod-gray-50 font-bold">{{ totalServiceFeeText }}</span>
                 </div>
                 <div class="flex space-x-2">
-                  <span class="text-sm text-cod-gray-800 dark:text-cod-gray-200">Toplam: </span>
+                  <span class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('payment.total') }}: </span>
                   <span class="text-sm text-cod-gray-800 dark:text-cod-gray-50 font-bold">{{ totalPriceText }}</span>
                 </div>
               </div>
@@ -259,13 +261,13 @@ definePageMeta({
                   class="w-full bg-ywllow text-cod-gray-800 tracking-wider font-bold py-4 px-4 rounded-lg"
                   @click.prevent="makePayment"
                 >
-                  ÖDEME YAP ({{ totalPriceText }})
+                  {{ $t('payment.payU') }} ({{ totalPriceText }})
                 </button>
               </div>
             </div>
 
             <div class="flex justify-center mt-4">
-              <nuxt-link :to="`/choose_seat?sessionId=${session.id}`" class="underline text-cod-gray-400">Geri Dön</nuxt-link>
+              <nuxt-link :to="`/choose_seat?sessionId=${session.id}`" class="underline text-cod-gray-400">{{ $t('go back') }}</nuxt-link>
             </div>
 
             <div class="flex mt-4">

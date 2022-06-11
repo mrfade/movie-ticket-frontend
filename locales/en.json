@@ -1,4 +1,108 @@
 {
   "search": "Search",
-  "search ticket": "Search Ticket"
+  "search ticket": "Search Ticket",
+
+  "_login": "Login",
+  "logout": "Logout",
+  "_register": "Register",
+
+  "home": "Home",
+  "_profile": "Profile",
+  "tickets": "Tickets",
+
+  "movies in theatres": "Movies in Theatres",
+
+  "name_surname": "Name Surname",
+  "email": "Email",
+  "password": "Password",
+
+  "edit": "Edit",
+  "update": "Update",
+  "go back": "Go Back",
+
+  "nowPlaying": "Now Playing",
+  "director": "Director",
+  "actors": "Actors",
+  "minutes": "Minutes",
+  "buyTicket": "Buy Ticket",
+  "description": "Description",
+  "movieCast": "Movie Cast",
+  "trailer": "Trailer",
+  "sessionsAndTheatres": "Sessions and Theatres",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "similarMovies": "Similar Movies",
+
+  "_seat": "Seat",
+  "seat": {
+    "selected": "Selected",
+    "notAvailable": "Not Available",
+    "available": "Available"
+  },
+
+  "login": {
+    "success": "Login Success"
+  },
+
+  "register": {
+    "success": "Register Success"
+  },
+
+  "payment": {
+    "success": "Payment Success",
+    "seatDetails": "Seat Details",
+    "cardDetails": "Card Details",
+    "cardName": "Card Name",
+    "cardNumber": "Card Number",
+    "cardExpiration": "Expiration Date",
+    "cardCvc": "CVC",
+    "ticketPricesU": "TICKET PRICES",
+    "ticketPrice": "Ticket Price",
+    "serviceFee": "Service Fee",
+    "total": "Total",
+    "payU": "PAY",
+    "selectedSeats": "Selected Seats",
+    "selectSeatU": "SELECT SEAT",
+    "stageU": "STAGE"
+  },
+
+  "profile": {
+    "updated": "Profile Updated",
+    "myTicketsU": "MY TICKETS"
+  },
+
+  "ticket": {
+    "theather": "Theather",
+    "seatsU": "SEATS"
+  },
+
+  "errors": {
+    "sww": "Something went wrong",
+    "allFieldsRequired": "All fields are required",
+    "login": {
+      "invalidCredentials": "Invalid login or password",
+      "failed": "Login failed"
+    },
+    "register": {
+      "failed": "Registration failed"
+    },
+    "session": {
+      "notFound": "Session not found",
+      "noSession": "No session found"
+    },
+    "payment": {
+      "pleaseSelectSeats": "Please select at least one seat",
+      "pleaseEnterCardName": "Please enter card name",
+      "pleaseEnterCardNumber": "Please enter card number",
+      "pleaseEnterCardMonth": "Please enter card month",
+      "pleaseEnterCardYear": "Please enter card year",
+      "pleaseEnterCardCvc": "Please enter card Cvc",
+      "notLoggedIn": "You must be logged in to buy a ticket",
+      "noCity": "You must select a city first"
+    },
+    "profile": {
+      "emptyFields": "Please fill name and email fields",
+      "updateFailed": "Update failed"
+    }
+  }
 }
