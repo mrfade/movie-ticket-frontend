@@ -2,18 +2,11 @@ import { $fetch } from 'ohmyfetch'
 import { FetchResult, UseFetchOptions } from 'nuxt/dist/app/composables/fetch'
 import { useUserStore } from '~/stores/user'
 
-function useApi<T> (
-  url: string | Request,
-  options?: UseFetchOptions<any>
-): FetchResult<any> {
-  if (!options)
-    options = {} as UseFetchOptions<any>
-
+const apiOptions = () => {
   const userStore = useUserStore()
   const config = useRuntimeConfig()
 
-  options = {
-    ...options,
+  return {
     baseURL: config.public.apiBase,
     onRequest (ctx) {
       const token = userStore.getToken
@@ -24,9 +17,22 @@ function useApi<T> (
       return Promise.resolve()
     }
   }
+}
+
+function useApi<T> (
+  url: string | Request,
+  options?: UseFetchOptions<any>
+): FetchResult<any> {
+  if (!options)
+    options = {} as UseFetchOptions<any>
+
+  options = {
+    ...options,
+    ...apiOptions()
+  }
 
   return $fetch<T, any>(url, options)
 }
 
 export default useApi
-export { useApi }
+export { useApi, apiOptions }
