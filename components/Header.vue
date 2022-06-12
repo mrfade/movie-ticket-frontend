@@ -67,6 +67,14 @@ defineProps({
                   {{ $t('_profile') }}
                 </nuxt-link>
               </MenuItem>
+              <MenuItem v-if="userStore.isAdmin" v-slot="{ active }">
+                <nuxt-link
+                  to="/admin/dashboard"
+                  :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']"
+                >
+                  {{ $t('adminArea') }}
+                </nuxt-link>
+              </MenuItem>
               <MenuItem v-slot="{ active }">
                 <a href="#" :class="[active ? 'bg-gray-100 dark:bg-cod-gray-800' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-cod-gray-100']">Ayarlar</a>
               </MenuItem>
