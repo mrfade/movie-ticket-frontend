@@ -19,6 +19,7 @@
 
   "edit": "Edit",
   "update": "Update",
+  "save": "Save",
   "go back": "Go Back",
 
   "nowPlaying": "Now Playing",
@@ -77,6 +78,12 @@
     "seatsU": "SEATS"
   },
 
+  "messages": {
+    "user": {
+      "updated": "User Updated"
+    }
+  },
+
   "errors": {
     "sww": "Something went wrong",
     "allFieldsRequired": "All fields are required",
@@ -106,7 +113,8 @@
       "updateFailed": "Update failed"
     },
     "user": {
-      "notFound": "User not found"
+      "notFound": "User not found",
+      "updateFailed": "Update failed"
     }
   }
 }

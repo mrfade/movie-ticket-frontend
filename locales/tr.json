@@ -19,6 +19,7 @@
 
   "edit": "Düzenle",
   "update": "Güncelle",
+  "save": "Save",
   "go back": "Geri Dön",
 
   "nowPlaying": "Gösterimde",
@@ -77,6 +78,12 @@
     "seatsU": "KOLTUKLAR"
   },
 
+  "messages": {
+    "user": {
+      "updated": "User Updated"
+    }
+  },
+
   "errors": {
     "sww": "Beklenmeyen bir hata oluştu",
     "allFieldsRequired": "Tüm alanlar zorunludur",
@@ -106,7 +113,8 @@
       "updateFailed": "Profil güncellenemedi"
     },
     "user": {
-      "notFound": "User not found"
+      "notFound": "User not found",
+      "updateFailed": "Update failed"
     }
   }
 }
