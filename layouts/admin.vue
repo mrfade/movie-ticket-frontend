@@ -22,7 +22,7 @@ useDark()
 
     <div class="flex flex-col lg:flex-row">
       <admin-sidebar class="w-full lg:fixed lg:w-64 lg:h-screen" />
-      <div class="lg:ml-64 lg:flex-1 lg:overflow-x-auto">
+      <div class="lg:ml-64 lg:flex-1">
         <slot />
       </div>
     </div>
