@@ -10,11 +10,14 @@ export const useUserStore = defineStore('user', {
     token: null,
     id: null,
     name: null,
-    email: null
+    email: null,
+    roles: []
   }),
 
   getters: {
     isAuthenticated: state => state.authenticated,
+    isAdmin: state => state.roles.includes('admin'),
+    isGod: state => state.roles.includes('god'),
     getToken: state => state.token,
     getId: state => state.id,
     getName: state => state.name,
@@ -44,12 +47,17 @@ export const useUserStore = defineStore('user', {
       this.email = email
     },
 
+    setRoles (roles: string[]) {
+      this.roles = roles
+    },
+
     clear () {
       this.authenticated = false
       this.token = null
       this.id = null
       this.name = null
       this.email = null
+      this.roles = []
 
       removeAccessToken()
     },
@@ -83,6 +91,7 @@ export const useUserStore = defineStore('user', {
       this.setId(user.id)
       this.setName(user.name)
       this.setEmail(user.email)
+      this.setRoles(user.roles)
 
       setAccessToken(this.getToken)
     },
