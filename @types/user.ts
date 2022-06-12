@@ -5,3 +5,8 @@ export interface User {
   password?: string;
   roles?: string[];
 }
+
+export interface OperationClaim {
+  id: number;
+  name: string;
+}
