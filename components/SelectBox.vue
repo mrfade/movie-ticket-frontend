@@ -10,8 +10,9 @@ export interface SelectBoxOption {
 }
 
 interface Props {
-  modelValue: SelectBoxOption | string | number,
+  modelValue: SelectBoxOption | SelectBoxOption[] | string | number,
   options: SelectBoxOption[],
+  multiple?: boolean,
   label?: string,
   transparentButton?: boolean,
   selectMinWidth?: number,
@@ -23,6 +24,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  multiple: false,
   label: '',
   transparentButton: false,
   selectMinWidth: 0,
@@ -35,19 +37,27 @@ const props = withDefaults(defineProps<Props>(), {
 
 // eslint-disable-next-line func-call-spacing
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: SelectBoxOption): void
+  (e: 'update:modelValue', value: SelectBoxOption | SelectBoxOption[]): void
 }>()
 
-const currentValue: SelectBoxOption = typeof props.modelValue in ['number', 'string'] ? props.options.find(option => option.value === props.modelValue) : props.modelValue as SelectBoxOption
-const selected: Ref<SelectBoxOption> = ref<SelectBoxOption>(currentValue)
+// const currentValue: SelectBoxOption | SelectBoxOption[] = typeof props.modelValue in ['number', 'string'] ? Array.isArray(props.modelValue) ? [...props.modelValue.map((value: SelectBoxOption) => props.options.find(option => option.value === value.value))] : props.options.find(option => option.value === props.modelValue) : props.modelValue as SelectBoxOption
+let currentValue: SelectBoxOption | SelectBoxOption[]
+if (typeof props.modelValue in ['number', 'string'])
+  currentValue = props.options.find(option => option.value === props.modelValue) as SelectBoxOption
+else if (Array.isArray(props.modelValue))
+  currentValue = [...props.modelValue.map((value: SelectBoxOption) => props.options.find(option => option.value === value.value))] as SelectBoxOption[]
+else
+  currentValue = props.modelValue as SelectBoxOption
 
-watch(selected, (value: SelectBoxOption) => {
+const selected: Ref<SelectBoxOption | SelectBoxOption[]> = ref<SelectBoxOption | SelectBoxOption[]>(currentValue)
+
+watch(selected, (value: SelectBoxOption | SelectBoxOption[]) => {
   emit('update:modelValue', value)
 })
 </script>
 
 <template>
-  <Listbox v-model="selected" as="div">
+  <Listbox v-model="selected" as="div" :multiple="multiple">
     <ListboxLabel v-if="label" class="block text-sm font-medium text-cod-gray-700 dark:text-cod-gray-300">{{ label }}</ListboxLabel>
     <div class="relative" :class="{ 'mt-1': label }">
       <ListboxButton
@@ -59,7 +69,7 @@ watch(selected, (value: SelectBoxOption) => {
       >
         <span class="flex items-center">
           <img
-            v-if="selected.image"
+            v-if="!Array.isArray(selected) && selected.image"
             :key="`selecbox-img-${selected.value}`"
             :src="selected.image"
             :alt="(selected.label as string)"
@@ -76,7 +86,7 @@ watch(selected, (value: SelectBoxOption) => {
               'aspect-[9/16]': imageAspectRatio === '9/16'
             }"
           />
-          <span class="ml-3 block truncate">{{ selected.label }}</span>
+          <span class="ml-3 block truncate">{{ Array.isArray(selected) ? selected.map((value: SelectBoxOption) => value.label).join(', ') : selected.label }}</span>
         </span>
         <span v-if="showIcon" class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
           <SelectorIcon class="h-5 w-5 text-cod-gray-400" aria-hidden="true" />
