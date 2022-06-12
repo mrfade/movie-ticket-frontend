@@ -35,6 +35,7 @@ watch(currentValue, (value: string) => {
     <label v-if="label" :for="id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ label }}</label>
     <input
       :id="id"
+      v-model="currentValue"
       :type="type"
       :placeholder="placeholder"
       :required="required"
