@@ -4,7 +4,7 @@ import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } f
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
 
 export interface SelectBoxOption {
-  value: string | number,
+  value: string,
   label: string | number,
   image?: string
 }
@@ -48,17 +48,18 @@ watch(selected, (value: SelectBoxOption) => {
 
 <template>
   <Listbox v-model="selected" as="div">
-    <ListboxLabel v-if="label" class="block text-sm font-medium text-gray-700">{{ label }}</ListboxLabel>
+    <ListboxLabel v-if="label" class="block text-sm font-medium text-cod-gray-700 dark:text-cod-gray-300">{{ label }}</ListboxLabel>
     <div class="relative" :class="{ 'mt-1': label }">
       <ListboxButton
         class="relative w-full text-left py-2 focus:outline-none"
         :class="[
-          transparentButton ? 'text-white font-base font-medium cursor-pointer' : 'pl-3 pr-10 cursor-default bg-white border border-gray-300 rounded-md shadow-sm sm:text-sm',
+          transparentButton ? 'text-white font-base font-medium cursor-pointer' : 'pl-3 pr-10 cursor-default dark:text-cod-gray-100 bg-white dark:bg-cod-gray-850 border-2 border-gray-300 dark:border-cod-gray-700 rounded-md shadow-sm sm:text-sm',
           showRing ? 'focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500' : ''
         ]"
       >
         <span class="flex items-center">
           <img
+            v-if="selected.image"
             :key="`selecbox-img-${selected.value}`"
             :src="selected.image"
             :alt="(selected.label as string)"
@@ -78,22 +79,22 @@ watch(selected, (value: SelectBoxOption) => {
           <span class="ml-3 block truncate">{{ selected.label }}</span>
         </span>
         <span v-if="showIcon" class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-          <SelectorIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <SelectorIcon class="h-5 w-5 text-cod-gray-400" aria-hidden="true" />
         </span>
       </ListboxButton>
 
       <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
         <ListboxOptions
-          class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+          class="absolute z-10 mt-1 w-full bg-white dark:bg-cod-gray-850 shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
           :style="{
             minWidth: selectMinWidth ? selectMinWidth + 'px' : '',
           }"
         >
           <ListboxOption v-for="option in options" :key="`option-${option.value}`" v-slot="{ active, selected }" as="template" :value="option">
-            <li :class="[active ? 'text-white bg-indigo-600' : 'text-gray-900', 'cursor-pointer select-none relative py-2 pl-3 pr-9']">
+            <li :class="[active ? 'text-white bg-indigo-600' : 'text-gray-900 dark:text-cod-gray-100', 'cursor-pointer select-none relative py-2 pl-3 pr-9']">
               <div class="flex items-center">
                 <img
-                  v-if="showImageInLabel"
+                  v-if="showImageInLabel && option.image"
                   :src="option.image"
                   alt=""
                   class="flex-shrink-0 h-6 rounded-full"
