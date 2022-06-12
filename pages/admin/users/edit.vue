@@ -7,11 +7,13 @@ import { ApiResponse } from '~~/@types/api'
 import { apiOptions } from '~~/composables/useApi'
 import { OperationClaim, User } from '~~/@types/user'
 import { SelectBoxOption } from '~~/components/SelectBox.vue'
+import { useLoaderStore } from '~~/stores/loader'
 
 const { t } = useI18n()
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
+const loaderStore = useLoaderStore()
 const user: Ref<User> = ref<User>(null)
 const claims: Ref<OperationClaim[]> = ref<OperationClaim[]>([])
 
@@ -72,6 +74,38 @@ const claimsOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
   })
 })
 
+const saveUser = async (): Promise<string | void> => {
+  loaderStore.setLoading(true)
+  const { error } = await useFetch<ApiResponse<User>>('/customer', {
+    ...apiOptions(),
+    method: 'PUT',
+    body: {
+      id: route.query.id,
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      roles: currentRoles.value.map((role: SelectBoxOption) => claims.value.find((claim: OperationClaim) => claim.id.toString() === role.value).name)
+    }
+  })
+  loaderStore.setLoading(false)
+
+  if (error.value) {
+    const err: FetchError = error.value as FetchError
+
+    if (err.response.status === 400)
+      toast.error(t('errors.user.updateFailed'))
+    else
+      toast.error(t('errors.sww'))
+
+    return Promise.reject(error.value)
+  }
+
+  toast.success(t('messages.user.updated'))
+  router.push('/admin/users')
+
+  return Promise.resolve()
+}
+
 definePageMeta({
   layout: 'admin',
   middleware: ['auth-admin']
@@ -82,48 +116,51 @@ definePageMeta({
   <div class="p-8">
     <admin-title>User Edit</admin-title>
 
-    <div class="mt-10 sm:mt-0">
-      <div class="shadow sm:rounded-md">
-        <div class="px-4 py-5 bg-white dark:bg-gray-800 sm:p-6">
-          <div class="grid grid-cols-6 gap-6">
-            <div class="col-span-6 sm:col-span-3">
-              <admin-input
-                v-model="name"
-                :label="t('name_surname')"
-                required
-              />
-            </div>
+    <div class="mt-5 shadow rounded-lg">
+      <div class="px-4 py-5 bg-white dark:bg-gray-800 sm:p-6">
+        <div class="grid grid-cols-6 gap-6">
+          <div class="col-span-6 sm:col-span-3">
+            <admin-input
+              v-model="name"
+              :label="t('name_surname')"
+              required
+            />
+          </div>
 
-            <div class="col-span-6 sm:col-span-3">
-              <admin-input
-                v-model="email"
-                :label="t('email')"
-                type="email"
-                required
-              />
-            </div>
+          <div class="col-span-6 sm:col-span-3">
+            <admin-input
+              v-model="email"
+              :label="t('email')"
+              type="email"
+              required
+            />
+          </div>
 
-            <div class="col-span-6 sm:col-span-3">
-              <admin-input
-                v-model="password"
-                :label="t('password')"
-                type="password"
-              />
-            </div>
+          <div class="col-span-6 sm:col-span-3">
+            <admin-input
+              v-model="password"
+              :label="t('password')"
+              type="password"
+            />
+          </div>
 
-            <div class="col-span-6 sm:col-span-3">
-              <select-box
-                v-model="currentRoles"
-                label="Roles"
-                :options="claimsOptions"
-                multiple
-              />
-            </div>
+          <div class="col-span-6 sm:col-span-3">
+            <select-box
+              v-model="currentRoles"
+              label="Roles"
+              :options="claimsOptions"
+              multiple
+            />
           </div>
         </div>
-        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-          <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
-        </div>
+      </div>
+      <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 text-right sm:px-6">
+        <button
+          class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          @click.prevent="saveUser"
+        >
+          {{ $t('save') }}
+        </button>
       </div>
     </div>
   </div>
