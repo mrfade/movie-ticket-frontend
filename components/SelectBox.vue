@@ -58,8 +58,8 @@ watch(selected, (value: SelectBoxOption | SelectBoxOption[]) => {
 
 <template>
   <Listbox v-model="selected" as="div" :multiple="multiple">
-    <ListboxLabel v-if="label" class="block text-sm font-medium text-cod-gray-700 dark:text-cod-gray-300">{{ label }}</ListboxLabel>
-    <div class="relative" :class="{ 'mt-1': label }">
+    <ListboxLabel v-if="label" class="block mb-2 text-sm font-medium text-cod-gray-700 dark:text-cod-gray-300">{{ label }}</ListboxLabel>
+    <div class="relative">
       <ListboxButton
         class="relative w-full text-left py-2 focus:outline-none"
         :class="[
