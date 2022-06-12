@@ -9,6 +9,7 @@
   "home": "Home",
   "_profile": "Profile",
   "tickets": "Tickets",
+  "adminArea": "Admin Area",
 
   "movies in theatres": "Movies in Theatres",
 
@@ -103,6 +104,9 @@
     "profile": {
       "emptyFields": "Please fill name and email fields",
       "updateFailed": "Update failed"
+    },
+    "user": {
+      "notFound": "User not found"
     }
   }
 }

@@ -9,6 +9,7 @@
   "home": "Ana Sayfa",
   "_profile": "Profil",
   "tickets": "Biletler",
+  "adminArea": "Yönetim Paneli",
 
   "movies in theatres": "Vizyondaki Filmler",
 
@@ -103,6 +104,9 @@
     "profile": {
       "emptyFields": "Lütfen isim ve email alanlarını doldurunuz",
       "updateFailed": "Profil güncellenemedi"
+    },
+    "user": {
+      "notFound": "User not found"
     }
   }
 }
