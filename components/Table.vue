@@ -84,6 +84,11 @@ withDefaults(defineProps<Props>(), {
             </template>
           </td>
         </tr>
+        <tr v-if="rows.length === 0" class="bg-white dark:bg-gray-800">
+          <td colspan="100" class="px-6 py-4 text-center">
+            No results found
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
