@@ -20,6 +20,7 @@ export interface Theather {
   seatPlan: string;
   seats?: Seat[];
   place: Place;
+  placeId?: number;
   prices: TheatherPrice[];
 }
 
