@@ -14,15 +14,17 @@ const toast = useToast()
 const loaderStore = useLoaderStore()
 const movies: Ref<Movie[]> = ref<Movie[]>([])
 
+const search: Ref<string> = ref<string>('')
 const pageNumber: Ref<number> = ref<number>(0)
 const totalPages: Ref<number> = ref<number>(0)
 const loading: Ref<boolean> = ref<boolean>(false)
 
-const fetchData = async (page: number): Promise<boolean> => {
+const fetchData = async (page: number = 1, search: string = ''): Promise<boolean> => {
   loading.value = true
   const { data, error } = await useFetch<ApiResponsePaged<Movie[]>>('/movie', {
     ...apiOptions(),
     params: {
+      q: search,
       pageNumber: page
     }
   })
@@ -43,23 +45,37 @@ const fetchData = async (page: number): Promise<boolean> => {
   return Promise.resolve(true)
 }
 
+const changePage = async (page: number): Promise<boolean> => {
+  await fetchData(page, search.value)
+  return Promise.resolve(true)
+}
+
 watch(loading, (value: boolean) => {
   loaderStore.setLoading(value)
 })
 
-await fetchData(1)
+watch(search, async (value: string) => {
+  if (value.length === 0)
+    await fetchData()
+
+  if (value.length < 3) return
+
+  await fetchData(pageNumber.value, value)
+})
 
 const rows: ComputedRef<TableRow[]> = computed(() => {
   return movies.value.map((movie: Movie) => {
     return {
       id: movie.id,
       col1: movie.title,
-      col2: movie.genres.map((genre: Genre) => genre.name).join(', '),
+      col2: movie.genres.map((genre: Genre) => genre.name).join(', ') || '-',
       col3: useDayjs()(movie.releaseDate).format('YYYY-MM-DD'),
       col4: movie.status
     } as TableRow
   })
 })
+
+await fetchData()
 
 definePageMeta({
   layout: 'admin',
@@ -70,6 +86,13 @@ definePageMeta({
 <template>
   <div class="p-8">
     <admin-title>Movies</admin-title>
+
+    <div class="flex my-4">
+      <admin-input
+        v-model="search"
+        :label="t('search')"
+      />
+    </div>
 
     <Table
       :columns="[
@@ -86,7 +109,7 @@ definePageMeta({
       <pagination
         :page-number="pageNumber"
         :total-pages="totalPages"
-        @page="fetchData"
+        @page="changePage"
       />
     </div>
   </div>
