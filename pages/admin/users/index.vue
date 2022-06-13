@@ -14,15 +14,17 @@ const router = useRouter()
 const loaderStore = useLoaderStore()
 const users: Ref<User[]> = ref<User[]>([])
 
+const search: Ref<string> = ref<string>('')
 const pageNumber: Ref<number> = ref<number>(0)
 const totalPages: Ref<number> = ref<number>(0)
 const loading: Ref<boolean> = ref<boolean>(false)
 
-const fetchData = async (page: number): Promise<boolean> => {
+const fetchData = async (page: number = 1, search: string = ''): Promise<boolean> => {
   loading.value = true
   const { data, error } = await useFetch<ApiResponsePaged<User[]>>('/customer', {
     ...apiOptions(),
     params: {
+      q: search,
       pageNumber: page
     }
   })
@@ -43,11 +45,23 @@ const fetchData = async (page: number): Promise<boolean> => {
   return Promise.resolve(true)
 }
 
+const changePage = async (page: number): Promise<boolean> => {
+  await fetchData(page, search.value)
+  return Promise.resolve(true)
+}
+
 watch(loading, (value: boolean) => {
   loaderStore.setLoading(value)
 })
 
-await fetchData(1)
+watch(search, async (value: string) => {
+  if (value.length === 0)
+    await fetchData()
+
+  if (value.length < 3) return
+
+  await fetchData(pageNumber.value, value)
+})
 
 const rows: ComputedRef<TableRow[]> = computed(() => {
   return users.value.map((user: User) => {
@@ -55,7 +69,7 @@ const rows: ComputedRef<TableRow[]> = computed(() => {
       id: parseInt(user.id),
       col1: user.name,
       col2: user.email,
-      col3: user.roles?.join(', ') ?? ' ',
+      col3: user.roles?.join(', ') || '-',
       actions: [
         {
           label: t('edit'),
@@ -78,6 +92,8 @@ const rows: ComputedRef<TableRow[]> = computed(() => {
   })
 })
 
+await fetchData()
+
 definePageMeta({
   layout: 'admin',
   middleware: ['auth-admin']
@@ -87,6 +103,13 @@ definePageMeta({
 <template>
   <div class="p-8">
     <admin-title>Users</admin-title>
+
+    <div class="flex my-4">
+      <admin-input
+        v-model="search"
+        :label="t('search')"
+      />
+    </div>
 
     <Table
       :columns="[
@@ -103,7 +126,7 @@ definePageMeta({
       <pagination
         :page-number="pageNumber"
         :total-pages="totalPages"
-        @page="fetchData"
+        @page="changePage"
       />
     </div>
   </div>
