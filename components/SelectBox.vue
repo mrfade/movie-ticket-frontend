@@ -16,6 +16,7 @@ interface Props {
   label?: string,
   transparentButton?: boolean,
   selectMinWidth?: number,
+  variant?: 'gray' | 'cod-gray',
   imageShape?: 'square' | 'rounded' | 'circle',
   imageAspectRatio?: '1/1' | '1/2' | '2/1' | '3/4' | '4/3' | '16/9' | '9/16',
   showIcon?: boolean,
@@ -28,6 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
   label: '',
   transparentButton: false,
   selectMinWidth: 0,
+  variant: 'cod-gray',
   imageShape: 'circle',
   imageAspectRatio: '1/1',
   showIcon: true,
@@ -58,14 +60,26 @@ watch(selected, (value: SelectBoxOption | SelectBoxOption[]) => {
 
 <template>
   <Listbox v-model="selected" as="div" :multiple="multiple">
-    <ListboxLabel v-if="label" class="block mb-2 text-sm font-medium text-cod-gray-700 dark:text-cod-gray-300">{{ label }}</ListboxLabel>
+    <ListboxLabel
+      v-if="label"
+      class="block mb-2 text-sm font-medium"
+      :class="{
+        'text-cod-gray-700 dark:text-cod-gray-300': variant === 'cod-gray',
+        'text-gray-700 dark:text-gray-300': variant === 'gray',
+      }"
+    >
+      {{ label }}
+    </ListboxLabel>
     <div class="relative">
       <ListboxButton
         class="relative w-full text-left py-2 focus:outline-none"
-        :class="[
-          transparentButton ? 'text-white font-base font-medium cursor-pointer' : 'pl-3 pr-10 cursor-default dark:text-cod-gray-100 bg-white dark:bg-cod-gray-850 border-2 border-gray-300 dark:border-cod-gray-700 rounded-md shadow-sm sm:text-sm',
-          showRing ? 'focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500' : ''
-        ]"
+        :class="{
+          'text-white font-base font-medium cursor-pointer': transparentButton,
+          'pl-3 pr-10 cursor-default bg-white border-2 rounded-md shadow-sm sm:text-sm': !transparentButton,
+          'dark:text-cod-gray-100 dark:bg-cod-gray-850 border-cod-gray-300 dark:border-cod-gray-700': !transparentButton && variant === 'cod-gray',
+          'dark:text-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700': !transparentButton && variant === 'gray',
+          'focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500': showRing,
+        }"
       >
         <span class="flex items-center">
           <img
@@ -89,15 +103,26 @@ watch(selected, (value: SelectBoxOption | SelectBoxOption[]) => {
           <span class="ml-3 block truncate">{{ Array.isArray(selected) ? selected.map((value: SelectBoxOption) => value.label).join(', ') : selected.label }}</span>
         </span>
         <span v-if="showIcon" class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-          <SelectorIcon class="h-5 w-5 text-cod-gray-400" aria-hidden="true" />
+          <SelectorIcon
+            class="h-5 w-5"
+            :class="{
+              'text-cod-gray-400': variant === 'cod-gray',
+              'text-gray-400': variant === 'gray',
+            }"
+            aria-hidden="true"
+          />
         </span>
       </ListboxButton>
 
       <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
         <ListboxOptions
-          class="absolute z-10 mt-1 w-full bg-white dark:bg-cod-gray-850 shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+          class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
           :style="{
             minWidth: selectMinWidth ? selectMinWidth + 'px' : '',
+          }"
+          :class="{
+            'dark:bg-cod-gray-850': variant === 'cod-gray',
+            'dark:bg-gray-800': variant === 'gray',
           }"
         >
           <ListboxOption v-for="option in options" :key="`option-${option.value}`" v-slot="{ active, selected }" as="template" :value="option">
