@@ -19,8 +19,10 @@
 
   "edit": "Edit",
   "update": "Update",
+  "delete": "Delete",
   "save": "Save",
   "go back": "Go Back",
+  "all": "All",
 
   "nowPlaying": "Now Playing",
   "director": "Director",
