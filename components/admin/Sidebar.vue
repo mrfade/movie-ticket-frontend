@@ -11,6 +11,11 @@ const menus = [
     path: '/admin/dashboard'
   },
   {
+    name: 'Admins',
+    icon: 'user-tie',
+    path: '/admin/admins'
+  },
+  {
     name: 'Movies',
     icon: 'clapperboard',
     path: '/admin/movies'
