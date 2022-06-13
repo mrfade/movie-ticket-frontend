@@ -26,6 +26,11 @@ const menus = [
     path: '/admin/users'
   },
   {
+    name: 'Places',
+    icon: 'map-location',
+    path: '/admin/places'
+  },
+  {
     name: 'Settings',
     icon: 'gear',
     path: '/admin/settings'
