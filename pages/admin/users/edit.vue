@@ -148,6 +148,7 @@ definePageMeta({
             <select-box
               v-model="currentRoles"
               label="Roles"
+              variant="gray"
               :options="claimsOptions"
               multiple
             />
