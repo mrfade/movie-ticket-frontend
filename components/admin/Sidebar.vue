@@ -43,6 +43,11 @@ const menus = [
     path: '/admin/sessions'
   },
   {
+    name: 'Genres',
+    icon: 'sliders',
+    path: '/admin/genres'
+  },
+  {
     name: 'Settings',
     icon: 'gear',
     path: '/admin/settings'
