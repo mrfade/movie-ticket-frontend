@@ -22,6 +22,7 @@ interface Props {
   showIcon?: boolean,
   showRing?: boolean,
   showImageInLabel?: boolean,
+  disabled?: boolean,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -34,7 +35,8 @@ const props = withDefaults(defineProps<Props>(), {
   imageAspectRatio: '1/1',
   showIcon: true,
   showRing: true,
-  showImageInLabel: true
+  showImageInLabel: true,
+  disabled: false
 })
 
 // eslint-disable-next-line func-call-spacing
@@ -59,7 +61,12 @@ watch(selected, (value: SelectBoxOption | SelectBoxOption[]) => {
 </script>
 
 <template>
-  <Listbox v-model="selected" as="div" :multiple="multiple">
+  <Listbox
+    v-model="selected"
+    as="div"
+    :multiple="multiple"
+    :disabled="disabled"
+  >
     <ListboxLabel
       v-if="label"
       class="block mb-2 text-sm font-medium"
