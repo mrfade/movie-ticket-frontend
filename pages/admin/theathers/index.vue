@@ -14,6 +14,7 @@ import { fetchPlaces, places } from '~~/composables/usePlaces'
 
 const { t } = useI18n()
 const toast = useToast()
+const router = useRouter()
 const loaderStore = useLoaderStore()
 const cityStore = useCityStore()
 const theathers: Ref<Theather[]> = ref<Theather[]>([])
@@ -128,7 +129,21 @@ const rows: ComputedRef<TableRow[]> = computed(() => {
     return {
       id: theather.id,
       col1: theather.name,
-      col2: places.value.find(place => place.id === theather.placeId)?.name || '-'
+      col2: places.value.find(place => place.id === theather.placeId)?.name || '-',
+      actions: [
+        {
+          label: t('edit'),
+          icon: 'edit',
+          action: () => {
+            router.push({
+              name: 'admin-theathers-edit',
+              query: {
+                id: theather.id
+              }
+            })
+          }
+        }
+      ]
     } as TableRow
   })
 })
@@ -175,6 +190,7 @@ definePageMeta({
       ]"
       :rows="rows"
       show-id-column
+      show-actions-column
     />
 
     <div class="flex justify-center mt-8">
