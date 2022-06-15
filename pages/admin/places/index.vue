@@ -8,11 +8,13 @@ import { apiOptions } from '~~/composables/useApi'
 import { TableRow } from '~~/components/Table.vue'
 import { City, Place } from '~~/@types/city'
 import { SelectBoxOption } from '~~/components/SelectBox.vue'
+import { useCityStore } from '~~/stores/city'
 
 const { t } = useI18n()
 const toast = useToast()
 const router = useRouter()
 const loaderStore = useLoaderStore()
+const cityStore = useCityStore()
 const places: Ref<Place[]> = ref<Place[]>([])
 const cities: Ref<City[]> = ref<City[]>([])
 
@@ -25,13 +27,7 @@ const pageNumber: Ref<number> = ref<number>(0)
 const totalPages: Ref<number> = ref<number>(0)
 const loading: Ref<boolean> = ref<boolean>(false)
 
-// fetch cities
-const { data: citiesData } = await useFetch<ApiResponsePaged<City[]>>('/city', {
-  ...apiOptions()
-})
-
-if (citiesData)
-  cities.value = citiesData.value.data as City[]
+cities.value = cityStore.getCities as City[]
 
 const fetchData = async (page: number = 1, search: string = '', cityId: number = 0): Promise<boolean> => {
   loading.value = true
