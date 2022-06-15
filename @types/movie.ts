@@ -29,6 +29,10 @@ export interface Actor {
   name: string;
   gender: number;
   profilePath: string;
+  biography?: string;
+  birthday?: string;
+  placeOfBirth?: string;
+  imdbId?: string;
 }
 
 export interface Cast {
