@@ -38,6 +38,11 @@ const menus = [
     path: '/admin/theathers'
   },
   {
+    name: 'Sessions',
+    icon: 'tv',
+    path: '/admin/sessions'
+  },
+  {
     name: 'Settings',
     icon: 'gear',
     path: '/admin/settings'
