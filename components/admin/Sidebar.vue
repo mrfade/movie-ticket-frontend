@@ -4,6 +4,8 @@ import { Ref } from 'vue'
 const menuOpen: Ref<boolean> = ref<boolean>(true)
 const toggleMenu = useToggle(menuOpen)
 
+const route = useRoute()
+
 const menus = [
   {
     name: 'Dashboard',
@@ -68,7 +70,11 @@ const menus = [
       </div>
       <ul class="space-y-2 lg:block" :class="{'hidden': !menuOpen}">
         <li v-for="menu in menus" :key="`menu-${menu.name}`">
-          <nuxt-link :to="menu.path" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+          <nuxt-link
+            :to="menu.path"
+            class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+            :class="[route.path.startsWith(menu.path) ? 'bg-gray-100 dark:bg-gray-700' : '']"
+          >
             <font-awesome-icon
               v-if="menu.icon"
               :icon="menu.icon"
