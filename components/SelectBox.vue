@@ -84,7 +84,7 @@ watch(selected, (value: SelectBoxOption | SelectBoxOption[]) => {
           'text-white font-base font-medium cursor-pointer': transparentButton,
           'pl-3 pr-10 cursor-default bg-white border-2 rounded-md shadow-sm sm:text-sm': !transparentButton,
           'dark:text-cod-gray-100 dark:bg-cod-gray-850 border-cod-gray-300 dark:border-cod-gray-700': !transparentButton && variant === 'cod-gray',
-          'dark:text-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700': !transparentButton && variant === 'gray',
+          'dark:text-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600': !transparentButton && variant === 'gray',
           'focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500': showRing,
         }"
       >
