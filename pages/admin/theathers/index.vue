@@ -9,12 +9,14 @@ import { TableRow } from '~~/components/Table.vue'
 import { City, Place } from '~~/@types/city'
 import { SelectBoxOption } from '~~/components/SelectBox.vue'
 import { Theather } from '~~/@types/theather'
+import { useCityStore } from '~~/stores/city'
+import { fetchPlaces, places } from '~~/composables/usePlaces'
 
 const { t } = useI18n()
 const toast = useToast()
 const loaderStore = useLoaderStore()
+const cityStore = useCityStore()
 const theathers: Ref<Theather[]> = ref<Theather[]>([])
-const places: Ref<Place[]> = ref<Place[]>([])
 const cities: Ref<City[]> = ref<City[]>([])
 
 const currentCity: Ref<SelectBoxOption> = ref<SelectBoxOption>({
@@ -30,32 +32,7 @@ const pageNumber: Ref<number> = ref<number>(0)
 const totalPages: Ref<number> = ref<number>(0)
 const loading: Ref<boolean> = ref<boolean>(false)
 
-// fetch cities
-const fetchCities = async (): Promise<boolean> => {
-  const { data: citiesData } = await useFetch<ApiResponsePaged<City[]>>('/city', {
-    ...apiOptions()
-  })
-
-  if (citiesData)
-    cities.value = citiesData.value.data as City[]
-
-  return Promise.resolve(true)
-}
-
-const fetchPlaces = async (cityId: number = 1): Promise<boolean> => {
-  const { data } = await useFetch<ApiResponsePaged<Place[]>>('/place', {
-    ...apiOptions(),
-    params: {
-      pageSize: 100,
-      cityId
-    }
-  })
-
-  if (data)
-    places.value = data.value.data as Place[]
-
-  return Promise.resolve(true)
-}
+cities.value = cityStore.getCities as City[]
 
 const fetchData = async (page: number = 1, search: string = '', placeId: number = 0): Promise<boolean> => {
   loading.value = true
@@ -156,7 +133,6 @@ const rows: ComputedRef<TableRow[]> = computed(() => {
   })
 })
 
-await fetchCities()
 await fetchData()
 
 definePageMeta({
