@@ -14,13 +14,15 @@
   "movies in theatres": "Vizyondaki Filmler",
 
   "name_surname": "Ad Soyad",
+  "name": "İsim",
   "email": "Email",
   "password": "Şifre",
 
   "edit": "Düzenle",
   "update": "Güncelle",
   "delete": "Sil",
-  "save": "Save",
+  "save": "Kaydet",
+  "show": "Göster",
   "go back": "Geri Dön",
   "all": "Tümü",
 
@@ -41,7 +43,14 @@
   "seat": {
     "selected": "Seçili",
     "notAvailable": "Dolu",
-    "available": "Boş"
+    "available": "Boş",
+    "filler": "Dolgu Boşluk"
+  },
+
+  "gender": {
+    "male": "Erkek",
+    "female": "Kadın",
+    "other": "Diğer"
   },
 
   "login": {
@@ -80,9 +89,64 @@
     "seatsU": "KOLTUKLAR"
   },
 
+  "movie": {
+    "title": "Başlık",
+    "originalTitle": "Orijinal Başlık",
+    "releaseDate": "Yayın Tarihi",
+    "imdbId": "IMDB ID",
+    "description": "Açıklama",
+    "duration": "Süre",
+    "nowPlaying": "Gösterimde mi?",
+    "status": {
+      "index": "Durum",
+      "rumored": "Rumored",
+      "planned": "Planned",
+      "inProduction": "In Production",
+      "postProduction": "Post Production",
+      "released": "Released",
+      "canceled": "Canceled"
+    }
+  },
+
+  "theather": {
+    "name": "Salon Adı",
+    "placeName": "Mekan Adı",
+    "seatPlan": "Koltuk Planı"
+  },
+
+  "place": {
+    "name": "Mekan Adı",
+    "city": "Şehir",
+    "theathers": "Salonlar"
+  },
+
+  "actor": {
+    "name": "Aktor Adı",
+    "gender": "Cinsiyet",
+    "birthday": "Doğum Tarihi",
+    "placeOfBirth": "Doğum Yeri",
+    "biography": "Biyografi",
+    "imdbId": "IMDB ID"
+  },
+
   "messages": {
     "user": {
-      "updated": "User Updated"
+      "updated": "Kullanıcı Güncellendi"
+    },
+    "place": {
+      "updated": "Mekan Güncellendi"
+    },
+    "movie": {
+      "updated": "Film Güncellendi"
+    },
+    "theather": {
+      "updated": "Salon Güncellendi"
+    },
+    "genre": {
+      "updated": "Tür Güncellendi"
+    },
+    "actor": {
+      "updated": "Aktor Güncellendi"
     }
   },
 
@@ -115,8 +179,28 @@
       "updateFailed": "Profil güncellenemedi"
     },
     "user": {
-      "notFound": "User not found",
-      "updateFailed": "Update failed"
+      "notFound": "Kullanıcı Bulunamadı",
+      "updateFailed": "Kullanıcı güncellenemedi"
+    },
+    "place": {
+      "notFound": "Mekan Bulunamadı",
+      "updateFailed": "Mekan güncellenemedi"
+    },
+    "movie": {
+      "notFound": "Film Bulunamadı",
+      "updateFailed": "Film güncellenemedi"
+    },
+    "theather": {
+      "notFound": "Salon Bulunamadı",
+      "updateFailed": "Salon güncellenemedi"
+    },
+    "genre": {
+      "notFound": "Tür Bulunamadı",
+      "updateFailed": "Tür güncellenemedi"
+    },
+    "actor": {
+      "notFound": "Aktor Bulunamadı",
+      "updateFailed": "Aktor güncellenemedi"
     }
   }
 }

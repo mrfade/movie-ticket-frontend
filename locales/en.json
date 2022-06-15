@@ -14,6 +14,7 @@
   "movies in theatres": "Movies in Theatres",
 
   "name_surname": "Name Surname",
+  "name": "Name",
   "email": "Email",
   "password": "Password",
 
@@ -21,6 +22,7 @@
   "update": "Update",
   "delete": "Delete",
   "save": "Save",
+  "show": "Show",
   "go back": "Go Back",
   "all": "All",
 
@@ -41,7 +43,14 @@
   "seat": {
     "selected": "Selected",
     "notAvailable": "Not Available",
-    "available": "Available"
+    "available": "Available",
+    "filler": "Filler"
+  },
+
+  "gender": {
+    "male": "Male",
+    "female": "Female",
+    "other": "Other"
   },
 
   "login": {
@@ -80,9 +89,64 @@
     "seatsU": "SEATS"
   },
 
+  "movie": {
+    "title": "Title",
+    "originalTitle": "Original Title",
+    "releaseDate": "Release Date",
+    "imdbId": "IMDB ID",
+    "description": "Description",
+    "duration": "Duration",
+    "nowPlaying": "Now Playing",
+    "status": {
+      "index": "Status",
+      "rumored": "Rumored",
+      "planned": "Planned",
+      "inProduction": "In Production",
+      "postProduction": "Post Production",
+      "released": "Released",
+      "canceled": "Canceled"
+    }
+  },
+
+  "theather": {
+    "name": "Name",
+    "placeName": "Place Name",
+    "seatPlan": "Seat Plan"
+  },
+
+  "place": {
+    "name": "Name",
+    "city": "City",
+    "theathers": "Theathers"
+  },
+
+  "actor": {
+    "name": "Name",
+    "gender": "Gender",
+    "birthday": "Birthday",
+    "placeOfBirth": "Place of Birth",
+    "biography": "Biography",
+    "imdbId": "IMDB ID"
+  },
+
   "messages": {
     "user": {
       "updated": "User Updated"
+    },
+    "place": {
+      "updated": "Place Updated"
+    },
+    "movie": {
+      "updated": "Movie Updated"
+    },
+    "theather": {
+      "updated": "Theather Updated"
+    },
+    "genre": {
+      "updated": "Genre Updated"
+    },
+    "actor": {
+      "updated": "Actor Updated"
     }
   },
 
@@ -116,6 +180,26 @@
     },
     "user": {
       "notFound": "User not found",
+      "updateFailed": "Update failed"
+    },
+    "place": {
+      "notFound": "Place not found",
+      "updateFailed": "Update failed"
+    },
+    "movie": {
+      "notFound": "Movie not found",
+      "updateFailed": "Update failed"
+    },
+    "theather": {
+      "notFound": "Theather not found",
+      "updateFailed": "Update failed"
+    },
+    "genre": {
+      "notFound": "Genre not found",
+      "updateFailed": "Update failed"
+    },
+    "actor": {
+      "notFound": "Actor not found",
       "updateFailed": "Update failed"
     }
   }
