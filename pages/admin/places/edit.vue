@@ -4,11 +4,13 @@ import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import { FetchError } from 'ohmyfetch'
 import { ApiResponse } from '~~/@types/api'
-import { apiOptions } from '~~/composables/useApi'
+import { apiOptions, useApi } from '~~/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
 import { City, Place } from '~~/@types/city'
 import { useCityStore } from '~~/stores/city'
 import { SelectBoxOption } from '~~/components/SelectBox.vue'
+import { Theather } from '~~/@types/theather'
+import { TableRow } from '~~/components/Table.vue'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -17,6 +19,7 @@ const router = useRouter()
 const loaderStore = useLoaderStore()
 const cityStore = useCityStore()
 const place: Ref<Place> = ref<Place>(null)
+const theathers: Ref<Theather[]> = ref<Theather[]>([])
 
 const { data, error } = await useFetch<ApiResponse<Place>>(`/place/${route.query.id}`, {
   ...apiOptions()
@@ -35,6 +38,13 @@ if (error.value) {
 
 if (data)
   place.value = data.value.data as Place
+
+const { data: theathersData } = useLazyAsyncData<ApiResponse<Theather[]>>(`admin_place_${route.query.id}_theathers`, () => useApi(`/place/${route.query.id}/theathers`))
+if (theathersData.value)
+  theathers.value = theathersData.value.data as Theather[]
+watch(theathersData, (newValue) => {
+  theathers.value = newValue.data as Theather[]
+})
 
 const name: Ref<string> = ref<string>(place.value.name)
 
@@ -80,6 +90,28 @@ const citiesOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
   })
 })
 
+const theathersRows: ComputedRef<TableRow[]> = computed(() => {
+  return theathers.value.map((theather: Theather) => {
+    return {
+      id: theather.id,
+      col1: theather.name,
+      actions: [
+        {
+          label: t('show'),
+          action: () => {
+            router.push({
+              name: 'admin-theathers-edit',
+              query: {
+                id: theather.id
+              }
+            })
+          }
+        }
+      ]
+    }
+  })
+})
+
 definePageMeta({
   layout: 'admin',
   middleware: ['auth-admin']
@@ -101,14 +133,14 @@ definePageMeta({
       <admin-edit-card-item>
         <admin-input
           v-model="name"
-          :label="t('name')"
+          :label="t('place.name')"
           required
         />
       </admin-edit-card-item>
       <admin-edit-card-item>
         <select-box
           v-model="currentCity"
-          :label="t('city')"
+          :label="t('place.city')"
           variant="gray"
           :options="citiesOptions"
           :select-min-width="250"
@@ -116,5 +148,15 @@ definePageMeta({
         />
       </admin-edit-card-item>
     </admin-edit-card>
+
+    <h3 class="text-xl font-semibold mt-8 mb-2">{{ $t('place.theathers') }}</h3>
+    <Table
+      :columns="[
+        'Name',
+      ]"
+      :rows="theathersRows"
+      show-id-column
+      show-actions-column
+    />
   </div>
 </template>
