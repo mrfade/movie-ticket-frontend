@@ -11,6 +11,7 @@ import { TableRow } from '~~/components/Table.vue'
 
 const { t } = useI18n()
 const toast = useToast()
+const router = useRouter()
 const loaderStore = useLoaderStore()
 const movies: Ref<Movie[]> = ref<Movie[]>([])
 
@@ -70,7 +71,21 @@ const rows: ComputedRef<TableRow[]> = computed(() => {
       col1: movie.title,
       col2: movie.genres.map((genre: Genre) => genre.name).join(', ') || '-',
       col3: useDayjs()(movie.releaseDate).format('YYYY-MM-DD'),
-      col4: movie.status
+      col4: movie.status,
+      actions: [
+        {
+          label: t('edit'),
+          icon: 'edit',
+          action: () => {
+            router.push({
+              name: 'admin-movies-edit',
+              query: {
+                id: movie.id
+              }
+            })
+          }
+        }
+      ]
     } as TableRow
   })
 })
@@ -103,6 +118,7 @@ definePageMeta({
       ]"
       :rows="rows"
       show-id-column
+      show-actions-column
     />
 
     <div class="flex justify-center mt-8">
