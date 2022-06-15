@@ -48,6 +48,11 @@ const menus = [
     path: '/admin/genres'
   },
   {
+    name: 'Actors',
+    icon: 'user-astronaut',
+    path: '/admin/actors'
+  },
+  {
     name: 'Settings',
     icon: 'gear',
     path: '/admin/settings'
