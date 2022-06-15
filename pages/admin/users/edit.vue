@@ -74,7 +74,7 @@ const claimsOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
   })
 })
 
-const saveUser = async (): Promise<string | void> => {
+const save = async (): Promise<string | void> => {
   loaderStore.setLoading(true)
   const { error } = await useFetch<ApiResponse<User>>('/customer', {
     ...apiOptions(),
@@ -116,53 +116,48 @@ definePageMeta({
   <div class="p-8">
     <admin-title>User Edit</admin-title>
 
-    <div class="mt-5 shadow rounded-lg">
-      <div class="px-4 py-5 bg-white dark:bg-gray-800 sm:p-6">
-        <div class="grid grid-cols-6 gap-6">
-          <div class="col-span-6 sm:col-span-3">
-            <admin-input
-              v-model="name"
-              :label="t('name_surname')"
-              required
-            />
-          </div>
+    <admin-edit-card
+      :buttons="[
+        {
+          text: t('save'),
+          onClick: save
+        }
+      ]"
+    >
+      <admin-edit-card-item>
+        <admin-input
+          v-model="name"
+          :label="t('name_surname')"
+          required
+        />
+      </admin-edit-card-item>
 
-          <div class="col-span-6 sm:col-span-3">
-            <admin-input
-              v-model="email"
-              :label="t('email')"
-              type="email"
-              required
-            />
-          </div>
+      <admin-edit-card-item>
+        <admin-input
+          v-model="email"
+          :label="t('email')"
+          type="email"
+          required
+        />
+      </admin-edit-card-item>
 
-          <div class="col-span-6 sm:col-span-3">
-            <admin-input
-              v-model="password"
-              :label="t('password')"
-              type="password"
-            />
-          </div>
+      <admin-edit-card-item>
+        <admin-input
+          v-model="password"
+          :label="t('password')"
+          type="password"
+        />
+      </admin-edit-card-item>
 
-          <div class="col-span-6 sm:col-span-3">
-            <select-box
-              v-model="currentRoles"
-              label="Roles"
-              variant="gray"
-              :options="claimsOptions"
-              multiple
-            />
-          </div>
-        </div>
-      </div>
-      <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 text-right sm:px-6">
-        <button
-          class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          @click.prevent="saveUser"
-        >
-          {{ $t('save') }}
-        </button>
-      </div>
-    </div>
+      <admin-edit-card-item>
+        <select-box
+          v-model="currentRoles"
+          label="Roles"
+          variant="gray"
+          :options="claimsOptions"
+          multiple
+        />
+      </admin-edit-card-item>
+    </admin-edit-card>
   </div>
 </template>
