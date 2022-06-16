@@ -57,7 +57,7 @@ await fetchTickets(1)
         />
       </div>
 
-      <div class="flex justify-center mt-8">
+      <div v-if="totalPages > 1" class="flex justify-center mt-8">
         <pagination
           :page-number="pageNumber"
           :total-pages="totalPages"
