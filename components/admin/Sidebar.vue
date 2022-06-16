@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 
-const menuOpen: Ref<boolean> = ref<boolean>(true)
+const menuOpen: Ref<boolean> = ref<boolean>(false)
 const toggleMenu = useToggle(menuOpen)
 
 const route = useRoute()
