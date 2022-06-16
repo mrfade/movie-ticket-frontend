@@ -97,7 +97,7 @@ const makePayment = async () => {
 
   if (ticket) {
     toast.success(t('payment.success'))
-    navigateTo('/profile/tickets')
+    await navigateTo('/profile/tickets')
   }
 }
 
