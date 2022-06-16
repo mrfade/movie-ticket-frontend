@@ -226,11 +226,13 @@ definePageMeta({
           </TabPanel>
           <TabPanel class="tab-panel">
             <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
-              <CastSingle
+              <nuxt-link
                 v-for="character in cast"
                 :key="character.id"
-                :character="character"
-              />
+                :to="`/actor/${character.actor.slug}`"
+              >
+                <CastSingle :character="character" />
+              </nuxt-link>
 
               <CastSkeleton v-if="castPending" />
               <CastSkeleton v-if="castPending" />
