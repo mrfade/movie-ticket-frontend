@@ -129,7 +129,8 @@
     "placeOfBirth": "Doğum Yeri",
     "biography": "Biyografi",
     "imdbId": "IMDB ID",
-    "noBiography": "Bu aktörün biyografisi yok"
+    "noBiography": "Bu aktörün biyografisi yok",
+    "knownFor": "Oynadığı Filmler"
   },
 
   "messages": {

@@ -3,7 +3,7 @@ import { createError } from 'h3'
 import { FetchError } from 'ohmyfetch'
 import { useI18n } from 'vue-i18n'
 import { ApiResponse } from '~~/@types/api'
-import { Actor } from '~~/@types/movie'
+import { Actor, Movie } from '~~/@types/movie'
 import { useApi } from '~~/composables/useApi'
 
 const { t } = useI18n()
@@ -31,6 +31,15 @@ if (error.value) {
 }
 
 const actor: Actor = data.value.data
+
+const movies = ref<Movie[]>([])
+const { data: moviesData, pending: moviesPending } = useLazyAsyncData<ApiResponse<Movie[]>>(`actor_${route.params.slug}_movies`, () => useApi(`actor/${route.params.slug}/movies`))
+if (moviesData.value)
+  movies.value = moviesData.value.data
+
+watch(moviesData, (newValue) => {
+  movies.value = newValue.data
+})
 
 const gender = computed(() => {
   if (actor.gender === 1) return t('gender.female')
@@ -76,6 +85,22 @@ const gender = computed(() => {
           </p>
         </div>
       </div>
+
+      <MovieShelf>
+        <template #title>
+          <h3 class="text-2xl font-medium mb-4 dark:text-white">{{ $t('actor.knownFor') }}</h3>
+        </template>
+
+        <MovieSingle
+          v-for="movie in movies"
+          :key="movie.id"
+          :movie="movie"
+        />
+
+        <template v-if="moviesPending">
+          <MovieSkeleton v-for="i in [...Array(6).keys()]" :key="`sf-${i}`" />
+        </template>
+      </MovieShelf>
     </div>
   </div>
 </template>

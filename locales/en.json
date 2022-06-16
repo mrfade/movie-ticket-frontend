@@ -129,7 +129,8 @@
     "placeOfBirth": "Place of Birth",
     "biography": "Biography",
     "imdbId": "IMDB ID",
-    "noBiography": "No biography"
+    "noBiography": "No biography",
+    "knownFor": "Known For"
   },
 
   "messages": {
