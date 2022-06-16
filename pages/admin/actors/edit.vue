@@ -53,7 +53,7 @@ const genders: SelectBoxOption[] = [
 ]
 
 const name: Ref<string> = ref<string>(actor.value.name)
-const birthday: Ref<string> = ref<string>(useDayjs()(actor.value.birthday).format('YYYY-MM-DD'))
+const birthday: Ref<string> = ref<string>(actor.value.birthday ? useDayjs()(actor.value.birthday).format('YYYY-MM-DD') : '')
 const placeOfBirth: Ref<string> = ref<string>(actor.value.placeOfBirth)
 const imdbId: Ref<string> = ref<string>(actor.value.imdbId)
 const biography: Ref<string> = ref<string>(actor.value.biography)
@@ -151,6 +151,7 @@ definePageMeta({
             v-model="gender"
             :label="$t('actor.gender')"
             :options="genders"
+            variant="gray"
             required
           />
         </admin-edit-card-item>
