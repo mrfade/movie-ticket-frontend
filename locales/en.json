@@ -25,6 +25,7 @@
   "show": "Show",
   "go back": "Go Back",
   "all": "All",
+  "info": "Info",
 
   "nowPlaying": "Now Playing",
   "director": "Director",
@@ -86,7 +87,8 @@
 
   "ticket": {
     "theather": "Theather",
-    "seatsU": "SEATS"
+    "seatsU": "SEATS",
+    "youDontHaveTicketsYet": "You don't have tickets yet"
   },
 
   "movie": {

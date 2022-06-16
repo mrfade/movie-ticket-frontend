@@ -25,6 +25,7 @@
   "show": "Göster",
   "go back": "Geri Dön",
   "all": "Tümü",
+  "info": "Bilgi",
 
   "nowPlaying": "Gösterimde",
   "director": "Yönetmen",
@@ -86,7 +87,8 @@
 
   "ticket": {
     "theather": "Salon",
-    "seatsU": "KOLTUKLAR"
+    "seatsU": "KOLTUKLAR",
+    "youDontHaveTicketsYet": "Henüz Biletiniz Yok"
   },
 
   "movie": {
