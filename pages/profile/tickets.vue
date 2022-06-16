@@ -42,6 +42,11 @@ watch(loading, (value: boolean) => {
 })
 
 await fetchTickets(1)
+
+// refresh tickets always when page is changed
+onMounted(() => {
+  refreshNuxtData()
+})
 </script>
 
 <template>
