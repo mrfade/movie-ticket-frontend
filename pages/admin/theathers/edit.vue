@@ -136,7 +136,7 @@ definePageMeta({
     </admin-edit-card>
 
     <div class="w-full max-w-screen-xl mx-auto px-8 py-16 flex flex-col items-center space-y-8">
-      <h3 class="text-xl font-semibold">{{ $t('theather.seatPlan') }}</h3>
+      <h3 class="text-xl dark:text-gray-200 font-semibold">{{ $t('theather.seatPlan') }}</h3>
       <!-- seat info grid -->
       <div class="grid grid-flow-col gap-x-4">
         <div class="flex justify-center items-center space-x-2">

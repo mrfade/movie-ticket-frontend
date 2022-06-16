@@ -149,7 +149,7 @@ definePageMeta({
       </admin-edit-card-item>
     </admin-edit-card>
 
-    <h3 class="text-xl font-semibold mt-8 mb-2">{{ $t('place.theathers') }}</h3>
+    <h3 class="text-xl dark:text-gray-200 font-semibold mt-8 mb-2">{{ $t('place.theathers') }}</h3>
     <Table
       :columns="[
         'Name',
