@@ -33,6 +33,7 @@ export interface Actor {
   birthday?: string;
   placeOfBirth?: string;
   imdbId?: string;
+  slug?: string;
 }
 
 export interface Cast {
