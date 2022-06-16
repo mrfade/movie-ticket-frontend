@@ -68,8 +68,11 @@ const gender = computed(() => {
           <h3 class="text-3xl font-medium text-cod-gray-800 dark:text-cod-gray-200 border-b-2 border-cod-gray-200 dark:border-cod-gray-800">
             {{ actor.name }}
           </h3>
-          <p class="text-justify text-cod-gray-600 dark:text-cod-gray-400">
+          <p v-if="actor.biography" class="text-justify text-cod-gray-600 dark:text-cod-gray-400">
             {{ actor.biography }}
+          </p>
+          <p v-else class="text-justify text-cod-gray-600 dark:text-cod-gray-400">
+            {{ $t('actor.noBiography') }}
           </p>
         </div>
       </div>

@@ -126,7 +126,8 @@
     "birthday": "Doğum Tarihi",
     "placeOfBirth": "Doğum Yeri",
     "biography": "Biyografi",
-    "imdbId": "IMDB ID"
+    "imdbId": "IMDB ID",
+    "noBiography": "Bu aktörün biyografisi yok"
   },
 
   "messages": {
