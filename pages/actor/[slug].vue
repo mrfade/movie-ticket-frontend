@@ -50,11 +50,11 @@ const gender = computed(() => {
             class="mx-auto"
           >
           <div class="flex flex-col p-2 space-y-2">
-            <div class="text-sm space-x-2">
+            <div v-if="actor.birthday" class="text-sm space-x-2">
               <span class="text-cod-gray-800 dark:text-cod-gray-300">{{ $t('actor.birthday') }}:</span>
               <span class="text-cod-gray-600 dark:text-cod-gray-100">{{ useDayjs()(actor.birthday).format('DD.MM.YYYY') }}</span>
             </div>
-            <div class="text-sm space-x-2">
+            <div v-if="actor.placeOfBirth" class="text-sm space-x-2">
               <span class="text-cod-gray-800 dark:text-cod-gray-300">{{ $t('actor.placeOfBirth') }}:</span>
               <span class="text-cod-gray-600 dark:text-cod-gray-100">{{ actor.placeOfBirth }}</span>
             </div>
