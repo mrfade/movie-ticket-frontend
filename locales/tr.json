@@ -130,7 +130,8 @@
     "biography": "Biyografi",
     "imdbId": "IMDB ID",
     "noBiography": "Bu aktörün biyografisi yok",
-    "knownFor": "Oynadığı Filmler"
+    "knownFor": "Oynadığı Filmler",
+    "personalInfo": "Kişisel Bilgiler"
   },
 
   "messages": {

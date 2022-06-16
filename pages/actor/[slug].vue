@@ -58,18 +58,19 @@ const gender = computed(() => {
             :alt="actor.name"
             class="mx-auto"
           >
-          <div class="flex flex-col p-2 space-y-2">
-            <div v-if="actor.birthday" class="text-sm space-x-2">
-              <span class="text-cod-gray-800 dark:text-cod-gray-300">{{ $t('actor.birthday') }}:</span>
-              <span class="text-cod-gray-600 dark:text-cod-gray-100">{{ useDayjs()(actor.birthday).format('DD.MM.YYYY') }}</span>
+          <div class="flex flex-col p-4 space-y-4">
+            <h3 class="font-bold text-xl text-cod-gray-900 dark:text-cod-gray-100">{{ $t('actor.personalInfo') }}</h3>
+            <div v-if="actor.birthday" class="text-sm space-y-2">
+              <div class="font-semibold text-cod-gray-800 dark:text-cod-gray-300">{{ $t('actor.birthday') }}:</div>
+              <span class="font-light text-cod-gray-600 dark:text-cod-gray-100">{{ useDayjs()(actor.birthday).format('DD.MM.YYYY') }} ({{ useDayjs()(actor.birthday).fromNow(true) }} yaşında)</span>
             </div>
-            <div v-if="actor.placeOfBirth" class="text-sm space-x-2">
-              <span class="text-cod-gray-800 dark:text-cod-gray-300">{{ $t('actor.placeOfBirth') }}:</span>
-              <span class="text-cod-gray-600 dark:text-cod-gray-100">{{ actor.placeOfBirth }}</span>
+            <div v-if="actor.placeOfBirth" class="text-sm space-y-2">
+              <div class="font-semibold text-cod-gray-800 dark:text-cod-gray-300">{{ $t('actor.placeOfBirth') }}:</div>
+              <span class="font-light text-cod-gray-600 dark:text-cod-gray-100">{{ actor.placeOfBirth }}</span>
             </div>
-            <div class="text-sm space-x-2">
-              <span class="text-cod-gray-800 dark:text-cod-gray-300">{{ $t('actor.gender') }}:</span>
-              <span class="text-cod-gray-600 dark:text-cod-gray-100">{{ gender }}</span>
+            <div class="text-sm space-y-2">
+              <div class="font-semibold text-cod-gray-800 dark:text-cod-gray-300">{{ $t('actor.gender') }}:</div>
+              <span class="font-light text-cod-gray-600 dark:text-cod-gray-100">{{ gender }}</span>
             </div>
           </div>
         </div>

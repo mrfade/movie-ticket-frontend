@@ -130,7 +130,8 @@
     "biography": "Biography",
     "imdbId": "IMDB ID",
     "noBiography": "No biography",
-    "knownFor": "Known For"
+    "knownFor": "Known For",
+    "personalInfo": "Personal Info"
   },
 
   "messages": {
