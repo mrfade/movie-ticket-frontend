@@ -67,12 +67,12 @@ const menus = [
         class="flex flex-wrap justify-between items-center mx-auto lg:mb-5"
         :class="{'mb-5': menuOpen}"
       >
-        <a href="#" class="flex items-center lg:pl-2.5">
+        <nuxt-link to="/" class="flex items-center lg:pl-2.5">
           <!-- <img src="/docs/images/logo.svg" class="h-6 mr-3 sm:h-7" alt="Flowbite Logo" /> -->
           <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
             Ticket.Admin
           </span>
-        </a>
+        </nuxt-link>
         <button
           type="button"
           class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
