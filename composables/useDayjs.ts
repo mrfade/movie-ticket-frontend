@@ -1,6 +1,6 @@
 import { useStorage } from '@vueuse/core'
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
+import relativeTime from 'dayjs/plugin/relativeTime.js'
 import 'dayjs/locale/tr'
 
 const locale = useStorage('locale', 'tr')
