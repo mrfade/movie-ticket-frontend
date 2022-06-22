@@ -119,7 +119,8 @@
   "place": {
     "name": "Name",
     "city": "City",
-    "theathers": "Theathers"
+    "theathers": "Theathers",
+    "location": "Location"
   },
 
   "actor": {

@@ -119,7 +119,8 @@
   "place": {
     "name": "Mekan Adı",
     "city": "Şehir",
-    "theathers": "Salonlar"
+    "theathers": "Salonlar",
+    "location": "Konum"
   },
 
   "actor": {
