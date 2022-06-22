@@ -1,3 +1,4 @@
+import { SessionTheather } from './session'
 import { Theather, Seat } from './theather'
 
 export interface MovieSimple {
@@ -6,6 +7,7 @@ export interface MovieSimple {
   posterPath: string;
   slug: string;
   backdropPath?: string;
+  theathers?: SessionTheather[]
 }
 
 export interface Session {
