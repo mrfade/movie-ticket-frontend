@@ -287,7 +287,7 @@ definePageMeta({
       <div class="flex flex-col space-y-1 bg-white dark:bg-cod-gray-850 shadow divide-y-2 divide-cod-gray-50 dark:divide-cod-gray-900">
         <div v-for="place in sessionPlaces" :key="place.id" class="flex flex-row gap-4 px-8 py-4">
           <div class="flex min-w-[33%] items-center font-semibold text-cod-gray-700 dark:text-cod-gray-50">
-            {{ place.name }}
+            <nuxt-link :to="`/place/${place.id}`">{{ place.name }}</nuxt-link>
           </div>
           <div class="flex-1 flex-col flex gap-4 text-cod-gray-900 dark:text-cod-gray-50 divide-y-2 divide-cod-gray-50 dark:divide-cod-gray-900">
             <div
