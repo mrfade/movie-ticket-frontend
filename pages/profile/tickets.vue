@@ -12,7 +12,7 @@ const currentPage: Ref<number> = ref<number>(1)
 const pageNumber: Ref<number> = ref<number>(0)
 const totalPages: Ref<number> = ref<number>(0)
 
-const { data, pending, refresh } = await useFetch<ApiResponsePaged<Ticket[]>>(() => `/me/tickets?pageNumber=${currentPage.value}&pageSize=2`, apiOptions())
+const { data, pending, refresh } = await useFetch<ApiResponsePaged<Ticket[]>>(() => `/me/tickets?pageNumber=${currentPage.value}&pageSize=5`, apiOptions())
 
 const assignData = (data: ApiResponsePaged<Ticket[]>) => {
   tickets.value = data.data as Ticket[]
