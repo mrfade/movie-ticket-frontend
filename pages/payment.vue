@@ -269,10 +269,6 @@ definePageMeta({
             <div class="flex justify-center mt-4">
               <nuxt-link :to="`/choose_seat?sessionId=${session.id}`" class="underline text-cod-gray-400">{{ $t('go back') }}</nuxt-link>
             </div>
-
-            <div class="flex mt-4">
-              <pre>{{ paymentData }}</pre>
-            </div>
           </div>
         </div>
       </div>
