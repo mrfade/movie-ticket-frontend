@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { FetchError } from 'ohmyfetch'
 import { Ref } from 'vue'
 import { apiOptions } from '~~/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
@@ -9,39 +8,34 @@ import { Ticket } from '~~/@types/ticket'
 const loaderStore = useLoaderStore()
 const tickets: Ref<Ticket[]> = ref<Ticket[]>([])
 
+const currentPage: Ref<number> = ref<number>(1)
 const pageNumber: Ref<number> = ref<number>(0)
 const totalPages: Ref<number> = ref<number>(0)
-const loading: Ref<boolean> = ref<boolean>(false)
 
-const fetchTickets = async (page: number): Promise<boolean> => {
-  loading.value = true
-  const { data } = await useFetch<ApiResponsePaged<Ticket[]>>('/me/tickets', {
-    ...apiOptions(),
-    params: {
-      pageNumber: page
-    }
-  })
-    .catch((error: FetchError) => {
-      return Promise.reject(error)
-    })
+const { data, pending, refresh } = await useFetch<ApiResponsePaged<Ticket[]>>(() => `/me/tickets?pageNumber=${currentPage.value}&pageSize=2`, apiOptions())
 
-  loading.value = false
-
-  if (data) {
-    tickets.value = data.value.data as Ticket[]
-
-    pageNumber.value = data.value.pageNumber
-    totalPages.value = data.value.totalPages
-  }
-
-  return Promise.resolve(true)
+const assignData = (data: ApiResponsePaged<Ticket[]>) => {
+  tickets.value = data.data as Ticket[]
+  pageNumber.value = data.pageNumber
+  totalPages.value = data.totalPages
 }
 
-watch(loading, (value: boolean) => {
+if (data.value)
+  assignData(data.value)
+
+watch(data, (newValue) => {
+  assignData(newValue)
+})
+
+watch(pending, (value: boolean) => {
   loaderStore.setLoading(value)
 })
 
-await fetchTickets(1)
+const changePage = async (page: number) => {
+  currentPage.value = page
+  await nextTick()
+  refresh()
+}
 
 // refresh tickets always when page is changed
 onMounted(() => {
@@ -73,7 +67,7 @@ onMounted(() => {
         <pagination
           :page-number="pageNumber"
           :total-pages="totalPages"
-          @page="fetchTickets"
+          @page="changePage"
         />
       </div>
     </div>
