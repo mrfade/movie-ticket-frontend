@@ -1,42 +1,10 @@
-# Nuxt 3 Minimal Starter
+# movie-ticket-frontend
 
-Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
+> **Warning**
+> This branch is OLD and NOT MAINTAINED. Please use the `master` branch instead.
 
-## Setup
+This project works with this [backend](https://github.com/onurnafiguzel/Ticket) project.
 
-Make sure to install the dependencies:
+## Live Demo
 
-```bash
-# yarn
-yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install --shamefully-hoist
-```
-
-## Development Server
-
-Start the development server on http://localhost:3000
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.
+[https://ticket-v1.solak.dev/](https://ticket-v1.solak.dev/)
