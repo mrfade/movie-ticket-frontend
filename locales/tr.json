@@ -1,23 +1,18 @@
 {
   "search": "Ara",
   "search ticket": "Bilet Ara",
-
   "_login": "Giriş Yap",
   "logout": "Çıkış Yap",
   "_register": "Kayıt Ol",
-
   "home": "Ana Sayfa",
   "_profile": "Profil",
   "tickets": "Biletler",
   "adminArea": "Yönetim Paneli",
-
   "movies in theatres": "Vizyondaki Filmler",
-
   "name_surname": "Ad Soyad",
   "name": "İsim",
   "email": "Email",
   "password": "Şifre",
-
   "edit": "Düzenle",
   "update": "Güncelle",
   "delete": "Sil",
@@ -26,10 +21,9 @@
   "go back": "Geri Dön",
   "all": "Tümü",
   "info": "Bilgi",
-
   "nowPlaying": "Gösterimde",
   "director": "Yönetmen",
-  "actors": "Oyuncular",
+  "people": "Oyuncular",
   "minutes": "Dakika",
   "buyTicket": "Bilet Al",
   "description": "Açıklama",
@@ -39,7 +33,6 @@
   "today": "Bugün",
   "tomorrow": "Yarın",
   "similarMovies": "Benzer Filmler",
-
   "_seat": "Koltuk",
   "seat": {
     "selected": "Seçili",
@@ -47,21 +40,17 @@
     "available": "Boş",
     "filler": "Dolgu Boşluk"
   },
-
   "gender": {
     "male": "Erkek",
     "female": "Kadın",
     "other": "Diğer"
   },
-
   "login": {
     "success": "Giriş Başarılı"
   },
-
   "register": {
     "success": "Kayıt Başarılı"
   },
-
   "payment": {
     "success": "Ödeme Başarılı",
     "seatDetails": "Koltuk Detayları",
@@ -79,18 +68,15 @@
     "selectSeatU": "KOLTUK SEÇİNİZ",
     "stageU": "SAHNE"
   },
-
   "profile": {
     "updated": "Profil Güncellendi",
     "myTicketsU": "BİLETLERİM"
   },
-
   "ticket": {
     "theather": "Salon",
     "seatsU": "KOLTUKLAR",
     "youDontHaveTicketsYet": "Henüz Biletiniz Yok"
   },
-
   "movie": {
     "title": "Başlık",
     "originalTitle": "Orijinal Başlık",
@@ -109,21 +95,18 @@
       "canceled": "Canceled"
     }
   },
-
-  "theather": {
+  "theater": {
     "name": "Salon Adı",
     "placeName": "Mekan Adı",
     "seatPlan": "Koltuk Planı"
   },
-
   "place": {
     "name": "Mekan Adı",
     "city": "Şehir",
-    "theathers": "Salonlar",
+    "theaters": "Salonlar",
     "location": "Konum"
   },
-
-  "actor": {
+  "person": {
     "name": "Aktor Adı",
     "gender": "Cinsiyet",
     "birthday": "Doğum Tarihi",
@@ -134,7 +117,6 @@
     "knownFor": "Oynadığı Filmler",
     "personalInfo": "Kişisel Bilgiler"
   },
-
   "messages": {
     "user": {
       "updated": "Kullanıcı Güncellendi"
@@ -151,11 +133,10 @@
     "genre": {
       "updated": "Tür Güncellendi"
     },
-    "actor": {
+    "person": {
       "updated": "Aktor Güncellendi"
     }
   },
-
   "errors": {
     "sww": "Beklenmeyen bir hata oluştu",
     "allFieldsRequired": "Tüm alanlar zorunludur",
@@ -196,7 +177,7 @@
       "notFound": "Film Bulunamadı",
       "updateFailed": "Film güncellenemedi"
     },
-    "theather": {
+    "theater": {
       "notFound": "Salon Bulunamadı",
       "updateFailed": "Salon güncellenemedi"
     },
@@ -204,7 +185,7 @@
       "notFound": "Tür Bulunamadı",
       "updateFailed": "Tür güncellenemedi"
     },
-    "actor": {
+    "person": {
       "notFound": "Aktor Bulunamadı",
       "updateFailed": "Aktor güncellenemedi"
     }

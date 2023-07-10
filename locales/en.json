@@ -1,23 +1,18 @@
 {
   "search": "Search",
   "search ticket": "Search Ticket",
-
   "_login": "Login",
   "logout": "Logout",
   "_register": "Register",
-
   "home": "Home",
   "_profile": "Profile",
   "tickets": "Tickets",
   "adminArea": "Admin Area",
-
   "movies in theatres": "Movies in Theatres",
-
   "name_surname": "Name Surname",
   "name": "Name",
   "email": "Email",
   "password": "Password",
-
   "edit": "Edit",
   "update": "Update",
   "delete": "Delete",
@@ -26,10 +21,9 @@
   "go back": "Go Back",
   "all": "All",
   "info": "Info",
-
   "nowPlaying": "Now Playing",
   "director": "Director",
-  "actors": "Actors",
+  "people": "People",
   "minutes": "Minutes",
   "buyTicket": "Buy Ticket",
   "description": "Description",
@@ -39,7 +33,6 @@
   "today": "Today",
   "tomorrow": "Tomorrow",
   "similarMovies": "Similar Movies",
-
   "_seat": "Seat",
   "seat": {
     "selected": "Selected",
@@ -47,21 +40,17 @@
     "available": "Available",
     "filler": "Filler"
   },
-
   "gender": {
     "male": "Male",
     "female": "Female",
     "other": "Other"
   },
-
   "login": {
     "success": "Login Success"
   },
-
   "register": {
     "success": "Register Success"
   },
-
   "payment": {
     "success": "Payment Success",
     "seatDetails": "Seat Details",
@@ -79,18 +68,15 @@
     "selectSeatU": "SELECT SEAT",
     "stageU": "STAGE"
   },
-
   "profile": {
     "updated": "Profile Updated",
     "myTicketsU": "MY TICKETS"
   },
-
   "ticket": {
     "theather": "Theather",
     "seatsU": "SEATS",
     "youDontHaveTicketsYet": "You don't have tickets yet"
   },
-
   "movie": {
     "title": "Title",
     "originalTitle": "Original Title",
@@ -109,21 +95,18 @@
       "canceled": "Canceled"
     }
   },
-
-  "theather": {
+  "theater": {
     "name": "Name",
     "placeName": "Place Name",
     "seatPlan": "Seat Plan"
   },
-
   "place": {
     "name": "Name",
     "city": "City",
-    "theathers": "Theathers",
+    "theaters": "Theaters",
     "location": "Location"
   },
-
-  "actor": {
+  "person": {
     "name": "Name",
     "gender": "Gender",
     "birthday": "Birthday",
@@ -134,7 +117,6 @@
     "knownFor": "Known For",
     "personalInfo": "Personal Info"
   },
-
   "messages": {
     "user": {
       "updated": "User Updated"
@@ -145,17 +127,16 @@
     "movie": {
       "updated": "Movie Updated"
     },
-    "theather": {
-      "updated": "Theather Updated"
+    "theater": {
+      "updated": "Theater Updated"
     },
     "genre": {
       "updated": "Genre Updated"
     },
-    "actor": {
+    "person": {
       "updated": "Actor Updated"
     }
   },
-
   "errors": {
     "sww": "Something went wrong",
     "allFieldsRequired": "All fields are required",
@@ -196,15 +177,15 @@
       "notFound": "Movie not found",
       "updateFailed": "Update failed"
     },
-    "theather": {
-      "notFound": "Theather not found",
+    "theater": {
+      "notFound": "Theater not found",
       "updateFailed": "Update failed"
     },
     "genre": {
       "notFound": "Genre not found",
       "updateFailed": "Update failed"
     },
-    "actor": {
+    "person": {
       "notFound": "Actor not found",
       "updateFailed": "Update failed"
     }
