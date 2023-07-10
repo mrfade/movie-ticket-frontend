@@ -2,11 +2,11 @@
 import { ComputedRef, Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
-import { ApiResponsePaged } from '~~/@types/api'
+import type { PagedResponse } from '~~/@types/api'
 import { useLoaderStore } from '~~/stores/loader'
 import { apiOptions } from '~~/composables/useApi'
 import { TableRow } from '~~/components/Table.vue'
-import { City, Place } from '~~/@types/city'
+import type { City, Place } from '~~/@types/city'
 import { SelectBoxOption } from '~~/components/SelectBox.vue'
 import { useCityStore } from '~~/stores/city'
 
@@ -31,7 +31,7 @@ cities.value = cityStore.getCities as City[]
 
 const fetchData = async (page: number = 1, search: string = '', cityId: number = 0): Promise<boolean> => {
   loading.value = true
-  const { data, error } = await useFetch<ApiResponsePaged<Place[]>>('/place', {
+  const { data, error } = await useFetch<PagedResponse<Place[]>>('/places', {
     ...apiOptions(),
     params: {
       q: search,
@@ -47,10 +47,10 @@ const fetchData = async (page: number = 1, search: string = '', cityId: number =
   }
 
   if (data) {
-    places.value = data.value.data as Place[]
+    places.value = data.value?.data as Place[]
 
-    pageNumber.value = data.value.pageNumber
-    totalPages.value = data.value.totalPages
+    pageNumber.value = data.value?.pageNumber || 0
+    totalPages.value = data.value?.totalPages || 0
   }
 
   return Promise.resolve(true)
@@ -84,8 +84,8 @@ watch(currentCity, async (value: SelectBoxOption) => {
 const citiesOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
   const options: SelectBoxOption[] = cities.value.map((city: City) => {
     return {
-      value: city.id.toString(),
-      label: city.name
+      value: city.ID.toString(),
+      label: city.Name
     } as SelectBoxOption
   })
 
@@ -100,9 +100,9 @@ const citiesOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
 const rows: ComputedRef<TableRow[]> = computed(() => {
   return places.value.map((place: Place) => {
     return {
-      id: place.id,
-      col1: place.name,
-      col2: cities.value.find(city => city.id === place.cityId)?.name || '-',
+      id: place.ID,
+      col1: place.Name,
+      col2: cities.value.find(city => city.ID === place.CityId)?.Name || '-',
       actions: [
         {
           label: t('edit'),
@@ -111,7 +111,7 @@ const rows: ComputedRef<TableRow[]> = computed(() => {
             router.push({
               name: 'admin-places-edit',
               query: {
-                id: place.id
+                id: place.ID
               }
             })
           }

@@ -2,11 +2,11 @@
 import { ComputedRef, Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
-import { ApiResponsePaged } from '~~/@types/api'
+import type { PagedResponse } from '~~/@types/api'
 import { useLoaderStore } from '~~/stores/loader'
 import { apiOptions } from '~~/composables/useApi'
 import { TableRow } from '~~/components/Table.vue'
-import { Session } from '~~/@types/movie'
+import type { Session } from '~~/@types/movie'
 import { useDayjs } from '~~/composables/useDayjs'
 
 const { t } = useI18n()
@@ -21,7 +21,7 @@ const loading: Ref<boolean> = ref<boolean>(false)
 
 const fetchData = async (page: number = 1, search: string = ''): Promise<boolean> => {
   loading.value = true
-  const { data, error } = await useFetch<ApiResponsePaged<Session[]>>('/session', {
+  const { data, error } = await useFetch<PagedResponse<Session[]>>('/sessions', {
     ...apiOptions(),
     params: {
       q: search,
@@ -36,10 +36,10 @@ const fetchData = async (page: number = 1, search: string = ''): Promise<boolean
   }
 
   if (data) {
-    sessions.value = data.value.data as Session[]
+    sessions.value = data.value?.data as Session[]
 
-    pageNumber.value = data.value.pageNumber
-    totalPages.value = data.value.totalPages
+    pageNumber.value = data.value?.pageNumber || 0
+    totalPages.value = data.value?.totalPages || 0
   }
 
   return Promise.resolve(true)
@@ -66,12 +66,12 @@ watch(search, async (value: string) => {
 const rows: ComputedRef<TableRow[]> = computed(() => {
   return sessions.value.map((session: Session) => {
     return {
-      id: session.id,
-      col1: session.name,
-      col2: useDayjs()(session.date).format('DD/MM/YYYY'),
-      col3: session.movie.title,
-      col4: session.theather.name,
-      col5: session.theather.place.name
+      id: session.ID,
+      col1: session.Name,
+      col2: useDayjs()(session.ShowTime).format('DD/MM/YYYY'),
+      col3: session.Movie?.Title,
+      col4: session.Theater?.Name,
+      col5: session.Theater?.Place?.Name
     } as TableRow
   })
 })

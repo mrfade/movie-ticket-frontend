@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SeatPlanRowItem } from '~~/@types/theather'
+import type { SeatPlanRowItem } from '~~/@types/theater'
 
 defineProps<{
   item: SeatPlanRowItem
@@ -11,3 +11,4 @@ defineProps<{
     {{ $t('payment.stageU') }}
   </div>
 </template>
+@types/theater

@@ -3,13 +3,13 @@ import { ComputedRef, Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import { FetchError } from 'ohmyfetch'
-import { ApiResponse } from '~~/@types/api'
+import type { Response } from '~~/@types/api'
 import { apiOptions, useApi } from '~~/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
-import { City, Place } from '~~/@types/city'
+import type { City, Place } from '~~/@types/city'
 import { useCityStore } from '~~/stores/city'
 import { SelectBoxOption } from '~~/components/SelectBox.vue'
-import { Theather } from '~~/@types/theather'
+import type { Theater } from '~~/@types/theater'
 import { TableRow } from '~~/components/Table.vue'
 
 const { t } = useI18n()
@@ -18,17 +18,17 @@ const route = useRoute()
 const router = useRouter()
 const loaderStore = useLoaderStore()
 const cityStore = useCityStore()
-const place: Ref<Place> = ref<Place>(null)
-const theathers: Ref<Theather[]> = ref<Theather[]>([])
+const place: Ref<Place> = ref<Place>({} as Place)
+const theaters: Ref<Theater[]> = ref<Theater[]>([])
 
-const { data, error } = await useFetch<ApiResponse<Place>>(`/place/${route.query.id}`, {
+const { data, error } = await useFetch<Response<Place>>(`/place/${route.query.id}`, {
   ...apiOptions()
 })
 
 if (error.value) {
   const err: FetchError = error.value as FetchError
 
-  if (err.response.status === 404)
+  if (err.response?.status === 404)
     toast.error(t('errors.place.notFound'))
   else
     toast.error(t('errors.sww'))
@@ -37,20 +37,20 @@ if (error.value) {
 }
 
 if (data)
-  place.value = data.value.data as Place
+  place.value = data.value?.data as Place
 
-const { data: theathersData } = useLazyAsyncData<ApiResponse<Theather[]>>(`admin_place_${route.query.id}_theathers`, () => useApi(`/place/${route.query.id}/theathers`))
+const { data: theathersData } = useLazyAsyncData<Response<Theater[]>>(`admin_place_${route.query.id}_theaters`, () => useApi(`/place/${route.query.id}/theaters`))
 if (theathersData.value)
-  theathers.value = theathersData.value.data as Theather[]
-watch(theathersData, (newValue) => {
-  theathers.value = newValue.data as Theather[]
+  theaters.value = theathersData.value.data as Theater[]
+watch(theathersData, (newValue: any) => {
+  theaters.value = newValue.data as Theater[]
 })
 
-const name: Ref<string> = ref<string>(place.value.name)
+const name: Ref<string> = ref<string>(place.value.Name)
 
 const save = async (): Promise<string | void> => {
   loaderStore.setLoading(true)
-  const { error } = await useFetch<ApiResponse<Place>>('/place', {
+  const { error } = await useFetch<Response<Place>>('/place', {
     ...apiOptions(),
     method: 'PUT',
     body: {
@@ -63,7 +63,7 @@ const save = async (): Promise<string | void> => {
   if (error.value) {
     const err: FetchError = error.value as FetchError
 
-    if (err.response.status === 400)
+    if (err.response?.status === 400)
       toast.error(t('errors.place.updateFailed'))
     else
       toast.error(t('errors.sww'))
@@ -78,31 +78,31 @@ const save = async (): Promise<string | void> => {
 }
 
 const currentCity: Ref<SelectBoxOption> = ref<SelectBoxOption>({
-  value: cityStore.getCities.find(city => city.id === place.value.cityId).id.toString(),
-  label: cityStore.getCities.find(city => city.id === place.value.cityId).name
+  value: cityStore.getCities.find(city => city.ID === place.value.CityId)?.ID.toString() ?? '0',
+  label: cityStore.getCities.find(city => city.ID === place.value.CityId)?.Name ?? 'N/A'
 })
 const citiesOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
   return cityStore.getCities.map((city: City) => {
     return {
-      value: city.id.toString(),
-      label: city.name
+      value: city.ID.toString(),
+      label: city.Name
     } as SelectBoxOption
   })
 })
 
-const theathersRows: ComputedRef<TableRow[]> = computed(() => {
-  return theathers.value.map((theather: Theather) => {
+const theatersRows: ComputedRef<TableRow[]> = computed(() => {
+  return theaters.value.map((theater: Theater) => {
     return {
-      id: theather.id,
-      col1: theather.name,
+      id: theater.ID,
+      col1: theater.Name,
       actions: [
         {
           label: t('show'),
           action: () => {
             router.push({
-              name: 'admin-theathers-edit',
+              name: 'admin-theaters-edit',
               query: {
-                id: theather.id
+                id: theater.ID
               }
             })
           }
@@ -149,12 +149,12 @@ definePageMeta({
       </admin-edit-card-item>
     </admin-edit-card>
 
-    <h3 class="text-xl dark:text-gray-200 font-semibold mt-8 mb-2">{{ $t('place.theathers') }}</h3>
+    <h3 class="text-xl dark:text-gray-200 font-semibold mt-8 mb-2">{{ $t('place.theaters') }}</h3>
     <Table
       :columns="[
         'Name',
       ]"
-      :rows="theathersRows"
+      :rows="theatersRows"
       show-id-column
       show-actions-column
     />

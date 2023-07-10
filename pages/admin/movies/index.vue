@@ -2,8 +2,8 @@
 import { ComputedRef, Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
-import { ApiResponsePaged } from '~~/@types/api'
-import { Genre, Movie } from '~~/@types/movie'
+import type { PagedResponse } from '~~/@types/api'
+import type { Genre, Movie } from '~~/@types/movie'
 import { useLoaderStore } from '~~/stores/loader'
 import { apiOptions } from '~~/composables/useApi'
 import { useDayjs } from '~~/composables/useDayjs'
@@ -22,7 +22,7 @@ const loading: Ref<boolean> = ref<boolean>(false)
 
 const fetchData = async (page: number = 1, search: string = ''): Promise<boolean> => {
   loading.value = true
-  const { data, error } = await useFetch<ApiResponsePaged<Movie[]>>('/movie', {
+  const { data, error } = await useFetch<PagedResponse<Movie[]>>('/movies', {
     ...apiOptions(),
     params: {
       q: search,
@@ -37,10 +37,10 @@ const fetchData = async (page: number = 1, search: string = ''): Promise<boolean
   }
 
   if (data) {
-    movies.value = data.value.data as Movie[]
+    movies.value = data.value?.data as Movie[]
 
-    pageNumber.value = data.value.pageNumber
-    totalPages.value = data.value.totalPages
+    pageNumber.value = data.value?.pageNumber || 0
+    totalPages.value = data.value?.totalPages || 0
   }
 
   return Promise.resolve(true)
@@ -67,11 +67,11 @@ watch(search, async (value: string) => {
 const rows: ComputedRef<TableRow[]> = computed(() => {
   return movies.value.map((movie: Movie) => {
     return {
-      id: movie.id,
-      col1: movie.title,
-      col2: movie.genres.map((genre: Genre) => genre.name).join(', ') || '-',
-      col3: useDayjs()(movie.releaseDate).format('YYYY-MM-DD'),
-      col4: movie.status,
+      id: movie.ID,
+      col1: movie.Title,
+      col2: movie.Genres?.map((genre: Genre) => genre.Name).join(', ') || '-',
+      col3: useDayjs()(movie.ReleaseDate).format('YYYY-MM-DD'),
+      col4: movie.Status,
       actions: [
         {
           label: t('edit'),
@@ -80,7 +80,7 @@ const rows: ComputedRef<TableRow[]> = computed(() => {
             router.push({
               name: 'admin-movies-edit',
               query: {
-                id: movie.id
+                id: movie.ID
               }
             })
           }

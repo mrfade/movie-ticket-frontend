@@ -1,13 +1,18 @@
+import type { Model } from './model';
+import type { Theater } from './theater';
+
 export interface City {
-  id: number;
-  name: string;
+  ID: number;
+  Name: string;
 }
 
-export interface Place {
-  id: number;
-  name: string;
-  cityId: number;
-  address: string;
-  latitude: number;
-  longitude: number;
+export interface Place extends Model {
+  Name: string;
+  Description: string;
+  CityId: number;
+  City?: City;
+  Address: string;
+  Latitude: number;
+  Longitude: number;
+  Theaters?: Theater[];
 }

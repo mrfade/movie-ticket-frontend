@@ -2,11 +2,11 @@
 import { ComputedRef, Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
-import { ApiResponsePaged } from '~~/@types/api'
+import type { PagedResponse } from '~~/@types/api'
 import { useLoaderStore } from '~~/stores/loader'
 import { apiOptions } from '~~/composables/useApi'
 import { TableRow } from '~~/components/Table.vue'
-import { User } from '~~/@types/user'
+import type { User } from '~~/@types/user'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -21,7 +21,7 @@ const loading: Ref<boolean> = ref<boolean>(false)
 
 const fetchData = async (page: number = 1, search: string = ''): Promise<boolean> => {
   loading.value = true
-  const { data, error } = await useFetch<ApiResponsePaged<User[]>>('/customer', {
+  const { data, error } = await useFetch<PagedResponse<User[]>>('/users', {
     ...apiOptions(),
     params: {
       q: search,
@@ -36,10 +36,10 @@ const fetchData = async (page: number = 1, search: string = ''): Promise<boolean
   }
 
   if (data) {
-    users.value = data.value.data as User[]
+    users.value = data.value?.data as User[]
 
-    pageNumber.value = data.value.pageNumber
-    totalPages.value = data.value.totalPages
+    pageNumber.value = data.value?.pageNumber || 0
+    totalPages.value = data.value?.totalPages || 0
   }
 
   return Promise.resolve(true)
@@ -66,10 +66,10 @@ watch(search, async (value: string) => {
 const rows: ComputedRef<TableRow[]> = computed(() => {
   return users.value.map((user: User) => {
     return {
-      id: parseInt(user.id),
-      col1: user.name,
-      col2: user.email,
-      col3: user.roles?.join(', ') || '-',
+      id: user.ID,
+      col1: user.Name,
+      col2: user.Email,
+      col3: user.Roles?.join(', ') || '-',
       actions: [
         {
           label: t('edit'),
@@ -78,7 +78,7 @@ const rows: ComputedRef<TableRow[]> = computed(() => {
             router.push({
               name: 'admin-users-edit',
               query: {
-                id: user.id
+                id: user.ID
               }
             })
           }

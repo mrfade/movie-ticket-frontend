@@ -1,3 +1,4 @@
+// @ts-expect-error
 import cookieparser from 'cookieparser'
 import { useCityStore } from '~~/stores/city'
 

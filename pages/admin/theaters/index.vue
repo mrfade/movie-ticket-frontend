@@ -2,13 +2,13 @@
 import { ComputedRef, Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
-import { ApiResponsePaged } from '~~/@types/api'
+import type { PagedResponse } from '~~/@types/api'
 import { useLoaderStore } from '~~/stores/loader'
 import { apiOptions } from '~~/composables/useApi'
 import { TableRow } from '~~/components/Table.vue'
 import { City, Place } from '~~/@types/city'
 import { SelectBoxOption } from '~~/components/SelectBox.vue'
-import { Theather } from '~~/@types/theather'
+import type { Theater } from '~~/@types/theater'
 import { useCityStore } from '~~/stores/city'
 import { fetchPlaces, places } from '~~/composables/usePlaces'
 
@@ -17,7 +17,7 @@ const toast = useToast()
 const router = useRouter()
 const loaderStore = useLoaderStore()
 const cityStore = useCityStore()
-const theathers: Ref<Theather[]> = ref<Theather[]>([])
+const theaters: Ref<Theater[]> = ref<Theater[]>([])
 const cities: Ref<City[]> = ref<City[]>([])
 
 const currentCity: Ref<SelectBoxOption> = ref<SelectBoxOption>({
@@ -37,7 +37,7 @@ cities.value = cityStore.getCities as City[]
 
 const fetchData = async (page: number = 1, search: string = '', placeId: number = 0): Promise<boolean> => {
   loading.value = true
-  const { data, error } = await useFetch<ApiResponsePaged<Theather[]>>('/theather', {
+  const { data, error } = await useFetch<PagedResponse<Theater[]>>('/theaters', {
     ...apiOptions(),
     params: {
       q: search,
@@ -53,10 +53,10 @@ const fetchData = async (page: number = 1, search: string = '', placeId: number 
   }
 
   if (data) {
-    theathers.value = data.value.data as Theather[]
+    theaters.value = data.value?.data as Theater[]
 
-    pageNumber.value = data.value.pageNumber
-    totalPages.value = data.value.totalPages
+    pageNumber.value = data.value?.pageNumber || 0
+    totalPages.value = data.value?.totalPages || 0
   }
 
   return Promise.resolve(true)
@@ -95,8 +95,8 @@ watch(currentPlace, async (value: SelectBoxOption) => {
 const citiesOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
   const options = cities.value.map((city: City) => {
     return {
-      value: city.id.toString(),
-      label: city.name
+      value: city.ID.toString(),
+      label: city.Name
     } as SelectBoxOption
   })
 
@@ -111,8 +111,8 @@ const citiesOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
 const placesOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
   const options = places.value.map((place: Place) => {
     return {
-      value: place.id.toString(),
-      label: place.name
+      value: place.ID.toString(),
+      label: place.Name
     } as SelectBoxOption
   })
 
@@ -125,20 +125,20 @@ const placesOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
 })
 
 const rows: ComputedRef<TableRow[]> = computed(() => {
-  return theathers.value.map((theather: Theather) => {
+  return theaters.value.map((theater: Theater) => {
     return {
-      id: theather.id,
-      col1: theather.name,
-      col2: places.value.find(place => place.id === theather.placeId)?.name || '-',
+      id: theater.ID,
+      col1: theater.Name,
+      col2: places.value.find(place => place.ID === theater.PlaceId)?.Name || '-',
       actions: [
         {
           label: t('edit'),
           icon: 'edit',
           action: () => {
             router.push({
-              name: 'admin-theathers-edit',
+              name: 'admin-theaters-edit',
               query: {
-                id: theather.id
+                id: theater.ID
               }
             })
           }
@@ -158,7 +158,7 @@ definePageMeta({
 
 <template>
   <div class="p-8">
-    <admin-title>Theathers</admin-title>
+    <admin-title>Theaters</admin-title>
 
     <div class="flex gap-8 my-4">
       <admin-input

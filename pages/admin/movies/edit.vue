@@ -3,10 +3,10 @@ import { Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import { FetchError } from 'ohmyfetch'
-import { ApiResponse } from '~~/@types/api'
+import type { Response } from '~~/@types/api'
 import { apiOptions } from '~~/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
-import { Movie } from '~~/@types/movie'
+import type { Movie } from '~~/@types/movie'
 import { SelectBoxOption } from '~~/components/SelectBox.vue'
 
 const { t } = useI18n()
@@ -14,16 +14,16 @@ const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const loaderStore = useLoaderStore()
-const movie: Ref<Movie> = ref<Movie>(null)
+const movie: Ref<Movie> = ref<Movie>({} as Movie)
 
-const { data, error } = await useFetch<ApiResponse<Movie>>(`/movie/${route.query.id}`, {
+const { data, error } = await useFetch<Response<Movie>>(`/movie/${route.query.id}`, {
   ...apiOptions()
 })
 
 if (error.value) {
   const err: FetchError = error.value as FetchError
 
-  if (err.response.status === 404)
+  if (err.response?.status === 404)
     toast.error(t('errors.place.notFound'))
   else
     toast.error(t('errors.sww'))
@@ -32,7 +32,7 @@ if (error.value) {
 }
 
 if (data)
-  movie.value = data.value.data as Movie
+  movie.value = data.value?.data as Movie
 
 const statusses: SelectBoxOption[] = [
   {
@@ -61,25 +61,25 @@ const statusses: SelectBoxOption[] = [
   }
 ]
 
-const _title: Ref<string> = ref<string>(movie.value.title)
-const originalTitle: Ref<string> = ref<string>(movie.value.originalTitle)
-const releaseDate: Ref<string> = ref<string>(movie.value.releaseDate)
-const duration: Ref<string> = ref<string>(movie.value.duration.toString())
-const imdbId: Ref<string> = ref<string>(movie.value.imdbId)
-const description: Ref<string> = ref<string>(movie.value.description)
+const _title: Ref<string> = ref<string>(movie.value.Title)
+const originalTitle: Ref<string> = ref<string>(movie.value.OriginalTitle)
+const releaseDate: Ref<string> = ref<string>(movie.value.ReleaseDate)
+const duration: Ref<string> = ref<string>(movie.value.Duration.toString())
+const imdbId: Ref<string> = ref<string>(movie.value.ImdbId || '')
+const description: Ref<string> = ref<string>(movie.value.Description)
 
 const status: Ref<SelectBoxOption> = ref<SelectBoxOption>({
-  value: movie.value.status,
-  label: t(`movie.status.${movie.value.status.toLocaleLowerCase()}`)
+  value: movie.value.Status,
+  label: t(`movie.status.${movie.value.Status.toLocaleLowerCase()}`)
 })
 const nowPlaying: Ref<SelectBoxOption> = ref<SelectBoxOption>({
-  value: movie.value.nowPlaying ? '1' : '0',
-  label: movie.value.nowPlaying ? 'Yes' : 'No'
+  value: movie.value.NowPlaying ? '1' : '0',
+  label: movie.value.NowPlaying ? 'Yes' : 'No'
 })
 
 const save = async (): Promise<string | void> => {
   loaderStore.setLoading(true)
-  const { error } = await useFetch<ApiResponse<Movie>>('/movie', {
+  const { error } = await useFetch<Response<Movie>>('/movie', {
     ...apiOptions(),
     method: 'PUT',
     body: {
@@ -99,7 +99,7 @@ const save = async (): Promise<string | void> => {
   if (error.value) {
     const err: FetchError = error.value as FetchError
 
-    if (err.response.status === 400)
+    if (err.response?.status === 400)
       toast.error(t('errors.movie.updateFailed'))
     else
       toast.error(t('errors.sww'))

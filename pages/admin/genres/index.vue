@@ -2,7 +2,7 @@
 import { ComputedRef, Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
-import { ApiResponsePaged } from '~~/@types/api'
+import { PagedResponse } from '~~/@types/api'
 import { useLoaderStore } from '~~/stores/loader'
 import { apiOptions } from '~~/composables/useApi'
 import { TableRow } from '~~/components/Table.vue'
@@ -21,7 +21,7 @@ const loading: Ref<boolean> = ref<boolean>(false)
 
 const fetchData = async (page: number = 1, search: string = ''): Promise<boolean> => {
   loading.value = true
-  const { data, error } = await useFetch<ApiResponsePaged<Genre[]>>('/genre', {
+  const { data, error } = await useFetch<PagedResponse<Genre[]>>('/genres', {
     ...apiOptions(),
     params: {
       q: search,
@@ -36,10 +36,10 @@ const fetchData = async (page: number = 1, search: string = ''): Promise<boolean
   }
 
   if (data) {
-    genres.value = data.value.data as Genre[]
+    genres.value = data.value?.data as Genre[]
 
-    pageNumber.value = data.value.pageNumber
-    totalPages.value = data.value.totalPages
+    pageNumber.value = data.value?.pageNumber || 0
+    totalPages.value = data.value?.totalPages || 0
   }
 
   return Promise.resolve(true)
@@ -66,8 +66,8 @@ watch(search, async (value: string) => {
 const rows: ComputedRef<TableRow[]> = computed(() => {
   return genres.value.map((genre: Genre) => {
     return {
-      id: genre.id,
-      col1: genre.name,
+      id: genre.ID,
+      col1: genre.Name,
       actions: [
         {
           label: t('edit'),
@@ -76,7 +76,7 @@ const rows: ComputedRef<TableRow[]> = computed(() => {
             router.push({
               name: 'admin-genres-edit',
               query: {
-                id: genre.id
+                id: genre.ID
               }
             })
           }

@@ -1,10 +1,11 @@
 <script setup lang="ts">
+// @ts-expect-error
 import shuffle from 'lodash.shuffle'
 import { onClickOutside } from '@vueuse/core'
 import { Ref } from 'vue'
 import { useApi } from '~~/composables/useApi'
-import { ApiResponse } from '~~/@types/api'
-import { Movie } from '~~/@types/movie'
+import type { Response } from '~~/@types/api'
+import type { Movie } from '~~/@types/movie'
 
 const search = ref('')
 const searchResult = ref<Movie[]>([])
@@ -22,27 +23,27 @@ onClickOutside(searchContainer, () => {
 
 const movies: Ref<Movie[]> = ref<Movie[]>([])
 const first6Movies: Ref<Movie[]> = ref<Movie[]>([])
-const { data: moviesData, pending: moviesPending } = useLazyAsyncData<ApiResponse<Movie[]>>('movies', () => useApi('movie'), {
+const { data: moviesData, pending: moviesPending } = useLazyAsyncData<Response<Movie[]>>('movies', () => useApi('movie'), {
   transform: (response) => {
     response.data = shuffle(response.data)
     return response
   }
 })
-const setMovies = (_movies) => {
+const setMovies = (_movies: Movie[]) => {
   movies.value = _movies
   first6Movies.value = movies.value.slice(0, 6)
 }
 
 if (moviesData.value)
-  setMovies(moviesData.value.data)
+  setMovies(moviesData.value.data as Movie[])
 
-watch(moviesData, newValue => setMovies(newValue.data))
+watch(moviesData, newValue => setMovies(newValue?.data as Movie[]))
 
 watch(search, async (newValue) => {
   if (newValue.length < 3) return
 
   searchLoading.value = true
-  const { data: searchData } = await useApi<ApiResponse<Movie[]>>(`search/movie?q=${newValue}`)
+  const { data: searchData } = await useApi<Response<Movie[]>>(`search/movie?q=${newValue}`)
   searchResult.value = searchData
   searchLoading.value = false
 })
@@ -87,7 +88,7 @@ definePageMeta({
           :class="[searchFocus ? 'border-t border-t-cod-gray-100 visible opacity-100' : 'invisible opacity-0']"
         >
           <div class="flex flex-col space-y-2 divide-y divide-cod-gray-100">
-            <MovieSearchSingle v-for="movie in searchResult" :key="movie.id" :movie="movie" />
+            <MovieSearchSingle v-for="movie in searchResult" :key="movie.ID" :movie="movie" />
           </div>
         </div>
       </div>
@@ -100,7 +101,7 @@ definePageMeta({
 
       <MovieSingle
         v-for="smovie in first6Movies"
-        :key="smovie.id"
+        :key="smovie.ID"
         :movie="smovie"
       />
 

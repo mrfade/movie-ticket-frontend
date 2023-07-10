@@ -21,6 +21,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   nuxtApp.hook('app:mounted', () => {
     const _locale = useStorage('locale', 'tr')
+    // @ts-expect-error
     vuei18n.global.locale.value = _locale.value
   })
 })

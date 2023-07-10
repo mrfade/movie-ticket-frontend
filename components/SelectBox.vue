@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
+// @ts-expect-error
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
 
 export interface SelectBoxOption {

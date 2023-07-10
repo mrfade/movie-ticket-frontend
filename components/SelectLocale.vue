@@ -19,7 +19,7 @@ const locales: SelectBoxOption[] = [
   }
 ]
 
-const selected: Ref<SelectBoxOption> = ref<SelectBoxOption>(locales.find(option => option.value === locale.value))
+const selected: Ref<SelectBoxOption> = ref<SelectBoxOption>(locales.find(option => option.value === locale.value) || locales[0])
 const storageLocale = useStorage('locale', 'tr')
 
 watch(selected, (value: SelectBoxOption) => {

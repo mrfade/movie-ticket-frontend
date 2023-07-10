@@ -7,9 +7,9 @@ import { useDayjs } from '~~/composables/useDayjs'
 import { useCurrencyFormat } from '~~/composables/useCurrencyFormat'
 import { usePaymentStore } from '~~/stores/payment'
 import { useLoaderStore } from '~~/stores/loader'
-import { Seat } from '~~/@types/theather'
-import { Session } from '~~/@types/movie'
-import { Ticket } from '~~/@types/ticket'
+import type { Seat } from '~~/@types/theater'
+import type { Session } from '~~/@types/movie'
+import type { Ticket } from '~~/@types/ticket'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -25,7 +25,7 @@ const cardName: Ref<string> = ref<string>('')
 const cardNumber: Ref<string> = ref<string>('')
 const cardMonth: Ref<number> = ref<number>(useDayjs()().month() + 1)
 const cardYear: Ref<number> = ref<number>(useDayjs()().year())
-const cardCvc: Ref<number> = ref<number>(null)
+const cardCvc: Ref<number> = ref<number>(0)
 
 const session: Session = paymentStore.getSession
 const selectedSeats: Ref<Seat[]> = ref<Seat[]>([])
@@ -34,12 +34,12 @@ const selectedSeats: Ref<Seat[]> = ref<Seat[]>([])
 if (paymentStore.getSelectedSeats)
   selectedSeats.value = paymentStore.getSelectedSeats
 
-const sessionDate = computed(() => useDayjs()(session.date).format('DD MMMM YYYY dddd HH:mm'))
+const sessionDate = computed(() => useDayjs()(session.ShowTime).format('DD MMMM YYYY dddd HH:mm'))
 
 // const basePrice = session.theather.prices.find(price => price.type === 1).price
 const serviceFee = 3.00
 
-const totalTicketPrice = computed(() => selectedSeats.value.reduce((acc, seat) => acc + session.theather.prices.find(price => price.type === seat.type)?.price, 0))
+const totalTicketPrice = computed(() => selectedSeats.value.reduce((acc, seat) => acc + (session.Theater?.Prices?.find(price => price.Type === seat.Type)?.Price || 0), 0))
 const totalServiceFee = computed(() => selectedSeats.value.length * serviceFee)
 
 const totalTicketPriceText = computed(() => useCurrencyFormat(totalTicketPrice.value))
@@ -89,11 +89,11 @@ const makePayment = async () => {
   }
 
   loaderStore.setLoading(true)
-  const ticket: Ticket = await paymentStore.makePayment(session.id, paymentData.value).catch((error: Error) => {
+  const ticket: Ticket = await paymentStore.makePayment(session.ID, paymentData.value).catch((error: Error) => {
     toast.error(error.message)
   }).finally(() => {
     loaderStore.setLoading(false)
-  })
+  }) as Ticket
 
   if (ticket) {
     toast.success(t('payment.success'))
@@ -123,20 +123,20 @@ definePageMeta({
               <div class="grid grid-flow-row grid-cols-6 gap-4">
                 <div
                   v-for="(seat, idx) in selectedSeats"
-                  :key="seat.id"
+                  :key="seat.ID"
                   class="col-span-6 sm:col-span-3 lg:col-span-2 flex flex-col gap-2"
                 >
-                  <label class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('_seat') }} {{ idx + 1 }} ({{ seat.name }})</label>
+                  <label class="text-sm text-cod-gray-800 dark:text-cod-gray-200">{{ $t('_seat') }} {{ idx + 1 }} ({{ seat.Name }})</label>
                   <select
-                    v-model="seat.type"
+                    v-model="seat.Type"
                     class="flex-1 select"
                   >
                     <option
-                      v-for="price in session.theather.prices"
-                      :key="price.id"
-                      :value="price.type"
+                      v-for="price in session.Theater?.Prices"
+                      :key="price.ID"
+                      :value="price.Type"
                     >
-                      {{ price.type === 1 ? 'Tam' : 'Öğrenci' }}
+                      {{ price.Type === 1 ? 'Tam' : 'Öğrenci' }}
                     </option>
                   </select>
                 </div>
@@ -223,16 +223,16 @@ definePageMeta({
             <div class="flex flex-col bg-white dark:bg-cod-gray-800 p-4 rounded-lg shadow divide-y divide-cod-gray-100 dark:divide-cod-gray-500 space-y-4">
               <div class="flex flex-row gap-4">
                 <img
-                  :src="`https://image.tmdb.org/t/p/w500/${session.movie.posterPath}`"
+                  :src="`https://image.tmdb.org/t/p/w500/${session.Movie?.PosterPath}`"
                   class="h-24 aspect-[2/3] rounded"
                 >
                 <div class="h-full flex-1 flex flex-col">
                   <h3 class="text-cod-gray-800 dark:text-cod-gray-50 text-lg font-bold mb-4">
-                    {{ session.movie.title }}
+                    {{ session.Movie?.Title }}
                   </h3>
                   <div class="flex-1 space-y-1">
                     <div class="text-cod-gray-600 dark:text-cod-gray-50 text-sm">
-                      {{ session.theather.place.name }} - {{ session.theather.name }}
+                      {{ session.Theater?.Place?.Name }} - {{ session.Theater?.Name }}
                     </div>
                     <div class="text-cod-gray-600 dark:text-cod-gray-50 text-sm">
                       {{ sessionDate }}
@@ -267,7 +267,7 @@ definePageMeta({
             </div>
 
             <div class="flex justify-center mt-4">
-              <nuxt-link :to="`/choose_seat?sessionId=${session.id}`" class="underline text-cod-gray-400">{{ $t('go back') }}</nuxt-link>
+              <nuxt-link :to="`/choose_seat?sessionId=${session.ID}`" class="underline text-cod-gray-400">{{ $t('go back') }}</nuxt-link>
             </div>
           </div>
         </div>

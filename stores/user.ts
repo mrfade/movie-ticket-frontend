@@ -1,17 +1,17 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { setAccessToken, removeAccessToken } from '~~/composables/useAuthCookie'
 import { useApi } from '~~/composables/useApi'
-import { ApiResponse } from '~~/@types/api'
-import { User } from '~~/@types/user'
+import type { Response } from '~~/@types/api'
+import type { User } from '~~/@types/user'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     authenticated: false,
-    token: null,
-    id: null,
-    name: null,
-    email: null,
-    roles: []
+    token: '',
+    id: 0,
+    name: '',
+    email: '',
+    roles: [] as string[]
   }),
 
   getters: {
@@ -35,7 +35,7 @@ export const useUserStore = defineStore('user', {
       setAccessToken(token)
     },
 
-    setId (id: string) {
+    setId (id: number) {
       this.id = id
     },
 
@@ -53,10 +53,10 @@ export const useUserStore = defineStore('user', {
 
     clear () {
       this.authenticated = false
-      this.token = null
-      this.id = null
-      this.name = null
-      this.email = null
+      this.token = ''
+      this.id = 0
+      this.name = ''
+      this.email = ''
       this.roles = []
 
       removeAccessToken()
@@ -66,7 +66,7 @@ export const useUserStore = defineStore('user', {
       this.clear()
     },
 
-    login (token: string, id: string, name: string, email: string) {
+    login (token: string, id: number, name: string, email: string) {
       this.setAuthenticated(true)
       this.setToken(token)
       this.setId(id)
@@ -77,7 +77,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async getMe (): Promise<void | Boolean> {
-      const data = await useApi<ApiResponse<User>>('/me').catch(() => {
+      const data = await useApi<Response<User>>('/me').catch(() => {
         this.clear()
         return false
       })
@@ -88,16 +88,16 @@ export const useUserStore = defineStore('user', {
       const user: User = data.data
 
       this.setAuthenticated(true)
-      this.setId(user.id)
-      this.setName(user.name)
-      this.setEmail(user.email)
-      this.setRoles(user.roles)
+      this.setId(user.ID)
+      this.setName(user.Name)
+      this.setEmail(user.Email)
+      this.setRoles(user.Roles)
 
       setAccessToken(this.getToken)
     },
 
     async updateUser (user: User): Promise<boolean> {
-      const data = await useApi<ApiResponse<User>>('/me/details', {
+      const data = await useApi<Response<User>>('/me/details', {
         method: 'PUT',
         body: user
       }).catch(() => {
@@ -108,8 +108,8 @@ export const useUserStore = defineStore('user', {
         return Promise.resolve(false)
 
       const updatedUser: User = data.data
-      this.setName(updatedUser.name)
-      this.setEmail(updatedUser.email)
+      this.setName(updatedUser.Name)
+      this.setEmail(updatedUser.Email)
 
       return Promise.resolve(true)
     },

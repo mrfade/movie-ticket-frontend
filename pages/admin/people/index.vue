@@ -2,17 +2,17 @@
 import { ComputedRef, Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
-import { ApiResponsePaged } from '~~/@types/api'
+import { PagedResponse } from '~~/@types/api'
 import { useLoaderStore } from '~~/stores/loader'
 import { apiOptions } from '~~/composables/useApi'
 import { TableRow } from '~~/components/Table.vue'
-import { Actor } from '~~/@types/movie'
+import type { Person } from '~~/@types/movie'
 
 const { t } = useI18n()
 const toast = useToast()
 const router = useRouter()
 const loaderStore = useLoaderStore()
-const actors: Ref<Actor[]> = ref<Actor[]>([])
+const people: Ref<Person[]> = ref<Person[]>([])
 
 const search: Ref<string> = ref<string>('')
 const pageNumber: Ref<number> = ref<number>(0)
@@ -21,7 +21,7 @@ const loading: Ref<boolean> = ref<boolean>(false)
 
 const fetchData = async (page: number = 1, search: string = ''): Promise<boolean> => {
   loading.value = true
-  const { data, error } = await useFetch<ApiResponsePaged<Actor[]>>('/actor', {
+  const { data, error } = await useFetch<PagedResponse<Person[]>>('/people', {
     ...apiOptions(),
     params: {
       q: search,
@@ -36,10 +36,10 @@ const fetchData = async (page: number = 1, search: string = ''): Promise<boolean
   }
 
   if (data) {
-    actors.value = data.value.data as Actor[]
+    people.value = data.value?.data as Person[]
 
-    pageNumber.value = data.value.pageNumber
-    totalPages.value = data.value.totalPages
+    pageNumber.value = data.value?.pageNumber || 0
+    totalPages.value = data.value?.totalPages || 0
   }
 
   return Promise.resolve(true)
@@ -64,19 +64,19 @@ watch(search, async (value: string) => {
 })
 
 const rows: ComputedRef<TableRow[]> = computed(() => {
-  return actors.value.map((actor: Actor) => {
+  return people.value.map((person: Person) => {
     return {
-      id: actor.id,
-      col1: actor.name,
+      id: person.ID,
+      col1: person.Name,
       actions: [
         {
           label: t('edit'),
           icon: 'edit',
           action: () => {
             router.push({
-              name: 'admin-actors-edit',
+              name: 'admin-people-edit',
               query: {
-                id: actor.id
+                id: person.ID
               }
             })
           }
@@ -96,7 +96,7 @@ definePageMeta({
 
 <template>
   <div class="p-8">
-    <admin-title>Actors</admin-title>
+    <admin-title>People</admin-title>
 
     <div class="flex gap-8 my-4">
       <admin-input

@@ -2,8 +2,8 @@
 import { Ref } from 'vue'
 import { apiOptions } from '~~/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
-import { ApiResponsePaged } from '~~/@types/api'
-import { Ticket } from '~~/@types/ticket'
+import type { PagedResponse } from '~~/@types/api'
+import type { Ticket } from '~~/@types/ticket'
 
 const loaderStore = useLoaderStore()
 const tickets: Ref<Ticket[]> = ref<Ticket[]>([])
@@ -12,9 +12,9 @@ const currentPage: Ref<number> = ref<number>(1)
 const pageNumber: Ref<number> = ref<number>(0)
 const totalPages: Ref<number> = ref<number>(0)
 
-const { data, pending, refresh } = await useFetch<ApiResponsePaged<Ticket[]>>(() => `/me/tickets?pageNumber=${currentPage.value}&pageSize=5`, apiOptions())
+const { data, pending, refresh } = await useFetch<PagedResponse<Ticket[]>>(() => `/me/tickets?pageNumber=${currentPage.value}&pageSize=5`, apiOptions())
 
-const assignData = (data: ApiResponsePaged<Ticket[]>) => {
+const assignData = (data: PagedResponse<Ticket[]>) => {
   tickets.value = data.data as Ticket[]
   pageNumber.value = data.pageNumber
   totalPages.value = data.totalPages
@@ -23,7 +23,7 @@ const assignData = (data: ApiResponsePaged<Ticket[]>) => {
 if (data.value)
   assignData(data.value)
 
-watch(data, (newValue) => {
+watch(data, (newValue: any) => {
   assignData(newValue)
 })
 
@@ -51,7 +51,7 @@ onMounted(() => {
       <div class="flex flex-col gap-4 mt-8">
         <ticket-single
           v-for="ticket in tickets"
-          :key="ticket.id"
+          :key="ticket.ID"
           :ticket="ticket"
         />
       </div>

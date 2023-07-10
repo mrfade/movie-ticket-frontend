@@ -3,24 +3,24 @@ import { Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import { FetchError } from 'ohmyfetch'
-import { ApiResponse } from '~~/@types/api'
+import type { Response } from '~~/@types/api'
 import { apiOptions } from '~~/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
-import { Genre } from '~~/@types/movie'
+import type { Genre } from '~~/@types/movie'
 
 const { t } = useI18n()
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const loaderStore = useLoaderStore()
-const genre: Ref<Genre> = ref<Genre>(null)
+const genre: Ref<Genre> = ref<Genre>({} as Genre)
 
-const { data, error } = await useFetch<ApiResponse<Genre>>(`/genre/${route.query.id}`, apiOptions())
+const { data, error } = await useFetch<Response<Genre>>(`/genre/${route.query.id}`, apiOptions())
 
 if (error.value) {
   const err: FetchError = error.value as FetchError
 
-  if (err.response.status === 404)
+  if (err.response?.status === 404)
     toast.error(t('errors.genre.notFound'))
   else
     toast.error(t('errors.sww'))
@@ -29,13 +29,13 @@ if (error.value) {
 }
 
 if (data)
-  genre.value = data.value.data as Genre
+  genre.value = data.value?.data as Genre
 
-const name: Ref<string> = ref<string>(genre.value.name)
+const name: Ref<string> = ref<string>(genre.value.Name)
 
 const save = async (): Promise<string | void> => {
   loaderStore.setLoading(true)
-  const { error } = await useFetch<ApiResponse<Genre>>('/genre', {
+  const { error } = await useFetch<Response<Genre>>('/genre', {
     ...apiOptions(),
     method: 'PUT',
     body: {
@@ -48,7 +48,7 @@ const save = async (): Promise<string | void> => {
   if (error.value) {
     const err: FetchError = error.value as FetchError
 
-    if (err.response.status === 400)
+    if (err.response?.status === 400)
       toast.error(t('errors.genre.updateFailed'))
     else
       toast.error(t('errors.sww'))

@@ -3,21 +3,21 @@ import { Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import { FetchError } from 'ohmyfetch'
-import { ApiResponse } from '~~/@types/api'
+import type { Response } from '~~/@types/api'
 import { apiOptions } from '~~/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
-import { Seat, SeatPlan, Theather } from '~~/@types/theather'
+import type { Seat, SeatPlan, Theater } from '~~/@types/theater'
 
 const { t } = useI18n()
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const loaderStore = useLoaderStore()
-const theather: Ref<Theather> = ref<Theather>(null)
+const theater: Ref<Theater> = ref<Theater>({} as Theater)
 const seats: Ref<Seat[]> = ref<Seat[]>([])
 
-const { data, error } = await useFetch<ApiResponse<Theather>>(`/theather/${route.query.id}`, apiOptions())
-const { data: seatsData, error: seatsError } = await useFetch<ApiResponse<Seat[]>>(`/theather/${route.query.id}/seats`, {
+const { data, error } = await useFetch<Response<Theater>>(`/theater/${route.query.id}`, apiOptions())
+const { data: seatsData, error: seatsError } = await useFetch<Response<Seat[]>>(`/theater/${route.query.id}/seats`, {
   ...apiOptions(),
   params: {
     pageSize: 250
@@ -27,33 +27,33 @@ const { data: seatsData, error: seatsError } = await useFetch<ApiResponse<Seat[]
 if (error.value) {
   const err: FetchError = error.value as FetchError
 
-  if (err.response.status === 404)
-    toast.error(t('errors.theather.notFound'))
+  if (err.response?.status === 404)
+    toast.error(t('errors.theater.notFound'))
   else
     toast.error(t('errors.sww'))
 
-  router.push('/admin/theathers')
+  router.push('/admin/theaters')
 }
 
 if (seatsError.value) {
   toast.error(t('errors.sww'))
-  router.push('/admin/theathers')
+  router.push('/admin/theaters')
 }
 
 if (data)
-  theather.value = data.value.data as Theather
+  theater.value = data.value?.data as Theater
 
 if (seatsData)
-  seats.value = seatsData.value.data as Seat[]
+  seats.value = seatsData.value?.data as Seat[]
 
-const name: Ref<string> = ref<string>(theather.value.name)
-const placeName: Ref<string> = ref<string>(theather.value.place.name)
+const name: Ref<string> = ref<string>(theater.value.Name)
+const placeName: Ref<string> = ref<string>(theater.value?.Place?.Name || '')
 
-const seatPlan: SeatPlan = JSON.parse(theather.value.seatPlan)
+const seatPlan: SeatPlan = JSON.parse(theater.value.SeatPlan)
 
 const save = async (): Promise<string | void> => {
   loaderStore.setLoading(true)
-  const { error } = await useFetch<ApiResponse<Theather>>('/theather', {
+  const { error } = await useFetch<Response<Theater>>('/theater', {
     ...apiOptions(),
     method: 'PUT',
     body: {
@@ -66,16 +66,16 @@ const save = async (): Promise<string | void> => {
   if (error.value) {
     const err: FetchError = error.value as FetchError
 
-    if (err.response.status === 400)
-      toast.error(t('errors.theather.updateFailed'))
+    if (err.response?.status === 400)
+      toast.error(t('errors.theater.updateFailed'))
     else
       toast.error(t('errors.sww'))
 
     return Promise.reject(error.value)
   }
 
-  toast.success(t('messages.theather.updated'))
-  router.push('/admin/theathers')
+  toast.success(t('messages.theater.updated'))
+  router.push('/admin/theaters')
 
   return Promise.resolve()
 }
@@ -84,7 +84,7 @@ const seatPlanSeats = seatPlan.rows.map((row) => {
   return row.map((_seat) => {
     return {
       ..._seat,
-      seat: seats.value.find(seat => seat.id === _seat.id)
+      seat: seats.value.find(seat => seat.ID === _seat.id)
     }
   })
 })
@@ -97,7 +97,7 @@ definePageMeta({
 
 <template>
   <div class="p-8">
-    <admin-title>Theather Edit</admin-title>
+    <admin-title>Theater Edit</admin-title>
 
     <admin-edit-card
       :buttons="[
@@ -110,7 +110,7 @@ definePageMeta({
       <admin-edit-card-item>
         <admin-input
           v-model="name"
-          :label="t('theather.name')"
+          :label="t('theater.name')"
           required
         />
       </admin-edit-card-item>
@@ -118,14 +118,14 @@ definePageMeta({
       <admin-edit-card-item>
         <admin-input
           v-model="placeName"
-          :label="t('theather.placeName')"
+          :label="t('theater.placeName')"
           disabled
         />
         <nuxt-link
           :to="{
             path: '/admin/places/edit',
             query: {
-              id: theather.place.id
+              id: theater.Place?.ID
             }
           }"
           class="mt-2 text-sm text-blue-500"
@@ -136,7 +136,7 @@ definePageMeta({
     </admin-edit-card>
 
     <div class="w-full max-w-screen-xl mx-auto px-8 py-16 flex flex-col items-center space-y-8">
-      <h3 class="text-xl dark:text-gray-200 font-semibold">{{ $t('theather.seatPlan') }}</h3>
+      <h3 class="text-xl dark:text-gray-200 font-semibold">{{ $t('theater.seatPlan') }}</h3>
       <!-- seat info grid -->
       <div class="grid grid-flow-col gap-x-4">
         <div class="flex justify-center items-center space-x-2">
@@ -160,7 +160,7 @@ definePageMeta({
               v-if="seat.type == 'seat'"
               class="w-10 h-10 text-sm lg:w-12 lg:text-base lg:h-12 flex justify-center items-center font-medium rounded-lg border-gray-200 dark:border-gray-400 border-2 text-gray-800 dark:text-gray-200"
             >
-              {{ seat.seat.name }}
+              {{ seat.seat?.Name }}
             </div>
             <!-- stage -->
             <div

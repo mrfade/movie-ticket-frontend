@@ -1,67 +1,77 @@
-import { SessionTheather } from './session'
-import { Theather, Seat } from './theather'
+import type { Model } from './model';
+import { SessionTheater } from './session'
+import { Theater, Seat } from './theater'
 
-export interface MovieSimple {
-  id: number;
-  title: string;
-  posterPath: string;
-  slug: string;
-  backdropPath?: string;
-  theathers?: SessionTheather[]
+export interface MovieSimple extends Model {
+  Title: string;
+  PosterPath: string;
+  Slug: string;
+  BackdropPath?: string;
+  Theaters?: SessionTheater[]
 }
 
-export interface Session {
-  id: number;
-  movieId?: number;
-  movie: MovieSimple;
-  theather: Theather;
-  name: string;
-  date: string;
-  seats: Seat[];
+export interface Session extends Model {
+  MovieId: number;
+  Movie?: MovieSimple;
+  TheaterId: number;
+  Theater?: Theater;
+  ShowTime: string;
+  Name: string;
+  Seats: Seat[];
 }
 
-export interface Genre {
-  id: number;
-  name: string;
+export interface Genre extends Model {
+  TmdbId: number;
+  Name: string;
 }
 
-export interface Actor {
-  id: number;
-  tmdbId: number;
-  name: string;
-  gender: number;
-  profilePath: string;
-  biography?: string;
-  birthday?: string;
-  placeOfBirth?: string;
-  imdbId?: string;
-  slug?: string;
+export interface Person extends Model {
+  TmdbId: number;
+  ImdbId: string;
+  Name: string;
+  Slug: string;
+  Biography: string;
+  Birthday: string;
+  PlaceOfBirth: string;
+  Gender: number;
+  KnownForDepartment: string;
+  ProfilePath: string;
 }
 
-export interface Cast {
-  id: number;
-  actorId: number;
-  actor: Actor;
-  character: string;
+export interface Cast extends Model {
+  PersonId: number;
+  Person: Person;
+  MovieId: number;
+  Role: string;
 }
 
-export interface Movie {
-  id: number,
-  slug: string,
-  title: string,
-  originalTitle: string,
-  description: string,
-  duration: number,
-  posterPath: string,
-  backdropPath: string,
-  releaseDate: string,
-  originalLanguage: string,
-  imdbId?: string | null,
-  status: string,
-  nowPlaying: boolean,
-  trailerUrl: string,
-  rating: number,
-  director: string,
-  genres?: Genre[],
-  cast?: Cast[],
+export interface Crew extends Model {
+  PersonId: number;
+  Person: Person;
+  MovieId: number;
+  Department: string;
+  Job: string;
+}
+
+export interface Movie extends Model {
+  Title: string,
+  Slug: string,
+  OriginalTitle: string,
+  Description: string,
+  Duration: number,
+  PosterPath: string,
+  BackdropPath: string,
+  ReleaseDate: string,
+  OriginalLanguage: string,
+  ImdbId?: string | null,
+  TmdbId?: string | null,
+  Status: string,
+  NowPlaying: boolean,
+  TrailerUrl: string,
+  Rating: number,
+  DirectorId: number,
+  Director?: Person,
+  Genres?: Genre[],
+  Cast?: Cast[],
+  Crews?: Crew[],
 }

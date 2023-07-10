@@ -8,7 +8,7 @@ const apiOptions = () => {
 
   return {
     baseURL: config.public.apiBase,
-    onRequest (ctx) {
+    onRequest (ctx: any) {
       const token = userStore.getToken
       if (token) {
         ctx.options.headers = new Headers(ctx.options.headers)
@@ -22,6 +22,7 @@ const apiOptions = () => {
 function useApi<T> (
   url: string | Request,
   options?: UseFetchOptions<any>
+// @ts-expect-error
 ): FetchResult<any> {
   if (!options)
     options = {} as UseFetchOptions<any>
@@ -31,6 +32,7 @@ function useApi<T> (
     ...apiOptions()
   }
 
+  // @ts-expect-error
   return $fetch<T, any>(url, options)
 }
 

@@ -3,10 +3,10 @@ import { Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import { FetchError } from 'ohmyfetch'
-import { ApiResponse } from '~~/@types/api'
+import type { Response } from '~~/@types/api'
 import { apiOptions } from '~~/composables/useApi'
 import { useLoaderStore } from '~~/stores/loader'
-import { Actor } from '~~/@types/movie'
+import type { Person } from '~~/@types/movie'
 import { SelectBoxOption } from '~~/components/SelectBox.vue'
 import { useDayjs } from '~~/composables/useDayjs'
 
@@ -15,23 +15,23 @@ const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const loaderStore = useLoaderStore()
-const actor: Ref<Actor> = ref<Actor>(null)
+const person: Ref<Person> = ref<Person>({} as Person)
 
-const { data, error } = await useFetch<ApiResponse<Actor>>(`/actor/${route.query.id}`, apiOptions())
+const { data, error } = await useFetch<Response<Person>>(`/person/${route.query.id}`, apiOptions())
 
 if (error.value) {
   const err: FetchError = error.value as FetchError
 
-  if (err.response.status === 404)
-    toast.error(t('errors.actor.notFound'))
+  if (err.response?.status === 404)
+    toast.error(t('errors.person.notFound'))
   else
     toast.error(t('errors.sww'))
 
-  router.push('/admin/actors')
+  router.push('/admin/people')
 }
 
 if (data)
-  actor.value = data.value.data as Actor
+  person.value = data.value?.data as Person
 
 const genders: SelectBoxOption[] = [
   {
@@ -52,17 +52,17 @@ const genders: SelectBoxOption[] = [
   }
 ]
 
-const name: Ref<string> = ref<string>(actor.value.name)
-const birthday: Ref<string> = ref<string>(actor.value.birthday ? useDayjs()(actor.value.birthday).format('YYYY-MM-DD') : '')
-const placeOfBirth: Ref<string> = ref<string>(actor.value.placeOfBirth)
-const imdbId: Ref<string> = ref<string>(actor.value.imdbId)
-const biography: Ref<string> = ref<string>(actor.value.biography)
-const profilePath: string = actor.value.profilePath
-const gender: Ref<SelectBoxOption> = ref<SelectBoxOption>(genders.find(gender => gender.value === actor.value.gender.toString()))
+const name: Ref<string> = ref<string>(person.value.Name)
+const birthday: Ref<string> = ref<string>(person.value.Birthday ? useDayjs()(person.value.Birthday).format('YYYY-MM-DD') : '')
+const placeOfBirth: Ref<string> = ref<string>(person.value.PlaceOfBirth)
+const imdbId: Ref<string> = ref<string>(person.value.ImdbId)
+const biography: Ref<string> = ref<string>(person.value.Biography)
+const profilePath: string = person.value.ProfilePath
+const gender: Ref<SelectBoxOption> = ref<SelectBoxOption>(genders.find(gender => gender.value === person.value.Gender.toString()) || genders[0])
 
 const save = async (): Promise<string | void> => {
   loaderStore.setLoading(true)
-  const { error } = await useFetch<ApiResponse<Actor>>('/actor', {
+  const { error } = await useFetch<Response<Person>>('/person', {
     ...apiOptions(),
     method: 'PUT',
     body: {
@@ -80,16 +80,16 @@ const save = async (): Promise<string | void> => {
   if (error.value) {
     const err: FetchError = error.value as FetchError
 
-    if (err.response.status === 400)
-      toast.error(t('errors.actor.updateFailed'))
+    if (err.response?.status === 400)
+      toast.error(t('errors.person.updateFailed'))
     else
       toast.error(t('errors.sww'))
 
     return Promise.reject(error.value)
   }
 
-  toast.success(t('messages.actor.updated'))
-  router.push('/admin/actors')
+  toast.success(t('messages.person.updated'))
+  router.push('/admin/people')
 
   return Promise.resolve()
 }
@@ -102,7 +102,7 @@ definePageMeta({
 
 <template>
   <div class="p-8">
-    <admin-title>Actor Edit</admin-title>
+    <admin-title>Person Edit</admin-title>
 
     <div class="grid grid-cols-3 gap-4">
       <admin-edit-card
@@ -117,7 +117,7 @@ definePageMeta({
         <admin-edit-card-item :sm-cols="6">
           <admin-input
             v-model="name"
-            :label="t('actor.name')"
+            :label="t('person.name')"
             required
           />
         </admin-edit-card-item>
@@ -125,7 +125,7 @@ definePageMeta({
         <admin-edit-card-item>
           <admin-input
             v-model="birthday"
-            :label="t('actor.birthday')"
+            :label="t('person.birthday')"
             required
           />
         </admin-edit-card-item>
@@ -133,7 +133,7 @@ definePageMeta({
         <admin-edit-card-item>
           <admin-input
             v-model="imdbId"
-            :label="t('actor.imdbId')"
+            :label="t('person.imdbId')"
             required
           />
         </admin-edit-card-item>
@@ -141,7 +141,7 @@ definePageMeta({
         <admin-edit-card-item>
           <admin-input
             v-model="placeOfBirth"
-            :label="t('actor.placeOfBirth')"
+            :label="t('person.placeOfBirth')"
             required
           />
         </admin-edit-card-item>
@@ -149,7 +149,7 @@ definePageMeta({
         <admin-edit-card-item>
           <select-box
             v-model="gender"
-            :label="$t('actor.gender')"
+            :label="$t('person.gender')"
             :options="genders"
             variant="gray"
             required
@@ -159,7 +159,7 @@ definePageMeta({
         <admin-edit-card-item :sm-cols="6">
           <admin-textarea
             v-model="biography"
-            :label="$t('actor.biography')"
+            :label="$t('person.biography')"
             :rows="15"
           />
         </admin-edit-card-item>

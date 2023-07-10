@@ -2,18 +2,19 @@
 import { createError } from 'h3'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import { Splide, SplideSlide } from '@splidejs/vue-splide'
+// @ts-expect-error
 import { ClockIcon } from '@heroicons/vue/outline'
 import { useToast } from 'vue-toastification'
 import { FetchError } from 'ohmyfetch'
 import { useI18n } from 'vue-i18n'
 import { useApi } from '~~/composables/useApi'
 import { useDayjs } from '~~/composables/useDayjs'
-import { ApiResponse } from '~~/@types/api'
-import { Movie, Cast } from '~~/@types/movie'
+import type { Response } from '~~/@types/api'
+import type { Movie, Cast } from '~~/@types/movie'
 import { useUserStore } from '~~/stores/user'
 import { MovieSession, SessionPlace } from '~~/@types/session'
 import { useCityStore } from '~~/stores/city'
-import { City } from '~~/@types/city'
+import type { City } from '~~/@types/city'
 import '@splidejs/vue-splide/css'
 import { useLoaderStore } from '~~/stores/loader'
 
@@ -24,45 +25,41 @@ const userStore = useUserStore()
 const cityStore = useCityStore()
 const loaderStore = useLoaderStore()
 
-const { data: movieData, error } = await useAsyncData<ApiResponse<Movie>>(`movie_${route.params.slug}`, () => useApi(`movie/${route.params.slug}`))
+const { data: movieData, error } = await useAsyncData<Response<Movie>>(`movie_${route.params.slug}`, () => useApi(`movie/${route.params.slug}`))
 
 if (error.value) {
   const err: FetchError = error.value as FetchError
 
-  if (err.response.status === 404)
-    throwError(
-      createError({
-        statusCode: 404,
-        statusMessage: 'Not Found'
-      })
-    )
-
-  throwError(
-    createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error'
+  if (err.response?.status === 404)
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Not Found'
     })
-  )
+
+  throw createError({
+    statusCode: 500,
+    statusMessage: 'Internal Server Error'
+  })
 }
 
-const movie: Movie = movieData.value.data
+const movie: Movie = movieData.value?.data as Movie
 
 const cast = ref<Cast[]>([])
-const { data: castData, pending: castPending } = useLazyAsyncData<ApiResponse<Cast[]>>(`movie_${route.params.slug}_cast`, () => useApi(`movie/${route.params.slug}/cast`))
+const { data: castData, pending: castPending } = useLazyAsyncData<Response<Cast[]>>(`movie_${route.params.slug}_cast`, () => useApi(`movie/${route.params.slug}/cast`))
 if (castData.value)
-  cast.value = castData.value.data
+  cast.value = castData.value.data as Cast[]
 
-watch(castData, (newValue) => {
-  cast.value = newValue.data
+watch(castData, (newValue: any) => {
+  cast.value = newValue.data as Cast[]
 })
 
 const similarMovies = ref<Movie[]>([])
-const { data: similarMoviesData, pending: similarMoviesPending } = useLazyAsyncData<ApiResponse<Movie[]>>(`movie_${route.params.slug}_similar_movies`, () => useApi(`movie/${route.params.slug}/similar_movies`))
+const { data: similarMoviesData, pending: similarMoviesPending } = useLazyAsyncData<Response<Movie[]>>(`movie_${route.params.slug}_similar_movies`, () => useApi(`movie/${route.params.slug}/similar_movies`))
 if (similarMoviesData.value)
-  similarMovies.value = similarMoviesData.value.data
+  similarMovies.value = similarMoviesData.value.data as Movie[]
 
-watch(similarMoviesData, (newValue) => {
-  similarMovies.value = newValue.data
+watch(similarMoviesData, (newValue: any) => {
+  similarMovies.value = newValue.data as Movie[]
 })
 
 const sessionPlaces = ref<SessionPlace[]>([])
@@ -73,16 +70,16 @@ const currentDay = ref<string>(useDayjs()().format('YYYY-MM-DD'))
 
 const getSessionPlaces = async (movieSlug: string, cityId: number, date: string) => {
   sessionsPending.value = true
-  const { data: sessionPlacesData, error } = await useAsyncData<ApiResponse<SessionPlace[]>>(`movie_${movieSlug}_city_${cityId}_date_${date}_session_places`, () => useApi(`movie/${movieSlug}/sessions?city=${cityId}&date=${date}`))
+  const { data: sessionPlacesData, error } = await useAsyncData<Response<SessionPlace[]>>(`movie_${movieSlug}_city_${cityId}_date_${date}_session_places`, () => useApi(`movie/${movieSlug}/sessions?city=${cityId}&date=${date}`))
 
   if (error.value) {
     const err: FetchError = error.value as FetchError
-    if (err.response.status !== 404) {
+    if (err.response?.status !== 404) {
       toast.error(t('errors.sww'))
       Promise.reject(new Error('not found'))
     }
   } else {
-    sessionPlaces.value = sessionPlacesData.value.data
+    sessionPlaces.value = sessionPlacesData.value?.data as SessionPlace[]
   }
 
   sessionsPending.value = false
@@ -124,7 +121,7 @@ const onClickBuyTicket = async () => {
     return
   }
 
-  await getSessionPlaces(route.params.slug as string, selectedCity.id, currentDay.value)
+  await getSessionPlaces(route.params.slug as string, selectedCity.ID, currentDay.value)
   openSessions.value = true
 
   nextTick(() => {
@@ -136,7 +133,7 @@ const changeSessionsDay = async (day: string) => {
   loaderStore.setLoading(true)
 
   currentDay.value = day
-  await getSessionPlaces(route.params.slug as string, cityStore.getSelectedCity?.id, day)
+  await getSessionPlaces(route.params.slug as string, cityStore.getSelectedCity?.ID, day)
 
   loaderStore.setLoading(false)
 }
@@ -145,7 +142,7 @@ const onSelectSession = (session: MovieSession) => {
   navigateTo({
     path: '/choose_seat',
     query: {
-      sessionId: session.id
+      sessionId: session.ID
     }
   })
 }
@@ -160,36 +157,36 @@ definePageMeta({
     <div class="w-full h-[32em] flex justify-center items-end relative">
       <div class="w-full h-full relative">
         <div class="w-full h-full absolute bg-black bg-opacity-60"></div>
-        <div class="w-full h-full bg-cover bg-[center_top]" :style="`background-image: url('https://image.tmdb.org/t/p/original/${movie.backdropPath}')`"></div>
+        <div class="w-full h-full bg-cover bg-[center_top]" :style="`background-image: url('https://image.tmdb.org/t/p/original/${movie.BackdropPath}')`"></div>
       </div>
 
       <div class="container max-w-screen-xl px-8 h-72 flex justify-between items-center absolute">
-        <img :src="`https://image.tmdb.org/t/p/w500/${movie.posterPath}`" alt="" class="w-32 sm:w-48 md:w-56 h-auto rounded-t-lg self-end">
+        <img :src="`https://image.tmdb.org/t/p/w500/${movie.PosterPath}`" alt="" class="w-32 sm:w-48 md:w-56 h-auto rounded-t-lg self-end">
         <div class="h-full p-8 flex-1 flex flex-col justify-end items-start">
           <div class="mb-6">
-            <h3 class="text-white text-4xl font-bold">{{ movie.title }}</h3>
-            <span class="text-white text-sm font-light">{{ movie.originalTitle }}</span>
+            <h3 class="text-white text-4xl font-bold">{{ movie.Title }}</h3>
+            <span class="text-white text-sm font-light">{{ movie.OriginalTitle }}</span>
           </div>
           <div class="flex flex-row gap-4 mb-8">
             <div class="text-white text-xs font-light px-4 py-2 rounded bg-black bg-opacity-40">
-              {{ useDayjs()(movie.releaseDate).format('D MMMM YYYY dddd') }}
+              {{ useDayjs()(movie.ReleaseDate).format('D MMMM YYYY dddd') }}
             </div>
-            <div v-if="movie.nowPlaying" class="text-white text-xs px-4 py-2 rounded-full bg-green-600">
+            <div v-if="movie.NowPlaying" class="text-white text-xs px-4 py-2 rounded-full bg-green-600">
               {{ $t('nowPlaying') }}
             </div>
           </div>
           <div class="flex-1 items-end space-y-2">
-            <div v-if="movie.director" class="text-white text-sm">
-              {{ $t('director') }}: {{ movie.director }}
+            <div v-if="movie.Director" class="text-white text-sm">
+              {{ $t('director') }}: {{ movie.Director.Name }}
             </div>
             <div v-if="cast.length > 0" class="text-white text-sm">
-              {{ $t('actors') }}: {{ cast.slice(0,3).map(c => c.actor.name).join(', ') }}
+              {{ $t('people') }}: {{ cast.slice(0,3).map(c => c.Person.Name).join(', ') }}
             </div>
             <div class="text-white text-sm flex items-center gap-1.5">
-              <ClientOnly><ClockIcon class="h-4 w-4" /></ClientOnly> {{ movie.duration }} {{ $t('minutes') }}
+              <ClientOnly><ClockIcon class="h-4 w-4" /></ClientOnly> {{ movie.Duration }} {{ $t('minutes') }}
             </div>
             <div class="text-white text-sm">
-              {{ movie.genres?.map(genre => genre.name).join(', ') }}
+              {{ movie.Genres?.map(genre => genre.Name).join(', ') }}
             </div>
           </div>
         </div>
@@ -213,7 +210,7 @@ definePageMeta({
               {{ $t('movieCast') }}
             </button>
           </Tab>
-          <Tab v-if="movie.trailerUrl" v-slot="{ selected }" as="template">
+          <Tab v-if="movie.TrailerUrl" v-slot="{ selected }" as="template">
             <button class="tab-btn" :class="{ selected }">
               {{ $t('trailer') }}
             </button>
@@ -222,14 +219,14 @@ definePageMeta({
 
         <TabPanels>
           <TabPanel class="tab-panel">
-            {{ movie.description }}
+            {{ movie.Description }}
           </TabPanel>
           <TabPanel class="tab-panel">
             <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
               <nuxt-link
                 v-for="character in cast"
-                :key="character.id"
-                :to="`/actor/${character.actor.slug}`"
+                :key="character.ID"
+                :to="`/person/${character.Person.Slug}`"
               >
                 <CastSingle :character="character" />
               </nuxt-link>
@@ -240,10 +237,10 @@ definePageMeta({
               <CastSkeleton v-if="castPending" />
             </div>
           </TabPanel>
-          <TabPanel v-if="movie.trailerUrl" class="tab-panel">
+          <TabPanel v-if="movie.TrailerUrl" class="tab-panel">
             <client-only>
               <vue-plyr>
-                <div data-plyr-provider="youtube" :data-plyr-embed-id="movie.trailerUrl"></div>
+                <div data-plyr-provider="youtube" :data-plyr-embed-id="movie.TrailerUrl"></div>
               </vue-plyr>
             </client-only>
           </TabPanel>
@@ -285,27 +282,27 @@ definePageMeta({
       </client-only>
 
       <div class="flex flex-col space-y-1 bg-white dark:bg-cod-gray-850 shadow divide-y-2 divide-cod-gray-50 dark:divide-cod-gray-900">
-        <div v-for="place in sessionPlaces" :key="place.id" class="flex flex-row gap-4 px-8 py-4">
+        <div v-for="place in sessionPlaces" :key="place.ID" class="flex flex-row gap-4 px-8 py-4">
           <div class="flex min-w-[33%] items-center font-semibold text-cod-gray-700 dark:text-cod-gray-50">
-            <nuxt-link :to="`/place/${place.id}`">{{ place.name }}</nuxt-link>
+            <nuxt-link :to="`/place/${place.ID}`">{{ place.Name }}</nuxt-link>
           </div>
           <div class="flex-1 flex-col flex gap-4 text-cod-gray-900 dark:text-cod-gray-50 divide-y-2 divide-cod-gray-50 dark:divide-cod-gray-900">
             <div
-              v-for="theather in place.theathers"
-              :key="theather.id"
+              v-for="theater in place.Theaters"
+              :key="theater.ID"
               class="flex pt-4 items-center"
             >
               <div class="flex-1 flex items-center underline">
-                {{ theather.name }}
+                {{ theater.Name }}
               </div>
               <div class="flex gap-2">
                 <button
-                  v-for="session in theather.sessions"
-                  :key="session.id"
+                  v-for="session in theater.Sessions"
+                  :key="session.ID"
                   class="p-2 border border-transparent text-sm font-medium rounded text-cod-gray-900 bg-ywllow hover:bg-yellow-300 focus:outline-none"
                   @click.prevent="onSelectSession(session)"
                 >
-                  {{ session.name }}
+                  {{ session.Name }}
                 </button>
               </div>
             </div>
@@ -324,7 +321,7 @@ definePageMeta({
 
       <MovieSingle
         v-for="smovie in similarMovies"
-        :key="smovie.id"
+        :key="smovie.ID"
         :movie="smovie"
       />
 

@@ -3,9 +3,9 @@ import { ComputedRef, Ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import { FetchError } from 'ohmyfetch'
-import { ApiResponse } from '~~/@types/api'
+import type { Response } from '~~/@types/api'
 import { apiOptions } from '~~/composables/useApi'
-import { OperationClaim, User } from '~~/@types/user'
+import type { Role, User } from '~~/@types/user'
 import { SelectBoxOption } from '~~/components/SelectBox.vue'
 import { useLoaderStore } from '~~/stores/loader'
 
@@ -14,17 +14,17 @@ const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const loaderStore = useLoaderStore()
-const user: Ref<User> = ref<User>(null)
-const claims: Ref<OperationClaim[]> = ref<OperationClaim[]>([])
+const user: Ref<User> = ref<User>({} as User)
+const allRoles: Ref<Role[]> = ref<Role[]>([])
 
-const { data, error } = await useFetch<ApiResponse<User>>(`/customer/${route.query.id}`, {
+const { data, error } = await useFetch<Response<User>>(`/user/${route.query.id}`, {
   ...apiOptions()
 })
 
 if (error.value) {
   const err: FetchError = error.value as FetchError
 
-  if (err.response.status === 404)
+  if (err.response?.status === 404)
     toast.error(t('errors.user.notFound'))
   else
     toast.error(t('errors.sww'))
@@ -33,50 +33,50 @@ if (error.value) {
 }
 
 if (data)
-  user.value = data.value.data as User
+  user.value = data.value?.data as User
 
-const { data: claimsData, error: claimsError } = await useFetch<ApiResponse<OperationClaim[]>>('/operationclaim', {
+const { data: rolesData, error: rolesError } = await useFetch<Response<Role[]>>('/roles', {
   ...apiOptions()
 })
 
-if (claimsError.value) {
+if (rolesError.value) {
   toast.error(t('errors.sww'))
   router.push('/admin/users')
 }
 
-if (claimsData)
-  claims.value = claimsData.value.data as OperationClaim[]
+if (rolesData)
+  allRoles.value = rolesData.value?.data as Role[]
 
-const name: Ref<string> = ref<string>(user.value.name)
-const email: Ref<string> = ref<string>(user.value.email)
-const password: Ref<string> = ref<string>(null)
-const roles: Ref<OperationClaim[]> = ref<OperationClaim[]>([
-  ...user.value.roles.map((role: string) => {
-    return claims.value.find((claim: OperationClaim) => claim.name === role)
+const name: Ref<string> = ref<string>(user.value.Name)
+const email: Ref<string> = ref<string>(user.value.Email)
+const password: Ref<string> = ref<string>('')
+const roles: Ref<Role[]> = ref<Role[]>([
+  ...user.value.Roles.map((role: Role) => {
+    return allRoles.value.find((claim: Role) => claim.ID === role.ID) || {} as Role
   })
 ])
 
 const currentRoles: Ref<SelectBoxOption[]> = ref<SelectBoxOption[]>([
-  ...roles.value.map((role: OperationClaim) => {
+  ...roles.value.map((role: Role) => {
     return {
-      value: role.id.toString(),
-      label: role.name
+      value: role.ID.toString(),
+      label: role.Name
     }
   })
 ])
 
-const claimsOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
-  return claims.value.map((claim: OperationClaim) => {
+const rolesOptions: ComputedRef<SelectBoxOption[]> = computed(() => {
+  return roles.value.map((role: Role) => {
     return {
-      value: claim.id.toString(),
-      label: claim.name
+      value: role.ID.toString(),
+      label: role.Name
     } as SelectBoxOption
   })
 })
 
 const save = async (): Promise<string | void> => {
   loaderStore.setLoading(true)
-  const { error } = await useFetch<ApiResponse<User>>('/customer', {
+  const { error } = await useFetch<Response<User>>('/user', {
     ...apiOptions(),
     method: 'PUT',
     body: {
@@ -84,7 +84,7 @@ const save = async (): Promise<string | void> => {
       name: name.value,
       email: email.value,
       password: password.value,
-      roles: currentRoles.value.map((role: SelectBoxOption) => claims.value.find((claim: OperationClaim) => claim.id.toString() === role.value).name)
+      roles: currentRoles.value.map((crole: SelectBoxOption) => allRoles.value.find((role: Role) => role.ID.toString() === crole.value)?.Name)
     }
   })
   loaderStore.setLoading(false)
@@ -92,7 +92,7 @@ const save = async (): Promise<string | void> => {
   if (error.value) {
     const err: FetchError = error.value as FetchError
 
-    if (err.response.status === 400)
+    if (err.response?.status === 400)
       toast.error(t('errors.user.updateFailed'))
     else
       toast.error(t('errors.sww'))
@@ -154,7 +154,7 @@ definePageMeta({
           v-model="currentRoles"
           label="Roles"
           variant="gray"
-          :options="claimsOptions"
+          :options="rolesOptions"
           multiple
         />
       </admin-edit-card-item>

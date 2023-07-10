@@ -36,13 +36,13 @@ const login = async () => {
   const { data } = await useApi('/auth/login', {
     method: 'POST',
     body: JSON.stringify(user)
-  }).catch((error) => {
+  }).catch((error: FetchError) => {
     // eslint-disable-next-line no-console
     console.log('catch', error)
 
     const err: FetchError = error as FetchError
 
-    if (err.response.status === 400)
+    if (err.response?.status === 400)
       toast.error(t('errors.login.invalidCredentials'))
     else
       toast.error(t('errors.sww'))

@@ -1,11 +1,11 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { useApi } from '~~/composables/useApi'
-import { ApiResponse } from '~~/@types/api'
-import { City } from '~~/@types/city'
+import type { Response } from '~~/@types/api'
+import type { City } from '~~/@types/city'
 
 export const useCityStore = defineStore('city', {
   state: () => ({
-    selectedCity: null as City,
+    selectedCity: {} as City,
     cities: [] as City[]
   }),
 
@@ -20,7 +20,7 @@ export const useCityStore = defineStore('city', {
     },
 
     setSelectedCityId (cityId: number) {
-      this.selectedCity = this.cities.find(city => city.id === cityId)
+      this.selectedCity = this.cities.find(city => city.ID === cityId) || {} as City
     },
 
     setCities (cities: City[]) {
@@ -28,7 +28,7 @@ export const useCityStore = defineStore('city', {
     },
 
     async fetchCities (): Promise<void | Boolean> {
-      const data = await useApi<ApiResponse<City[]>>('/city').catch(() => false)
+      const data = await useApi<Response<City[]>>('/cities').catch(() => false)
 
       if (!data)
         return Promise.resolve(false)

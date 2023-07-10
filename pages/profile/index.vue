@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { User } from '~~/@types/user';
 import { Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toastification'
@@ -19,11 +20,11 @@ const updateUser = async () => {
   }
 
   const update = await userStore.updateUser({
-    id: userStore.getId,
-    name: name.value,
-    email: email.value,
-    password: password.value
-  })
+    ID: userStore.getId,
+    Name: name.value,
+    Email: email.value,
+    Password: password.value
+  } as User)
 
   if (update)
     toast.success(t('profile.updated'))

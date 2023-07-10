@@ -1,16 +1,16 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { FetchError } from 'ohmyfetch'
 import { useApi } from '~~/composables/useApi'
-import { ApiResponse } from '~~/@types/api'
-import { Session } from '~~/@types/movie'
-import { Seat } from '~~/@types/theather'
-import { Ticket } from '~~/@types/ticket'
+import type { Response } from '~~/@types/api'
+import type { Session } from '~~/@types/movie'
+import type { Seat } from '~~/@types/theater'
+import type { Ticket } from '~~/@types/ticket'
 
 export const usePaymentStore = defineStore('payment', {
   state: () => ({
-    session: null,
-    selectedSeats: [],
-    lastTicket: null
+    session: {} as Session,
+    selectedSeats: [] as Seat[],
+    lastTicket: {} as Ticket
   }),
 
   getters: {
@@ -33,12 +33,12 @@ export const usePaymentStore = defineStore('payment', {
     },
 
     async makePayment (sessionId: number, paymentData: any): Promise<Ticket> {
-      const data = await useApi<ApiResponse<Ticket>>(`/session/${sessionId}/buy`, {
+      const data = await useApi<Response<Ticket>>(`/session/${sessionId}/buy`, {
         method: 'POST',
         body: paymentData
-      }).catch((error: FetchError<ApiResponse<Ticket>>) => {
-        if (error.response.status === 400)
-          throw new Error(error.response._data.message)
+      }).catch((error: FetchError<Response<Ticket>>) => {
+        if (error.response?.status === 400)
+          throw new Error(error.response._data?.error || 'Unexpected error')
 
         throw new Error('Unexpected error')
       })

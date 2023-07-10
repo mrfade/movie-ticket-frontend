@@ -12,18 +12,19 @@ export interface ValidationError {
 }
 
 export interface Paged {
+  hasNext: boolean,
+  hasPrev: boolean,
   pageNumber: number,
   pageSize: number,
   totalPages: number,
   totalRecords: number,
 }
 
-export interface ApiResponse<T> {
-  success: boolean,
-  message: string | null,
+export interface Response<T> {
+  error?: string,
   data?: T,
 }
 
-export interface ApiResponsePaged<T> extends ApiResponse<T>, Paged {
+export interface PagedResponse<T> extends Response<T>, Paged {
 
 }

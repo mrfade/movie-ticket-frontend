@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 import { SelectBoxOption } from './SelectBox.vue'
-import { City } from '~~/@types/city'
+import type { City } from '~~/@types/city'
 import { useCityStore } from '~~/stores/city'
 
 const cityStore = useCityStore()
 
 const selectedCity: Ref<SelectBoxOption> = ref<SelectBoxOption>({
-  value: cityStore.selectedCity?.id.toString(),
-  label: cityStore.selectedCity?.name
+  value: cityStore.selectedCity?.ID.toString(),
+  label: cityStore.selectedCity?.Name
 })
 
 const cities: City[] = cityStore.getCities
 const options: SelectBoxOption[] = cities.map(city => ({
-  value: city.id.toString(),
-  label: city.name
+  value: city.ID.toString(),
+  label: city.Name
 } as SelectBoxOption))
 
 const cityIdCookie = useCookie('cityId')

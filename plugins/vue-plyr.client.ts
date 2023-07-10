@@ -1,3 +1,4 @@
+// @ts-expect-error
 import VuePlyr from 'vue-plyr'
 import 'vue-plyr/dist/vue-plyr.css'
 
