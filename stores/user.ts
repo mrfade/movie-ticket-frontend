@@ -2,7 +2,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { setAccessToken, removeAccessToken } from '~~/composables/useAuthCookie'
 import { useApi } from '~~/composables/useApi'
 import type { Response } from '~~/@types/api'
-import type { User } from '~~/@types/user'
+import type { User, Role } from '~~/@types/user'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -11,13 +11,13 @@ export const useUserStore = defineStore('user', {
     id: 0,
     name: '',
     email: '',
-    roles: [] as string[]
+    roles: [] as Role[]
   }),
 
   getters: {
     isAuthenticated: state => state.authenticated,
-    isAdmin: state => state.roles.includes('admin') || state.roles.includes('god'),
-    isGod: state => state.roles.includes('god'),
+    isAdmin: state => state.roles.filter(role => role.Name === 'ADMIN' || role.Name === 'GOD').length > 0,
+    isGod: state => state.roles.filter(role => role.Name === 'GOD').length > 0,
     getToken: state => state.token,
     getId: state => state.id,
     getName: state => state.name,
@@ -47,7 +47,7 @@ export const useUserStore = defineStore('user', {
       this.email = email
     },
 
-    setRoles (roles: string[]) {
+    setRoles (roles: Role[]) {
       this.roles = roles
     },
 
