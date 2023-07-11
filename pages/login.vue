@@ -29,11 +29,11 @@ const login = async () => {
 
   // login
   const user = {
-    email: emailValue,
-    password: passwordValue
+    Email: emailValue,
+    Password: passwordValue
   }
 
-  const { data } = await useApi('/auth/login', {
+  const data = await useApi('/auth/login', {
     method: 'POST',
     body: JSON.stringify(user)
   }).catch((error: FetchError) => {
@@ -46,9 +46,9 @@ const login = async () => {
       toast.error(t('errors.login.invalidCredentials'))
     else
       toast.error(t('errors.sww'))
-  }).finally(() => {
-    loaderStore.setLoading(false)
   })
+
+  loaderStore.setLoading(false)
 
   if (!data.token) {
     toast.error(t('errors.login.failed'))
