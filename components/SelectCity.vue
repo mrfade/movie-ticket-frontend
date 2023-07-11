@@ -6,10 +6,13 @@ import { useCityStore } from '~~/stores/city'
 
 const cityStore = useCityStore()
 
-const selectedCity: Ref<SelectBoxOption> = ref<SelectBoxOption>({
+const selectedCity: Ref<SelectBoxOption> = ref<SelectBoxOption>(cityStore.selectedCity?.ID ? {
   value: cityStore.selectedCity?.ID.toString(),
   label: cityStore.selectedCity?.Name
-})
+} : {
+  value: '',
+  label: 'Şehir Seçin'
+} as SelectBoxOption)
 
 const cities: City[] = cityStore.getCities
 const options: SelectBoxOption[] = cities.map(city => ({
