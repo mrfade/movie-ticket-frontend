@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
-// @ts-expect-error
-import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/24/solid'
 
 export interface SelectBoxOption {
   value: string,
@@ -111,7 +110,7 @@ watch(selected, (value: SelectBoxOption | SelectBoxOption[]) => {
           <span class="ml-3 block truncate">{{ Array.isArray(selected) ? selected.map((value: SelectBoxOption) => value.label).join(', ') : selected.label }}</span>
         </span>
         <span v-if="showIcon" class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-          <SelectorIcon
+          <ChevronUpDownIcon
             class="h-5 w-5"
             :class="{
               'text-cod-gray-400': variant === 'cod-gray',
