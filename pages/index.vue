@@ -23,7 +23,7 @@ onClickOutside(searchContainer, () => {
 
 const movies: Ref<Movie[]> = ref<Movie[]>([])
 const first6Movies: Ref<Movie[]> = ref<Movie[]>([])
-const { data: moviesData, pending: moviesPending } = useLazyAsyncData<Response<Movie[]>>('movies', () => useApi('movie'), {
+const { data: moviesData, pending: moviesPending } = useLazyAsyncData<Response<Movie[]>>('movies', () => useApi('movies'), {
   transform: (response) => {
     response.data = shuffle(response.data)
     return response
