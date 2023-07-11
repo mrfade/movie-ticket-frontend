@@ -33,9 +33,9 @@ const menus = [
     path: '/admin/places'
   },
   {
-    name: 'Theathers',
+    name: 'Theaters',
     icon: 'tent',
-    path: '/admin/theathers'
+    path: '/admin/theaters'
   },
   {
     name: 'Sessions',
@@ -48,9 +48,9 @@ const menus = [
     path: '/admin/genres'
   },
   {
-    name: 'Actors',
+    name: 'People',
     icon: 'user-astronaut',
-    path: '/admin/actors'
+    path: '/admin/people'
   },
   {
     name: 'Settings',
