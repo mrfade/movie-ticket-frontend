@@ -24,7 +24,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: isDev ? 'http://localhost:5000/api' : 'https://ticket-api.solak.dev/api'
+      apiBase: isDev ? 'http://localhost:5000' : 'https://ticket-api.solak.dev'
     }
   }
 })
