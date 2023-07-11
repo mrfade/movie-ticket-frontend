@@ -2,8 +2,7 @@
 import { createError } from 'h3'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import { Splide, SplideSlide } from '@splidejs/vue-splide'
-// @ts-expect-error
-import { ClockIcon } from '@heroicons/vue/outline'
+import { ClockIcon } from '@heroicons/vue/24/outline'
 import { useToast } from 'vue-toastification'
 import { FetchError } from 'ohmyfetch'
 import { useI18n } from 'vue-i18n'
